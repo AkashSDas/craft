@@ -8,15 +8,18 @@ import {
     GoogleSignupStrategy,
     RefreshTokenStrategy,
 } from "./strategy";
+import { AuthController } from "./auth.controller";
+import { AuthService } from "./auth.service";
 
 @Module({
     imports: [JwtModule.register({}), PassportModule, UserModule],
-    controllers: [],
+    controllers: [AuthController],
     providers: [
         AccessTokenStrategy,
         RefreshTokenStrategy,
         GoogleSignupStrategy,
         GoogleLoginStrategy,
+        AuthService,
     ],
 })
 export class AuthModule {}
