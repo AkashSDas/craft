@@ -1,4 +1,4 @@
-import { Module } from "@nestjs/common";
+import { Module, forwardRef } from "@nestjs/common";
 import { JwtModule } from "@nestjs/jwt";
 import { PassportModule } from "@nestjs/passport";
 import { UserModule } from "src/users/user.module";
@@ -8,11 +8,15 @@ import {
     GoogleSignupStrategy,
     RefreshTokenStrategy,
 } from "./strategy";
-import { AuthController } from "./auth.controller";
 import { AuthService } from "./auth.service";
+import { AuthController } from "./auth.controller";
 
 @Module({
-    imports: [JwtModule.register({}), PassportModule, UserModule],
+    imports: [
+        JwtModule.register({}),
+        PassportModule,
+        forwardRef(() => UserModule),
+    ],
     controllers: [AuthController],
     providers: [
         AccessTokenStrategy,

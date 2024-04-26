@@ -5,6 +5,7 @@ import {
     Get,
     HttpCode,
     HttpStatus,
+    Inject,
     Param,
     Post,
     Put,
@@ -13,9 +14,10 @@ import {
     UnauthorizedException,
     UseFilters,
     UseGuards,
+    forwardRef,
 } from "@nestjs/common";
-import { type AuthService } from "./auth.service";
-import { type ConfigService } from "@nestjs/config";
+import { AuthService } from "./auth.service";
+import { ConfigService } from "@nestjs/config";
 import {
     InitMagicLinkLoginDto,
     type EmailSignupDto,
@@ -37,7 +39,8 @@ import { InvalidOAuthLoginFilter } from "./filter";
 @Controller("auth")
 export class AuthController {
     constructor(
-        private service: AuthService,
+        @Inject(forwardRef(() => AuthService)) private service: AuthService,
+        @Inject(forwardRef(() => ConfigService))
         private configService: ConfigService,
     ) {}
 

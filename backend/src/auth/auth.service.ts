@@ -1,11 +1,13 @@
 import {
     BadRequestException,
+    Inject,
     Injectable,
     InternalServerErrorException,
     UnauthorizedException,
+    forwardRef,
 } from "@nestjs/common";
-import { type JwtService } from "@nestjs/jwt";
-import { type UserRepository } from "src/users/user.repository";
+import { JwtService } from "@nestjs/jwt";
+import { UserRepository } from "src/users/user.repository";
 import {
     InitMagicLinkLoginDto,
     type EmailSignupDto,
@@ -21,7 +23,9 @@ import { type Types } from "mongoose";
 @Injectable({})
 export class AuthService {
     constructor(
+        @Inject(forwardRef(() => UserRepository))
         private userRepo: UserRepository,
+        @Inject(forwardRef(() => JwtService))
         private jwtService: JwtService,
     ) {}
 
