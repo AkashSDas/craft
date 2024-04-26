@@ -5,7 +5,8 @@ import {
 } from "@nestjs/common";
 import { type JwtService } from "@nestjs/jwt";
 import { type UserRepository } from "src/users/user.repository";
-import { type EmailSignupDto } from "./dto";
+import { InitMagicLinkLoginDto, type EmailSignupDto } from "./dto";
+import { sendEmail } from "src/utils/mail";
 
 @Injectable({})
 export class AuthService {
@@ -33,5 +34,25 @@ export class AuthService {
 
             throw new InternalServerErrorException();
         }
+    }
+
+    async initMagicLinkLogin(payload: InitMagicLinkLoginDto) {
+        const user = await this.userRepo.findOne({ email: payload.email });
+        if (!user) {
+            throw new BadRequestException("User not found");
+        }
+
+        const token = user.createMagicLinkToken();
+        const link = `${process.env.FRONTEND_URL}/auth/login?magic-token=${token}`;
+
+        const mailStatus = await sendEmail({
+            to: user.email,
+            subject: "Magic link login",
+            text: `Click on the link to login: ${link}`,
+            html: `Click on the link to login: <a href="${link}">${link}</a>`,
+        });
+
+        console.log(`Mail status: ${mailStatus}`);
+        await user.save({ validateModifiedOnly: true });
     }
 }

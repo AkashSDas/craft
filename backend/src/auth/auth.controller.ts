@@ -8,7 +8,7 @@ import {
 } from "@nestjs/common";
 import { type AuthService } from "./auth.service";
 import { type ConfigService } from "@nestjs/config";
-import { type EmailSignupDto } from "./dto";
+import { InitMagicLinkLoginDto, type EmailSignupDto } from "./dto";
 import { type Response } from "express";
 
 @Controller("auth")
@@ -37,5 +37,12 @@ export class AuthController {
         });
 
         return { user: result.user, accessToken: result.accessToken };
+    }
+
+    @Post("email-login")
+    @HttpCode(HttpStatus.OK)
+    async initMagicLinkLogin(@Body() dto: InitMagicLinkLoginDto) {
+        await this.service.initMagicLinkLogin(dto);
+        return { message: "Login link sent to your email" };
     }
 }
