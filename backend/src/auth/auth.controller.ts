@@ -29,8 +29,8 @@ import { AuthGuard } from "@nestjs/passport";
 import {
     GOOGLE_LOGIN_STRATEGY,
     GOOGLE_SIGNUP_STRATEGY,
-} from "src/utils/constants";
-import { User } from "src/users/schema";
+} from "../utils/constants";
+import { User } from "../users/schema";
 import { hash } from "argon2";
 import { InvalidOAuthLoginFilter } from "./filter";
 
