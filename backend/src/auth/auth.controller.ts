@@ -1,17 +1,22 @@
 import {
     Body,
     Controller,
+    Get,
     HttpCode,
     HttpStatus,
     Param,
     Post,
+    Req,
     Res,
+    UnauthorizedException,
+    UseGuards,
 } from "@nestjs/common";
 import { type AuthService } from "./auth.service";
 import { type ConfigService } from "@nestjs/config";
 import { InitMagicLinkLoginDto, type EmailSignupDto } from "./dto";
-import { type Response } from "express";
+import { type Response, type Request } from "express";
 import { CompleteMagicLinkLoginParam } from "./param";
+import { RefreshTokenGuard } from "./guard";
 
 @Controller("auth")
 export class AuthController {
@@ -67,5 +72,16 @@ export class AuthController {
         });
 
         return { user: result.user, accessToken: result.accessToken };
+    }
+
+    @Get("access-token")
+    @HttpCode(HttpStatus.OK)
+    @UseGuards(RefreshTokenGuard)
+    async getNewAccessToken(@Req() req: Request) {
+        const token = req.cookies?.refreshToken;
+        if (!token) throw new UnauthorizedException();
+
+        const result = await this.service.getNewAccessToken(token);
+        return { accessToken: result.accessToken, user: result.user };
     }
 }
