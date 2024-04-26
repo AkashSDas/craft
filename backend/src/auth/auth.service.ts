@@ -10,6 +10,7 @@ import {
     InitMagicLinkLoginDto,
     type EmailSignupDto,
     CreateOAuthSessionDto,
+    CompleteOAuthSignupDto,
 } from "./dto";
 import { sendEmail } from "src/utils/mail";
 import { createHash } from "crypto";
@@ -137,5 +138,24 @@ export class AuthService {
 
     async cancelOAuthSession(userId: Types.ObjectId) {
         await this.userRepo.deleteOne({ _id: userId });
+    }
+
+    async completeOAuthSignup(payload: CompleteOAuthSignupDto, user: User) {
+        const updatedUser = await this.userRepo.findOneAndUpdate(
+            { _id: user._id },
+            {
+                $set: { username: payload.username },
+                $unset: { oauthSignupSessionToken: undefined },
+            },
+        );
+
+        if (!updatedUser) {
+            throw new BadRequestException("User not found");
+        }
+
+        const accessToken = updatedUser.createAccessToken(this.jwtService);
+        const refreshToken = updatedUser.createRefreshToken(this.jwtService);
+
+        return { user: updatedUser, accessToken, refreshToken };
     }
 }

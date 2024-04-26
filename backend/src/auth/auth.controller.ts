@@ -7,6 +7,7 @@ import {
     HttpStatus,
     Param,
     Post,
+    Put,
     Req,
     Res,
     UnauthorizedException,
@@ -19,6 +20,7 @@ import {
     InitMagicLinkLoginDto,
     type EmailSignupDto,
     CreateOAuthSessionDto,
+    CompleteOAuthSignupDto,
 } from "./dto";
 import { type Response, type Request } from "express";
 import { CompleteMagicLinkLoginParam } from "./param";
@@ -197,5 +199,53 @@ export class AuthController {
         });
 
         return { message: "Signup cancelled" };
+    }
+
+    @Put("oauth-session")
+    @HttpCode(HttpStatus.OK)
+    @UseGuards(AccessTokenGuard)
+    async completeOauthSignup(
+        @Body() dto: CompleteOAuthSignupDto,
+        @Req() req: Request,
+        @Res({ passthrough: true }) res: Response,
+    ) {
+        const result = await this.service.completeOAuthSignup(
+            dto,
+            req.user as User,
+        );
+
+        res.cookie("refreshToken", result.refreshToken, {
+            httpOnly: true,
+            secure: true,
+            sameSite: "none",
+            maxAge: Number(
+                this.configService.get("REFRESH_TOKEN_COOKIE_EXPIRES_IN_MS"),
+            ),
+        });
+
+        return { user: result.user, accessToken: result.accessToken };
+    }
+
+    @Get("logout")
+    @UseGuards(AccessTokenGuard)
+    logout(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
+        if (req.cookies?.refreshToken) {
+            res.clearCookie("refreshToken", {
+                httpOnly: true,
+                secure: true,
+                sameSite: "none",
+                maxAge: Number(
+                    this.configService.get(
+                        "REFRESH_TOKEN_COOKIE_EXPIRES_IN_MS",
+                    ),
+                ),
+            });
+        }
+
+        if (req.logOut) {
+            req.logOut(function successfulOAuthLogout() {});
+        }
+
+        return { message: "Logged out successfully" };
     }
 }
