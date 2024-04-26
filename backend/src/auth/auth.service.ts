@@ -7,6 +7,7 @@ import { type JwtService } from "@nestjs/jwt";
 import { type UserRepository } from "src/users/user.repository";
 import { InitMagicLinkLoginDto, type EmailSignupDto } from "./dto";
 import { sendEmail } from "src/utils/mail";
+import { createHash } from "crypto";
 
 @Injectable({})
 export class AuthService {
@@ -54,5 +55,25 @@ export class AuthService {
 
         console.log(`Mail status: ${mailStatus}`);
         await user.save({ validateModifiedOnly: true });
+    }
+
+    async completeMagicLinkLogin(token: string) {
+        const unhased = createHash("sha256").update(token).digest("hex");
+        const user = await this.userRepo.findOne({
+            magicLinkToken: unhased,
+            magicLinkTokenExpiresAt: { $gt: new Date() },
+        });
+
+        if (!user) {
+            throw new BadRequestException("Invalid token");
+        }
+
+        user.magicLinkToken = undefined;
+        user.magicLinkTokenExpiresAt = undefined;
+        await user.save({ validateModifiedOnly: true });
+
+        const accessToken = user.createAccessToken(this.jwtService);
+        const refreshToken = user.createRefreshToken(this.jwtService);
+        return { user, accessToken, refreshToken };
     }
 }

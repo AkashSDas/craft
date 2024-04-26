@@ -10,6 +10,7 @@ import { dateInFuture } from "src/utils/datetime";
 import { JwtService } from "@nestjs/jwt";
 import { Types } from "mongoose";
 import { randomBytes, createHash } from "crypto";
+import { AccessTokenPayload, RefreshTokenPayload } from "src/auth/strategy";
 
 interface IUser {
     /** Public facing user document id */
@@ -101,7 +102,7 @@ export const UserSchema = SchemaFactory.createForClass(User);
 // ====================================
 
 UserSchema.methods.createAccessToken = function (jwt: JwtService): string {
-    const payload = { email: this.email };
+    const payload: AccessTokenPayload = { email: this.email };
     return jwt.sign(payload, {
         secret: process.env.ACCESS_TOKEN_SECRET,
         expiresIn: process.env.ACCESS_TOKEN_EXPIRES_IN,
@@ -109,7 +110,7 @@ UserSchema.methods.createAccessToken = function (jwt: JwtService): string {
 };
 
 UserSchema.methods.createRefreshToken = function (jwt: JwtService): string {
-    const payload = { _id: this._id, email: this.email };
+    const payload: RefreshTokenPayload = { _id: this._id, email: this.email };
     return jwt.sign(payload, {
         secret: process.env.REFRESH_TOKEN_SECRET,
         expiresIn: process.env.REFRESH_TOKEN_EXPIRES_IN,
