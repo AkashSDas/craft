@@ -14,7 +14,11 @@ import {
 } from "@nestjs/common";
 import { type AuthService } from "./auth.service";
 import { type ConfigService } from "@nestjs/config";
-import { InitMagicLinkLoginDto, type EmailSignupDto } from "./dto";
+import {
+    InitMagicLinkLoginDto,
+    type EmailSignupDto,
+    CreateOAuthSessionDto,
+} from "./dto";
 import { type Response, type Request } from "express";
 import { CompleteMagicLinkLoginParam } from "./param";
 import { RefreshTokenGuard } from "./guard";
@@ -151,5 +155,25 @@ export class AuthController {
         // isLoggedIn from useUser will become true and user will be redirected to home page
         const url = this.configService.get("OAUTH_SIGNUP_SUCCESS_REDIRECT_URL");
         return res.redirect(`${url}?token=${encodeURIComponent(token)}`);
+    }
+
+    @Post("oauth-session")
+    @HttpCode(HttpStatus.OK)
+    async createOAuthSession(
+        @Body() dto: CreateOAuthSessionDto,
+        @Res({ passthrough: true }) res: Response,
+    ) {
+        const result = await this.service.createOAuthSession(dto);
+
+        res.cookie("refreshToken", result.refreshToken, {
+            httpOnly: true,
+            secure: true,
+            sameSite: "none",
+            maxAge: Number(
+                this.configService.get("REFRESH_TOKEN_COOKIE_EXPIRES_IN_MS"),
+            ),
+        });
+
+        return { user: result.user, accessToken: result.accessToken };
     }
 }

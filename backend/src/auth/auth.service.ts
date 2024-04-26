@@ -6,7 +6,11 @@ import {
 } from "@nestjs/common";
 import { type JwtService } from "@nestjs/jwt";
 import { type UserRepository } from "src/users/user.repository";
-import { InitMagicLinkLoginDto, type EmailSignupDto } from "./dto";
+import {
+    InitMagicLinkLoginDto,
+    type EmailSignupDto,
+    CreateOAuthSessionDto,
+} from "./dto";
 import { sendEmail } from "src/utils/mail";
 import { createHash } from "crypto";
 import { User } from "src/users/schema";
@@ -108,5 +112,25 @@ export class AuthService {
         if (checkUserSignupIsComplete(user)) {
             return user.createAccessToken(this.jwtService);
         }
+    }
+
+    async createOAuthSession(dto: CreateOAuthSessionDto) {
+        const user = await this.userRepo.findOne({
+            oauthSignupSessionToken: decodeURIComponent(dto.token),
+        });
+
+        if (!user) {
+            throw new BadRequestException("Invalid token");
+        }
+
+        const accessToken = user.createAccessToken(this.jwtService);
+        const refreshToken = user.createRefreshToken(this.jwtService);
+
+        await this.userRepo.updateOne(
+            { _id: user._id },
+            { $unset: { oauthSignupSessionToken: undefined } },
+        );
+
+        return { user, accessToken, refreshToken };
     }
 }
