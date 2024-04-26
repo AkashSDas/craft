@@ -9,6 +9,7 @@ import {
     Req,
     Res,
     UnauthorizedException,
+    UseFilters,
     UseGuards,
 } from "@nestjs/common";
 import { type AuthService } from "./auth.service";
@@ -18,9 +19,13 @@ import { type Response, type Request } from "express";
 import { CompleteMagicLinkLoginParam } from "./param";
 import { RefreshTokenGuard } from "./guard";
 import { AuthGuard } from "@nestjs/passport";
-import { GOOGLE_SIGNUP_STRATEGY } from "src/utils/constants";
+import {
+    GOOGLE_LOGIN_STRATEGY,
+    GOOGLE_SIGNUP_STRATEGY,
+} from "src/utils/constants";
 import { User } from "src/users/schema";
 import { hash } from "argon2";
+import { InvalidOAuthLoginFilter } from "./filter";
 
 @Controller("auth")
 export class AuthController {
@@ -112,6 +117,39 @@ export class AuthController {
         await (req.user as User).save({ validateModifiedOnly: true });
 
         const url = process.env.OAUTH_SIGNUP_SUCCESS_REDIRECT_URL;
+        return res.redirect(`${url}?token=${encodeURIComponent(token)}`);
+    }
+
+    @Get("google-login")
+    @UseGuards(AuthGuard(GOOGLE_LOGIN_STRATEGY))
+    initializeGoogleLogin() {}
+
+    /**
+     * This will only redirect to success url because if the user is not registered
+     * then filter will handle the error and redirect to failure url
+     */
+    @Get("google-login/redirect")
+    @UseGuards(AuthGuard(GOOGLE_LOGIN_STRATEGY))
+    @UseFilters(InvalidOAuthLoginFilter)
+    async googleLoginRedirect(
+        @Req() req: Request,
+        @Res({ passthrough: true }) res: Response,
+    ) {
+        const refreshToken = this.service.oauthLogin(req.user as User);
+        if (!refreshToken) {
+            return res.redirect(
+                this.configService.get("OAUTH_LOGIN_FAILURE_REDIRECT_URL"),
+            );
+        }
+
+        const token = await hash(refreshToken);
+        (req.user as User).oauthSignupSessionToken = token;
+        await (req.user as User).save({ validateModifiedOnly: true });
+
+        // Redirecting to signup page and then we'll call useCreateOAuthSession with
+        // the token. Once the session is created if the signup was complete then
+        // isLoggedIn from useUser will become true and user will be redirected to home page
+        const url = this.configService.get("OAUTH_SIGNUP_SUCCESS_REDIRECT_URL");
         return res.redirect(`${url}?token=${encodeURIComponent(token)}`);
     }
 }

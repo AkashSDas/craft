@@ -10,6 +10,7 @@ import { InitMagicLinkLoginDto, type EmailSignupDto } from "./dto";
 import { sendEmail } from "src/utils/mail";
 import { createHash } from "crypto";
 import { User } from "src/users/schema";
+import { checkUserSignupIsComplete } from "src/utils/user";
 
 @Injectable({})
 export class AuthService {
@@ -99,6 +100,13 @@ export class AuthService {
     oauthSignup(user?: User): string | undefined {
         if (user) {
             return user.createRefreshToken(this.jwtService);
+        }
+    }
+
+    oauthLogin(user?: User): string | undefined {
+        // Conditional to consider user as signed up
+        if (checkUserSignupIsComplete(user)) {
+            return user.createAccessToken(this.jwtService);
         }
     }
 }
