@@ -1,16 +1,14 @@
 import {
     BadRequestException,
-    Inject,
     Injectable,
     InternalServerErrorException,
     UnauthorizedException,
-    forwardRef,
 } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import { UserRepository } from "src/users/user.repository";
 import {
     InitMagicLinkLoginDto,
-    type EmailSignupDto,
+    EmailSignupDto,
     CreateOAuthSessionDto,
     CompleteOAuthSignupDto,
 } from "./dto";
@@ -18,14 +16,12 @@ import { sendEmail } from "src/utils/mail";
 import { createHash } from "crypto";
 import { User } from "src/users/schema";
 import { checkUserSignupIsComplete } from "src/utils/user";
-import { type Types } from "mongoose";
+import { Types } from "mongoose";
 
 @Injectable({})
 export class AuthService {
     constructor(
-        @Inject(forwardRef(() => UserRepository))
         private userRepo: UserRepository,
-        @Inject(forwardRef(() => JwtService))
         private jwtService: JwtService,
     ) {}
 
@@ -40,6 +36,7 @@ export class AuthService {
             const refreshToken = user.createRefreshToken(this.jwtService);
             return { user, accessToken, refreshToken };
         } catch (e) {
+            console.log(e);
             if (e.message == "User already exists") {
                 throw new BadRequestException(
                     "Email or username already taken",
