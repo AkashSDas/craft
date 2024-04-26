@@ -1,6 +1,7 @@
 import {
     Body,
     Controller,
+    Delete,
     Get,
     HttpCode,
     HttpStatus,
@@ -21,7 +22,7 @@ import {
 } from "./dto";
 import { type Response, type Request } from "express";
 import { CompleteMagicLinkLoginParam } from "./param";
-import { RefreshTokenGuard } from "./guard";
+import { AccessTokenGuard, RefreshTokenGuard } from "./guard";
 import { AuthGuard } from "@nestjs/passport";
 import {
     GOOGLE_LOGIN_STRATEGY,
@@ -175,5 +176,26 @@ export class AuthController {
         });
 
         return { user: result.user, accessToken: result.accessToken };
+    }
+
+    @Delete("oauth-session")
+    @HttpCode(HttpStatus.OK)
+    @UseGuards(AccessTokenGuard)
+    async cancelOAuthSession(
+        @Req() req: Request,
+        @Res({ passthrough: true }) res: Response,
+    ) {
+        this.service.cancelOAuthSession((req.user as User)._id);
+
+        res.clearCookie("refreshToken", {
+            httpOnly: true,
+            secure: true,
+            sameSite: "none",
+            maxAge: Number(
+                this.configService.get("REFRESH_TOKEN_COOKIE_EXPIRES_IN_MS"),
+            ),
+        });
+
+        return { message: "Signup cancelled" };
     }
 }

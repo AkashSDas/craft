@@ -15,6 +15,7 @@ import { sendEmail } from "src/utils/mail";
 import { createHash } from "crypto";
 import { User } from "src/users/schema";
 import { checkUserSignupIsComplete } from "src/utils/user";
+import { type Types } from "mongoose";
 
 @Injectable({})
 export class AuthService {
@@ -132,5 +133,9 @@ export class AuthService {
         );
 
         return { user, accessToken, refreshToken };
+    }
+
+    async cancelOAuthSession(userId: Types.ObjectId) {
+        await this.userRepo.deleteOne({ _id: userId });
     }
 }
