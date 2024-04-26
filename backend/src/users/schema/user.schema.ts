@@ -8,7 +8,7 @@ import { createId } from "src/utils/ids";
 import { isEmail } from "class-validator";
 import { dateInFuture } from "src/utils/datetime";
 import { JwtService } from "@nestjs/jwt";
-import { Types } from "mongoose";
+import { Document, type Types } from "mongoose";
 import { randomBytes, createHash } from "crypto";
 import { AccessTokenPayload, RefreshTokenPayload } from "src/auth/strategy";
 

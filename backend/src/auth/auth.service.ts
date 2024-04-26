@@ -9,6 +9,7 @@ import { type UserRepository } from "src/users/user.repository";
 import { InitMagicLinkLoginDto, type EmailSignupDto } from "./dto";
 import { sendEmail } from "src/utils/mail";
 import { createHash } from "crypto";
+import { User } from "src/users/schema";
 
 @Injectable({})
 export class AuthService {
@@ -92,6 +93,12 @@ export class AuthService {
             return { user, accessToken };
         } catch (e) {
             throw new UnauthorizedException();
+        }
+    }
+
+    oauthSignup(user?: User): string | undefined {
+        if (user) {
+            return user.createRefreshToken(this.jwtService);
         }
     }
 }

@@ -17,6 +17,10 @@ import { InitMagicLinkLoginDto, type EmailSignupDto } from "./dto";
 import { type Response, type Request } from "express";
 import { CompleteMagicLinkLoginParam } from "./param";
 import { RefreshTokenGuard } from "./guard";
+import { AuthGuard } from "@nestjs/passport";
+import { GOOGLE_SIGNUP_STRATEGY } from "src/utils/constants";
+import { User } from "src/users/schema";
+import { hash } from "argon2";
 
 @Controller("auth")
 export class AuthController {
@@ -83,5 +87,31 @@ export class AuthController {
 
         const result = await this.service.getNewAccessToken(token);
         return { accessToken: result.accessToken, user: result.user };
+    }
+
+    @Get("google-signup")
+    @UseGuards(AuthGuard(GOOGLE_SIGNUP_STRATEGY))
+    initializeGoogleSignup() {}
+
+    // TODO: if user already exists then don't create an oauth session
+    @Get("google-signup/redirect")
+    @UseGuards(AuthGuard(GOOGLE_SIGNUP_STRATEGY))
+    async googleSignupRedirect(
+        @Req() req: Request,
+        @Res({ passthrough: true }) res: Response,
+    ) {
+        const refreshToken = this.service.oauthSignup(req.user as User);
+        if (!refreshToken) {
+            return res.redirect(
+                this.configService.get("OAUTH_SIGNUP_FAILURE_REDIRECT_URL"),
+            );
+        }
+
+        const token = await hash(refreshToken);
+        (req.user as User).oauthSignupSessionToken = token;
+        await (req.user as User).save({ validateModifiedOnly: true });
+
+        const url = process.env.OAUTH_SIGNUP_SUCCESS_REDIRECT_URL;
+        return res.redirect(`${url}?token=${encodeURIComponent(token)}`);
     }
 }
