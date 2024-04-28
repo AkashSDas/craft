@@ -1,7 +1,9 @@
+import { Text } from "@chakra-ui/react";
+
 export default function Home() {
     return (
         <div>
-            <h1>Craft</h1>
+            <Text>Craft</Text>
         </div>
     );
 }
