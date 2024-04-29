@@ -1,3 +1,4 @@
+import { Navbar } from "@app/components/shared/navbar";
 import { theme } from "@app/lib/chakra";
 import { queryClient } from "@app/lib/react-query";
 import { store } from "@app/store";
@@ -12,6 +13,7 @@ export default function App({ Component, pageProps }: AppProps) {
         <ChakraProvider theme={theme}>
             <QueryClientProvider client={queryClient}>
                 <ReduxProvider store={store}>
+                    <Navbar />
                     <Component {...pageProps} />
                 </ReduxProvider>
             </QueryClientProvider>

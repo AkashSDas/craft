@@ -1,4 +1,4 @@
-import { extendTheme } from "@chakra-ui/react";
+import { extendTheme, keyframes } from "@chakra-ui/react";
 import localFont from "next/font/local";
 import { Source_Serif_4, Ubuntu_Mono } from "next/font/google";
 
@@ -21,7 +21,7 @@ import { Source_Serif_4, Ubuntu_Mono } from "next/font/google";
 //     ["SemiBoldItalic", "600", "italic"],
 // ];
 
-const monaSansCondensed = localFont({
+export const monaSansCondensed = localFont({
     src: [
         {
             path: "../../public/fonts-ttf/monasans-condensed/MonaSansCondensed-Black.ttf",
@@ -193,7 +193,7 @@ export const monasans = localFont({
     fallback: ["sans-serif"],
 });
 
-const monasansExpanded = localFont({
+export const monasansExpanded = localFont({
     src: [
         {
             path: "../../public/fonts-ttf/monasans-expanded/MonaSansExpanded-Black.ttf",
@@ -279,7 +279,7 @@ const monasansExpanded = localFont({
     fallback: ["sans-serif"],
 });
 
-const sourceSerif4 = Source_Serif_4({
+export const sourceSerif4 = Source_Serif_4({
     weight: ["400", "600", "700"],
     style: ["normal", "italic"],
     fallback: ["serif"],
@@ -293,8 +293,159 @@ const ubuntuMono = Ubuntu_Mono({
     subsets: ["latin"],
 });
 
+const maxTop = "7.5px"; // on hover init
+const top = "6.5px"; // on hover end
+const down = "3.5px"; // on active
+
+const hoverEffect = keyframes`
+    0% {
+        box-shadow: 0px 0px 0px 1.5px rgba(0, 0, 0, 100);
+        transform: translateY(0px);
+    }
+    50% {
+        box-shadow: 0px 0px 0px 1.5px rgba(0, 0, 0, 100), 0px ${maxTop} 0px 0px rgba(0, 0, 0, 100);
+        transform: translateY(-4px);
+    }
+    100% {
+        box-shadow: 0px 0px 0px 1.5px rgba(0, 0, 0, 100), 0px ${top} 0px 0px rgba(0, 0, 0, 100);
+        transform: translateY(-1.25px);
+    }
+`;
+
+const activeEffect = keyframes`
+    0% {
+        box-shadow: 0px 0px 0px 1.5px rgba(0, 0, 0, 100), 0px ${top} 0px 0px rgba(0, 0, 0, 100);
+        transform: translateY(-1.25px);
+    }
+    100% {
+        box-shadow: 0px 0px 0px 1.5px rgba(0, 0, 0, 100), 0px ${down} 0px 0px rgba(0, 0, 0, 100);
+        transform: translateY(-0.75px);
+    }
+`;
+
+const leaveEffect = keyframes`
+    0% {
+        box-shadow: 0px 0px 0px 1.5px rgba(0, 0, 0, 100), 0px ${top} 0px 0px rgba(0, 0, 0, 100);
+        transform: translateY(-1.25px);
+    }
+    100% {
+        box-shadow: 0px 0px 0px 1.5px rgba(0, 0, 0, 100);
+        transform: translateY(0px);
+    }
+`;
+
+const lightColor = "white";
+const darkColor = "#080606";
+const hoverEffectLight = keyframes`
+    0% {
+        box-shadow: 0px 0px 0px 1.5px ${darkColor};
+        transform: translateY(0px);
+    }
+    50% {
+        box-shadow: 0px 0px 0px 1.5px ${darkColor}, 5px ${maxTop} 0px 0px ${lightColor};
+        transform: translateY(-4px);
+    }
+    100% {
+        box-shadow: 0px 0px 0px 1.5px ${darkColor}, 3px ${top} 0px 0px ${lightColor};
+        transform: translateY(-1.25px);
+    }
+`;
+
+const activeEffectLight = keyframes`
+    0% {
+        box-shadow: 0px 0px 0px 1.5px ${darkColor}, 3px ${top} 0px 0px ${lightColor};
+        transform: translateY(-1.25px);
+    }
+    100% {
+        box-shadow: 0px 0px 0px 1.5px ${darkColor}, 2px ${down} 0px 0px ${lightColor};
+        transform: translateY(-0.75px);
+    }
+`;
+
+const leaveEffectLight = keyframes`
+    0% {
+        box-shadow: 0px 0px 0px 1.5px ${darkColor}, 3px ${top} 0px 0px ${lightColor};
+        transform: translateY(-1.25px);
+    }
+    100% {
+        box-shadow: 0px 0px 0px 1.5px ${darkColor};
+        transform: translateY(0px);
+    }
+`;
+
 export const theme = extendTheme({
-    components: {},
+    components: {
+        Button: {
+            baseStyle: {
+                fontFamily: "body",
+                fontWeight: "500",
+                borderRadius: "4px",
+                height: "40px",
+            },
+            variants: {
+                navItem: {
+                    textTransform: "uppercase",
+                    fontSize: "14px",
+                    fontWeight: "600",
+                    letterSpacing: "0.5px",
+                    color: "white",
+                    transition:
+                        "background-color .3s ease-out, transform 0.3s cubic-bezier(.5,2.5,.7,.7)",
+                    transformOrigin: "center",
+                    _hover: {
+                        bgColor: "gray.700",
+                        transform: "scale(0.96)",
+                    },
+                    _active: {
+                        bgColor: "gray.800",
+                        transform: "scale(0.9)",
+                    },
+                },
+                nav: {
+                    textTransform: "uppercase",
+                    fontSize: "14px",
+                    fontWeight: "600",
+                    letterSpacing: "0.5px",
+                    color: "black",
+                    bgColor: "brand.500",
+                    borderBottom: "1.5px solid",
+                    borderBottomColor: "gray.900",
+                    animation: `${leaveEffectLight} 0.3s forwards`,
+                    transition:
+                        "transform .3s cubic-bezier(.5,2.5,.7,.7),box-shadow .3s cubic-bezier(.5,2.5,.7,.7),-webkit-transform .3s cubic-bezier(.5,2.5,.7,.7),-webkit-box-shadow .3s cubic-bezier(.5,2.5,.7,.7)",
+                    _hover: {
+                        filter: "brightness(0.95)",
+                        bgColor: "brand.500",
+                        animation: `${hoverEffectLight} 0.3s forwards`,
+                    },
+                    _active: {
+                        filter: "brightness(0.9)",
+                        bgColor: "brand.500",
+                        animation: `${activeEffectLight} 0.3s forwards`,
+                    },
+                },
+                solid: {
+                    fontSize: "14px",
+                    fontWeight: "600",
+                    bgColor: "brand.500",
+                    animation: `${leaveEffect} 0.3s forwards`,
+                    transition:
+                        "transform .3s cubic-bezier(.5,2.5,.7,.7),box-shadow .3s cubic-bezier(.5,2.5,.7,.7),-webkit-transform .3s cubic-bezier(.5,2.5,.7,.7),-webkit-box-shadow .3s cubic-bezier(.5,2.5,.7,.7)",
+                    _hover: {
+                        filter: "brightness(0.95)",
+                        bgColor: "brand.500",
+                        animation: `${hoverEffect} 0.3s forwards`,
+                    },
+                    _active: {
+                        bgColor: "brand.500",
+                        filter: "brightness(0.9)",
+                        animation: `${activeEffect} 0.3s forwards`,
+                    },
+                },
+            },
+        },
+    },
+    keyframes: {},
     fonts: {
         heading: monasans.style.fontFamily,
         body: monasans.style.fontFamily,
@@ -330,7 +481,7 @@ export const theme = extendTheme({
             600: "#3c3837",
             700: "#353130",
             800: "#2b2827",
-            900: "#191514",
+            900: "#080606",
         },
         green: {
             50: "#eefbef",
