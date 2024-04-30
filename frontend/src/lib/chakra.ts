@@ -2,6 +2,10 @@ import { extendTheme, keyframes } from "@chakra-ui/react";
 import localFont from "next/font/local";
 import { Source_Serif_4, Ubuntu_Mono } from "next/font/google";
 
+// ==================================================
+// TYPOGRAPHY
+// ==================================================
+
 // const fontTypes = [
 //     ["Black", "900", "normal"],
 //     ["BlackItalic", "900", "italic"],
@@ -293,11 +297,15 @@ const ubuntuMono = Ubuntu_Mono({
     subsets: ["latin"],
 });
 
+// ==================================================
+// BUTTON ANIMATION
+// ==================================================
+
 const maxTop = "7.5px"; // on hover init
 const top = "6.5px"; // on hover end
 const down = "3.5px"; // on active
 
-const hoverEffect = keyframes`
+const btnHoverEffect = keyframes`
     0% {
         box-shadow: 0px 0px 0px 1.5px rgba(0, 0, 0, 100);
         transform: translateY(0px);
@@ -312,7 +320,7 @@ const hoverEffect = keyframes`
     }
 `;
 
-const activeEffect = keyframes`
+const btnActiveEffect = keyframes`
     0% {
         box-shadow: 0px 0px 0px 1.5px rgba(0, 0, 0, 100), 0px ${top} 0px 0px rgba(0, 0, 0, 100);
         transform: translateY(-1.25px);
@@ -323,7 +331,7 @@ const activeEffect = keyframes`
     }
 `;
 
-const leaveEffect = keyframes`
+const btnLeaveEffect = keyframes`
     0% {
         box-shadow: 0px 0px 0px 1.5px rgba(0, 0, 0, 100), 0px ${top} 0px 0px rgba(0, 0, 0, 100);
         transform: translateY(-1.25px);
@@ -334,61 +342,66 @@ const leaveEffect = keyframes`
     }
 `;
 
-const lightColor = "white";
-const darkColor = "#080606";
-const hoverEffectLight = keyframes`
+const navPrimaryBtnLightColor = "white";
+const navPrimaryBtnDarkColor = "#080606";
+
+const navPrimaryBtnHoverEffectLight = keyframes`
     0% {
-        box-shadow: 0px 0px 0px 1.5px ${darkColor};
+        box-shadow: 0px 0px 0px 1.5px ${navPrimaryBtnDarkColor};
         transform: translateY(0px);
     }
     50% {
-        box-shadow: 0px 0px 0px 1.5px ${darkColor}, 5px ${maxTop} 0px 0px ${lightColor};
+        box-shadow: 0px 0px 0px 1.5px ${navPrimaryBtnDarkColor}, 5px ${maxTop} 0px 0px ${navPrimaryBtnLightColor};
         transform: translateY(-4px);
     }
     100% {
-        box-shadow: 0px 0px 0px 1.5px ${darkColor}, 3px ${top} 0px 0px ${lightColor};
+        box-shadow: 0px 0px 0px 1.5px ${navPrimaryBtnDarkColor}, 3px ${top} 0px 0px ${navPrimaryBtnLightColor};
         transform: translateY(-1.25px);
     }
 `;
 
-const activeEffectLight = keyframes`
+const navPrimaryBtnActiveEffectLight = keyframes`
     0% {
-        box-shadow: 0px 0px 0px 1.5px ${darkColor}, 3px ${top} 0px 0px ${lightColor};
+        box-shadow: 0px 0px 0px 1.5px ${navPrimaryBtnDarkColor}, 3px ${top} 0px 0px ${navPrimaryBtnLightColor};
         transform: translateY(-1.25px);
     }
     100% {
-        box-shadow: 0px 0px 0px 1.5px ${darkColor}, 2px ${down} 0px 0px ${lightColor};
+        box-shadow: 0px 0px 0px 1.5px ${navPrimaryBtnDarkColor}, 2px ${down} 0px 0px ${navPrimaryBtnLightColor};
         transform: translateY(-0.75px);
     }
 `;
 
-const leaveEffectLight = keyframes`
+const navPrimaryBtnLeaveEffectLight = keyframes`
     0% {
-        box-shadow: 0px 0px 0px 1.5px ${darkColor}, 3px ${top} 0px 0px ${lightColor};
+        box-shadow: 0px 0px 0px 1.5px ${navPrimaryBtnDarkColor}, 3px ${top} 0px 0px ${navPrimaryBtnLightColor};
         transform: translateY(-1.25px);
     }
     100% {
-        box-shadow: 0px 0px 0px 1.5px ${darkColor};
+        box-shadow: 0px 0px 0px 1.5px ${navPrimaryBtnDarkColor};
         transform: translateY(0px);
     }
 `;
+
+// ==================================================
+// CHAKRA THEME
+// ==================================================
 
 export const theme = extendTheme({
     components: {
         Button: {
             baseStyle: {
                 fontFamily: "body",
-                fontWeight: "500",
+                fontWeight: "600",
                 borderRadius: "4px",
                 height: "40px",
             },
             variants: {
                 navItem: {
-                    textTransform: "uppercase",
+                    color: "white",
                     fontSize: "14px",
                     fontWeight: "600",
+                    textTransform: "uppercase",
                     letterSpacing: "0.5px",
-                    color: "white",
                     transition:
                         "background-color .3s ease-out, transform 0.3s cubic-bezier(.5,2.5,.7,.7)",
                     transformOrigin: "center",
@@ -401,45 +414,45 @@ export const theme = extendTheme({
                         transform: "scale(0.9)",
                     },
                 },
-                nav: {
-                    textTransform: "uppercase",
-                    fontSize: "14px",
-                    fontWeight: "600",
-                    letterSpacing: "0.5px",
+                navPrimary: {
                     color: "black",
                     bgColor: "brand.500",
                     borderBottom: "1.5px solid",
                     borderBottomColor: "gray.900",
-                    animation: `${leaveEffectLight} 0.3s forwards`,
+                    fontSize: "14px",
+                    fontWeight: "600",
+                    textTransform: "uppercase",
+                    letterSpacing: "0.5px",
+                    animation: `${navPrimaryBtnLeaveEffectLight} 0.3s forwards`,
                     transition:
                         "transform .3s cubic-bezier(.5,2.5,.7,.7),box-shadow .3s cubic-bezier(.5,2.5,.7,.7),-webkit-transform .3s cubic-bezier(.5,2.5,.7,.7),-webkit-box-shadow .3s cubic-bezier(.5,2.5,.7,.7)",
                     _hover: {
                         filter: "brightness(0.95)",
                         bgColor: "brand.500",
-                        animation: `${hoverEffectLight} 0.3s forwards`,
+                        animation: `${navPrimaryBtnHoverEffectLight} 0.3s forwards`,
                     },
                     _active: {
                         filter: "brightness(0.9)",
                         bgColor: "brand.500",
-                        animation: `${activeEffectLight} 0.3s forwards`,
+                        animation: `${navPrimaryBtnActiveEffectLight} 0.3s forwards`,
                     },
                 },
                 solid: {
                     fontSize: "14px",
                     fontWeight: "600",
                     bgColor: "brand.500",
-                    animation: `${leaveEffect} 0.3s forwards`,
+                    animation: `${btnLeaveEffect} 0.3s forwards`,
                     transition:
                         "transform .3s cubic-bezier(.5,2.5,.7,.7),box-shadow .3s cubic-bezier(.5,2.5,.7,.7),-webkit-transform .3s cubic-bezier(.5,2.5,.7,.7),-webkit-box-shadow .3s cubic-bezier(.5,2.5,.7,.7)",
                     _hover: {
                         filter: "brightness(0.95)",
                         bgColor: "brand.500",
-                        animation: `${hoverEffect} 0.3s forwards`,
+                        animation: `${btnHoverEffect} 0.3s forwards`,
                     },
                     _active: {
                         bgColor: "brand.500",
                         filter: "brightness(0.9)",
-                        animation: `${activeEffect} 0.3s forwards`,
+                        animation: `${btnActiveEffect} 0.3s forwards`,
                     },
                 },
             },

@@ -1,7 +1,6 @@
-import { monaSansCondensed, monasansExpanded } from "@app/lib/chakra";
-import { Box, Button, HStack, Text } from "@chakra-ui/react";
-import { Logo } from "../logo";
+import { Button, HStack } from "@chakra-ui/react";
 import Link from "next/link";
+import { Logo } from "../logo";
 
 export function Navbar() {
     return (
@@ -22,7 +21,7 @@ export function Navbar() {
                     Login
                 </Button>
 
-                <Button as={Link} href="/auth/signup" variant="nav">
+                <Button as={Link} href="/auth/signup" variant="navPrimary">
                     Get Started
                 </Button>
             </HStack>
