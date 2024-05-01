@@ -1,4 +1,4 @@
-import { extendTheme, keyframes } from "@chakra-ui/react";
+import { StyleFunctionProps, extendTheme, keyframes } from "@chakra-ui/react";
 import localFont from "next/font/local";
 import { Source_Serif_4, Ubuntu_Mono } from "next/font/google";
 
@@ -436,6 +436,30 @@ export const theme = extendTheme({
                         bgColor: "brand.500",
                         animation: `${navPrimaryBtnActiveEffectLight} 0.3s forwards`,
                     },
+                    "@media screen and (max-width: 30em)": {
+                        animation: `${navPrimaryBtnHoverEffectLight} 0.3s forwards`,
+                    },
+                },
+                paleSolid: {
+                    fontSize: "14px",
+                    fontWeight: "600",
+                    bgColor: "white",
+                    animation: `${btnLeaveEffect} 0.3s forwards`,
+                    transition:
+                        "transform .3s cubic-bezier(.5,2.5,.7,.7),box-shadow .3s cubic-bezier(.5,2.5,.7,.7),-webkit-transform .3s cubic-bezier(.5,2.5,.7,.7),-webkit-box-shadow .3s cubic-bezier(.5,2.5,.7,.7)",
+                    _hover: {
+                        filter: "brightness(0.95)",
+                        bgColor: "white",
+                        animation: `${btnHoverEffect} 0.3s forwards`,
+                    },
+                    _active: {
+                        filter: "brightness(0.9)",
+                        bgColor: "white",
+                        animation: `${btnActiveEffect} 0.3s forwards`,
+                    },
+                    "@media screen and (max-width: 30em)": {
+                        animation: `${btnHoverEffect} 0.3s forwards`,
+                    },
                 },
                 solid: {
                     fontSize: "14px",
@@ -453,6 +477,9 @@ export const theme = extendTheme({
                         bgColor: "brand.500",
                         filter: "brightness(0.9)",
                         animation: `${btnActiveEffect} 0.3s forwards`,
+                    },
+                    "@media screen and (max-width: 30em)": {
+                        animation: `${btnHoverEffect} 0.3s forwards`,
                     },
                 },
             },
