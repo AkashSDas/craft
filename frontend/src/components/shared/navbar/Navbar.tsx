@@ -9,6 +9,7 @@ import {
     DrawerOverlay,
     HStack,
     Show,
+    Spinner,
     Text,
     VStack,
     useDisclosure,
@@ -161,6 +162,7 @@ export function Navbar() {
                                         as={Link}
                                         href="/auth/signup"
                                         onClick={onClose}
+                                        fontSize="1rem"
                                     >
                                         Signup
                                     </Button>
