@@ -111,7 +111,11 @@ export function EmailSignupForm() {
                 variant="solid"
                 type="submit"
                 disabled={form.formState.isSubmitting}
-                sx={{ w: "100%", h: "48px" }}
+                sx={{
+                    w: "100%",
+                    h: "48px",
+                    fontSize: { base: "14px", sm: "16px" },
+                }}
             >
                 {form.formState.isSubmitting ? (
                     <Spinner />

@@ -16,11 +16,12 @@ export function SignupSection(): React.JSX.Element {
         <VStack
             maxWidth="480px"
             w="100%"
-            bgColor="gray.50"
+            bgColor={{ base: "transparent", sm: "gray.50" }}
             borderRadius="4px"
-            p="2rem"
-            border="1px solid"
-            borderColor="gray.300"
+            px={{ base: "1rem", sm: "2rem" }}
+            py={{ base: "1rem", sm: "2rem" }}
+            border={{ base: "none", sm: "1px solid" }}
+            borderColor={{ base: "transparent", sm: "gray.300" }}
             alignItems="start"
             gap="2rem"
         >
@@ -44,14 +45,19 @@ export function SignupSection(): React.JSX.Element {
                 sx={{
                     h: "48px",
                     w: "100%",
-                    fontSize: "1rem",
+                    fontSize: { base: "14px", sm: "16px" },
                     fontWeight: "semibold",
                 }}
             >
                 Signup with Google
             </Button>
 
-            <Text fontSize="14px" color="gray.600" textAlign="center" w="100%">
+            <Text
+                fontSize={{ base: "13px", sm: "14px" }}
+                color="gray.600"
+                textAlign="center"
+                w="100%"
+            >
                 <Text as="span" {...fontStyles["expandedBoldItalic"]}>
                     OR
                 </Text>{" "}
@@ -60,7 +66,12 @@ export function SignupSection(): React.JSX.Element {
 
             <EmailSignupForm />
 
-            <Text fontSize="14px" color="gray.600" textAlign="center" w="100%">
+            <Text
+                fontSize={{ base: "13px", sm: "14px" }}
+                color="gray.600"
+                textAlign="center"
+                w="100%"
+            >
                 Already have an account?{" "}
                 <Text
                     as={Link}
@@ -78,7 +89,7 @@ export function SignupSection(): React.JSX.Element {
 
 function SignupHeading() {
     return (
-        <Heading as="h1" fontSize="4rem">
+        <Heading as="h1" fontSize={{ base: "48px", sm: "4rem" }}>
             <Text as="span" {...fontStyles["expandedBoldItalic"]}>
                 S
             </Text>
@@ -103,7 +114,7 @@ function SignupHeading() {
 
 function SignupMessage() {
     return (
-        <Text fontSize="24px">
+        <Text fontSize={{ base: "20px", sm: "24px" }}>
             <Text as="span" {...fontStyles["bold"]}>
                 Home{" "}
             </Text>
