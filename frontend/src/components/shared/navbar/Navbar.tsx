@@ -18,6 +18,7 @@ import Link from "next/link";
 import { Logo } from "../logo";
 import Image from "next/image";
 import { useRef } from "react";
+import { useLogout, useUser } from "@app/hooks/auth";
 
 function ForwardIcon(): React.JSX.Element {
     return (
@@ -33,6 +34,8 @@ function ForwardIcon(): React.JSX.Element {
 export function Navbar() {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const menuBtnRef = useRef<HTMLButtonElement>(null);
+    const { isPending, logoutUser } = useLogout();
+    const { isLoggedIn } = useUser();
 
     return (
         <HStack
@@ -52,13 +55,34 @@ export function Navbar() {
                 <Show above="sm">
                     <Button variant="navItem">Write</Button>
 
-                    <Button as={Link} href="/auth/login" variant="navItem">
-                        Login
-                    </Button>
+                    {isLoggedIn ? (
+                        <Button
+                            variant="navItem"
+                            onClick={logoutUser}
+                            disabled={isPending}
+                            isDisabled={isPending}
+                        >
+                            {isPending ? <Spinner size="xs" /> : "Logout"}
+                        </Button>
+                    ) : (
+                        <>
+                            <Button
+                                as={Link}
+                                href="/auth/login"
+                                variant="navItem"
+                            >
+                                Login
+                            </Button>
 
-                    <Button as={Link} href="/auth/signup" variant="navPrimary">
-                        Get Started
-                    </Button>
+                            <Button
+                                as={Link}
+                                href="/auth/signup"
+                                variant="navPrimary"
+                            >
+                                Get Started
+                            </Button>
+                        </>
+                    )}
                 </Show>
 
                 {/* Mobile menu */}
@@ -131,41 +155,63 @@ export function Navbar() {
 
                                     <Divider />
 
-                                    <HStack
-                                        w="100%"
-                                        px="8px"
-                                        py="12px"
-                                        justifyContent="space-between"
-                                        borderRadius="4px"
-                                        _hover={{ bgColor: "gray.100" }}
-                                        _active={{ bgColor: "gray.200" }}
-                                        as={Link}
-                                        href="/auth/login"
-                                        onClick={onClose}
-                                    >
-                                        <Text
-                                            fontWeight="600"
-                                            fontSize="24px"
-                                            color="gray.700"
+                                    {isLoggedIn ? (
+                                        <Button
+                                            variant="paleSolid"
+                                            onClick={logoutUser}
+                                            disabled={isPending}
+                                            isDisabled={isPending}
+                                            fontSize="1rem"
+                                            w="100%"
+                                            mt="1rem"
                                         >
-                                            Login
-                                        </Text>
-                                        <ForwardIcon />
-                                    </HStack>
+                                            {isPending ? (
+                                                <Spinner size="xs" />
+                                            ) : (
+                                                "Logout"
+                                            )}
+                                        </Button>
+                                    ) : (
+                                        <>
+                                            <HStack
+                                                w="100%"
+                                                px="8px"
+                                                py="12px"
+                                                justifyContent="space-between"
+                                                borderRadius="4px"
+                                                _hover={{ bgColor: "gray.100" }}
+                                                _active={{
+                                                    bgColor: "gray.200",
+                                                }}
+                                                as={Link}
+                                                href="/auth/login"
+                                                onClick={onClose}
+                                            >
+                                                <Text
+                                                    fontWeight="600"
+                                                    fontSize="24px"
+                                                    color="gray.700"
+                                                >
+                                                    Login
+                                                </Text>
+                                                <ForwardIcon />
+                                            </HStack>
 
-                                    <Divider />
+                                            <Divider />
 
-                                    <Button
-                                        variant="solid"
-                                        w="100%"
-                                        mt="1rem"
-                                        as={Link}
-                                        href="/auth/signup"
-                                        onClick={onClose}
-                                        fontSize="1rem"
-                                    >
-                                        Signup
-                                    </Button>
+                                            <Button
+                                                variant="solid"
+                                                w="100%"
+                                                mt="1rem"
+                                                as={Link}
+                                                href="/auth/signup"
+                                                onClick={onClose}
+                                                fontSize="1rem"
+                                            >
+                                                Signup
+                                            </Button>
+                                        </>
+                                    )}
                                 </VStack>
                             </DrawerBody>
                         </DrawerContent>
