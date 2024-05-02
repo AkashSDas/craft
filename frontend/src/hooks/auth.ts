@@ -1,5 +1,9 @@
 import { queryClient } from "@app/lib/react-query";
-import { createOAuthSession, getNewAccessToken } from "@app/services/auth";
+import {
+    createOAuthSession,
+    getNewAccessToken,
+    magicLinkLogin,
+} from "@app/services/auth";
 import { useToast } from "@chakra-ui/react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/router";
@@ -111,6 +115,64 @@ export function useCreateOAuthSession() {
             }
         },
         [router.query?.token]
+    );
+
+    return { isPending: mutation.isPending, isError: mutation.isError };
+}
+
+export function useMagicLinkLogin() {
+    const router = useRouter();
+    const toast = useToast();
+    const token = router?.query?.["magic-token"];
+
+    const mutation = useMutation({
+        mutationFn: () => {
+            if (!token) {
+                throw new Error("Magic link token is missing");
+            }
+            return magicLinkLogin(token as string);
+        },
+        onSuccess: async (data, _variables, _context) => {
+            if (data.success) {
+                queryClient.setQueryData(["user"], { user: data.user });
+                localStorage.setItem("accessToken", data.accessToken!);
+
+                await router.push("/");
+                toast({
+                    title: "Success",
+                    description: data.message,
+                    status: "success",
+                    duration: 5000,
+                    isClosable: true,
+                });
+            } else {
+                toast({
+                    title: "Error",
+                    description: data.message,
+                    status: "error",
+                    duration: 5000,
+                    isClosable: true,
+                });
+            }
+        },
+        onError(error) {
+            toast({
+                title: "Error",
+                description: error.message,
+                status: "error",
+                duration: 5000,
+                isClosable: true,
+            });
+        },
+    });
+
+    useEffect(
+        function loginOnInit() {
+            if (token) {
+                mutation.mutateAsync();
+            }
+        },
+        [token]
     );
 
     return { isPending: mutation.isPending, isError: mutation.isError };
