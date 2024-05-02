@@ -2,12 +2,13 @@ import { queryClient } from "@app/lib/react-query";
 import {
     createOAuthSession,
     getNewAccessToken,
+    logout,
     magicLinkLogin,
 } from "@app/services/auth";
 import { useToast } from "@chakra-ui/react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/router";
-import { useEffect, useMemo } from "react";
+import { useCallback, useEffect, useMemo } from "react";
 
 /**
  * Get currently logged in user's information and update access token
@@ -27,7 +28,9 @@ export function useUser() {
         },
         retry: false,
         refetchOnWindowFocus: false,
-        refetchInterval: 4 * 30 * 1000, // Refresh every 4mins (access token expires in 5mins)
+        refetchInterval: 4.5 * 60 * 1000, // Refresh every 4.5 (access token expires in 5mins)
+        refetchOnReconnect: true,
+        staleTime: 4.5 * 60 * 1000, // Invalidate after 5mins
         retryDelay(failureCount, error) {
             if (error.message == "Network Error") {
                 return 0;
@@ -43,6 +46,7 @@ export function useUser() {
      */
     const isSignupCompleted = useMemo(
         function checkSignupStatus() {
+            console.log({ data });
             return data?.user?.username && data?.user?.email;
         },
         [data?.user]
@@ -176,4 +180,37 @@ export function useMagicLinkLogin() {
     );
 
     return { isPending: mutation.isPending, isError: mutation.isError };
+}
+
+export function useLogout() {
+    const toast = useToast();
+    const mutation = useMutation({
+        mutationFn: logout,
+        async onMutate() {
+            const prevUser = queryClient.getQueryData(["user"]);
+            queryClient.setQueryData(["user"], { user: null });
+
+            toast({
+                title: "Logged out",
+                description: "You have been logged out",
+                status: "success",
+                duration: 3000,
+                isClosable: true,
+            });
+
+            return { previousData: prevUser };
+        },
+        onSuccess(data, variables, context) {
+            localStorage.removeItem("accessToken");
+        },
+        onError: (_, __, context) => {
+            queryClient.setQueryData(["user"], context?.previousData);
+        },
+    });
+
+    const logoutUser = useCallback(async function logoutUser() {
+        return mutation.mutateAsync();
+    }, []);
+
+    return { logoutUser, isPending: mutation.isPending };
 }

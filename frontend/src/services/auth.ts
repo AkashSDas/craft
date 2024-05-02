@@ -186,7 +186,7 @@ export async function emailLogin(payload: EmailLoginInputs) {
 
     var response = await fetchFromAPI<SuccessResponse | ErrorResponse>(
         endpoints.emailLogin,
-        { method: "POST", data: payload }
+        { method: "POST", data: payload, timeout: 30 * 1000 } // 30 seconds
     );
 
     if (response.status === 200) {
