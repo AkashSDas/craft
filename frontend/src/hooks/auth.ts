@@ -3,7 +3,7 @@ import { createOAuthSession, getNewAccessToken } from "@app/services/auth";
 import { useToast } from "@chakra-ui/react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/router";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 
 /**
  * Get currently logged in user's information and update access token
@@ -33,7 +33,19 @@ export function useUser() {
         },
     });
 
+    /**
+     * This boolean value tell whether a user has completed the signup process
+     * or has partially completed it (incase of OAuth signup)
+     */
+    const isSignupCompleted = useMemo(
+        function checkSignupStatus() {
+            return data?.user?.username && data?.user?.email;
+        },
+        [data?.user]
+    );
+
     return {
+        isSignupCompleted,
         isLoggedIn: !!data?.user,
         user: data?.user,
         status,
