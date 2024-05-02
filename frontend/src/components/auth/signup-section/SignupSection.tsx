@@ -1,8 +1,11 @@
 import { fontStyles } from "@app/utils/fonts";
-import { Button, Heading, Text, VStack } from "@chakra-ui/react";
+import { Button, Heading, Show, Text, VStack } from "@chakra-ui/react";
 import Image from "next/image";
 import Link from "next/link";
 import { EmailSignupForm } from "../email-signup-form/EmailSignupForm";
+import { useUser } from "@app/hooks/auth";
+import { CancelOAuthSignup } from "../cancel-oauth-signup/CancelOAuthSignup";
+import { CompleteOAuthSignupForm } from "../complete-oauth-signup-form/CompleteOAuthSignupForm";
 
 function openSignupWindow(): void {
     window.open(
@@ -12,6 +15,8 @@ function openSignupWindow(): void {
 }
 
 export function SignupSection(): React.JSX.Element {
+    const { isLoggedIn } = useUser();
+
     return (
         <VStack
             maxWidth="480px"
@@ -27,44 +32,49 @@ export function SignupSection(): React.JSX.Element {
         >
             <VStack gap="0.5rem" w="100%" alignItems="start">
                 <SignupHeading />
-                <SignupMessage />
+                {!isLoggedIn ? <SignupMessage /> : null}
+                <CancelOAuthSignup />
             </VStack>
 
-            <Button
-                onClick={openSignupWindow}
-                variant="paleSolid"
-                aria-label="Signup with Google"
-                leftIcon={
-                    <Image
-                        src="/icons/google.png"
-                        width={20}
-                        height={20}
-                        alt="Google signup button"
-                    />
-                }
-                sx={{
-                    h: "48px",
-                    w: "100%",
-                    fontSize: { base: "14px", sm: "16px" },
-                    fontWeight: "semibold",
-                }}
-            >
-                Signup with Google
-            </Button>
+            {!isLoggedIn ? (
+                <Button
+                    onClick={openSignupWindow}
+                    variant="paleSolid"
+                    aria-label="Signup with Google"
+                    leftIcon={
+                        <Image
+                            src="/icons/google.png"
+                            width={20}
+                            height={20}
+                            alt="Google signup button"
+                        />
+                    }
+                    sx={{
+                        h: "48px",
+                        w: "100%",
+                        fontSize: { base: "14px", sm: "16px" },
+                        fontWeight: "semibold",
+                    }}
+                >
+                    Signup with Google
+                </Button>
+            ) : null}
 
-            <Text
-                fontSize={{ base: "13px", sm: "14px" }}
-                color="gray.600"
-                textAlign="center"
-                w="100%"
-            >
-                <Text as="span" {...fontStyles["expandedBoldItalic"]}>
-                    OR
-                </Text>{" "}
-                create an account with email
-            </Text>
+            {!isLoggedIn ? (
+                <Text
+                    fontSize={{ base: "13px", sm: "14px" }}
+                    color="gray.600"
+                    textAlign="center"
+                    w="100%"
+                >
+                    <Text as="span" {...fontStyles["expandedBoldItalic"]}>
+                        OR
+                    </Text>{" "}
+                    create an account with email
+                </Text>
+            ) : null}
 
-            <EmailSignupForm />
+            {!isLoggedIn ? <EmailSignupForm /> : <CompleteOAuthSignupForm />}
 
             <Text
                 fontSize={{ base: "13px", sm: "14px" }}

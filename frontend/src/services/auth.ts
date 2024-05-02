@@ -1,4 +1,5 @@
-import { EmailSignupInputs } from "@app/components/auth/email-signup-form";
+import { type CompleteOAuthInputs } from "@app/components/auth/complete-oauth-signup-form/CompleteOAuthSignupForm";
+import { type EmailSignupInputs } from "@app/components/auth/email-signup-form";
 import { endpoints, fetchFromAPI } from "@app/lib/api";
 import { type User } from "@app/types/user";
 
@@ -93,16 +94,14 @@ export async function createOAuthSession(token: string) {
  * Complete the oauth signup process. After creating a session with Google, user has
  * to fill in the missing details like username and submit to complete the signup process
  */
-export async function completeOAuthSignup(payload: {
-    email: string;
-    username: string;
-}) {
+export async function completeOAuthSignup(payload: CompleteOAuthInputs) {
     type SuccessResponse = { user: User; accessToken: string };
     type ErrorResponse = { message: string };
 
     const response = await fetchFromAPI<SuccessResponse | ErrorResponse>(
         endpoints.completeOAuthSignup,
-        { method: "PUT", data: payload }
+        { method: "PUT", data: payload },
+        true
     );
     const { data, status } = response;
 
@@ -133,7 +132,8 @@ export async function cancelOAuthSignup() {
 
     var response = await fetchFromAPI<SuccessResponse | ErrorResponse>(
         endpoints.completeOAuthSignup,
-        { method: "DELETE" }
+        { method: "DELETE" },
+        true
     );
 
     if (response.status === 200) {

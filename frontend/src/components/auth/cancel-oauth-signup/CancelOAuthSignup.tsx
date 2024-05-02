@@ -1,7 +1,7 @@
 import { useUser } from "@app/hooks/auth";
 import { queryClient } from "@app/lib/react-query";
 import { cancelOAuthSignup } from "@app/services/auth";
-import { Button, Text, useToast } from "@chakra-ui/react";
+import { Button, Spinner, Text, useToast } from "@chakra-ui/react";
 import { useMutation } from "@tanstack/react-query";
 
 export function CancelOAuthSignup(): React.JSX.Element | null {
@@ -50,8 +50,11 @@ export function CancelOAuthSignup(): React.JSX.Element | null {
                     variant="paleSolid"
                     ml="0.5rem"
                     fontSize="14px"
+                    disabled={mutation.isPending}
+                    isDisabled={mutation.isPending}
+                    onClick={cancel}
                 >
-                    Start over
+                    {mutation.isPending ? <Spinner size="xs" /> : "Cancel"}
                 </Button>
             </Text>
         );
