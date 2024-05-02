@@ -16,16 +16,29 @@ type ApiResponse<T> = {
 
 export async function fetchFromAPI<T>(
     url: string,
-    opts?: AxiosRequestConfig
+    opts?: AxiosRequestConfig,
+    useAuth = false
 ): Promise<ApiResponse<T>> {
     try {
-        const response = await axiosInstance<T>(url, opts);
+        const res = await axiosInstance<T>(url, {
+            ...opts,
+            headers: {
+                ...opts?.headers,
+                ...(useAuth
+                    ? {
+                          Authorization: `Bearer ${localStorage.getItem(
+                              "accessToken"
+                          )}`,
+                      }
+                    : {}),
+            },
+        });
 
         return {
-            status: response.status,
-            data: response.data,
+            status: res.status,
+            data: res.data,
             error: null,
-            success: response.status < 300,
+            success: res.status < 300,
         };
     } catch (e) {
         if (e instanceof AxiosError) {
@@ -38,7 +51,7 @@ export async function fetchFromAPI<T>(
                 };
             }
 
-            if (e.message === "Network Error") {
+            if (e.message == "Network Error") {
                 return {
                     status: 500,
                     data: null,
