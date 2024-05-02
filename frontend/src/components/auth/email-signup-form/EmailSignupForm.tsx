@@ -86,10 +86,11 @@ export function EmailSignupForm() {
             <FormControl
                 isInvalid={form.formState.errors.username ? true : false}
                 mb="0.5rem"
+                isRequired
             >
                 <FormLabel fontSize="14px">Username</FormLabel>
                 <Input variant="outline" {...form.register("username")} />
-                <FormErrorMessage>
+                <FormErrorMessage variant="solid">
                     {form.formState.errors.username?.message}
                 </FormErrorMessage>
             </FormControl>
@@ -97,6 +98,7 @@ export function EmailSignupForm() {
             <FormControl
                 isInvalid={form.formState.errors.email ? true : false}
                 mb="0.5rem"
+                isRequired
             >
                 <FormLabel fontSize="14px">Email</FormLabel>
                 <Input variant="outline" {...form.register("email")} />

@@ -395,10 +395,6 @@ export const theme = extendTheme({
                         height: "48px",
                         border: "1.5px solid",
                         borderColor: "gray.300",
-                        _focus: {
-                            borderColor: "brand.500",
-                            boxShadow: "0 0 0 1px #fc8d50",
-                        },
                     },
                 },
             },
