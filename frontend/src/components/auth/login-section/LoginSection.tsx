@@ -4,7 +4,6 @@ import { fontStyles } from "@app/utils/fonts";
 import {
     Button,
     Heading,
-    Link,
     VStack,
     useToast,
     Text,
@@ -22,6 +21,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { object, string } from "zod";
 import Image from "next/image";
+import Link from "next/link";
 
 function openLoginWindow(): void {
     window.open(
