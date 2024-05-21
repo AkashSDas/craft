@@ -9,6 +9,9 @@ export class ArticleRepository {
 
     /** Initialize an article by an author. */
     async initArticle(authorId: Types.ObjectId) {
-        return await this.model.create({ authorIds: [authorId] });
+        return await this.model.create({
+            authorIds: [authorId],
+            lastUpdatedAt: new Date(),
+        });
     }
 }
