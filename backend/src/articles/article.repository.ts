@@ -14,4 +14,11 @@ export class ArticleRepository {
             lastUpdatedAt: new Date(),
         });
     }
+
+    async checkArticleExists(authorId: Types.ObjectId, articleId: string) {
+        return await this.model.findOne(
+            { articleId, authorIds: authorId },
+            { authorIds: 1 },
+        );
+    }
 }

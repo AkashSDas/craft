@@ -9,4 +9,8 @@ export class ArticleService {
     async createNewArticle(authorId: Types.ObjectId) {
         return await this.repo.initArticle(authorId);
     }
+
+    async checkOwnership(authorId: Types.ObjectId, articleId: string) {
+        return await this.repo.checkArticleExists(authorId, articleId);
+    }
 }
