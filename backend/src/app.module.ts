@@ -4,6 +4,7 @@ import { MongooseModule } from "@nestjs/mongoose";
 import { AuthModule } from "./auth/auth.module";
 import { UserModule } from "./users/user.module";
 import { ArticleModule } from "./articles/article.module";
+import { CloudinaryProvider } from "./utils/cloudinary";
 
 @Module({
     imports: [
@@ -13,5 +14,6 @@ import { ArticleModule } from "./articles/article.module";
         UserModule,
         ArticleModule,
     ],
+    providers: [CloudinaryProvider],
 })
 export class AppModule {}
