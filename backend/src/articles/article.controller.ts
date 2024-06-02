@@ -1,8 +1,10 @@
 import {
     Controller,
     ForbiddenException,
+    Get,
     HttpCode,
     HttpStatus,
+    NotFoundException,
     Post,
     Put,
     Req,
@@ -22,6 +24,16 @@ export class ArticleController {
     async createNewArticle(@Req() req: IRequest) {
         const article = await this.serv.createNewArticle(req.user._id);
         return { article, message: "Article created successfully" };
+    }
+
+    @Get(":articleId")
+    @HttpCode(HttpStatus.OK)
+    async getArticle(@Req() req: IRequest) {
+        const article = await this.serv.getArticle(req.params.articleId);
+        if (!article) {
+            throw new NotFoundException("Article not found");
+        }
+        return { article };
     }
 
     @Put(":articleId/content")

@@ -13,4 +13,8 @@ export class ArticleService {
     async checkOwnership(authorId: Types.ObjectId, articleId: string) {
         return await this.repo.checkArticleExists(authorId, articleId);
     }
+
+    async getArticle(articleId: string) {
+        return await this.repo.getArticleById(articleId);
+    }
 }

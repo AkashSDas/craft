@@ -21,4 +21,8 @@ export class ArticleRepository {
             { authorIds: 1 },
         );
     }
+
+    async getArticleById(articleId: string) {
+        return await this.model.findOne({ articleId });
+    }
 }

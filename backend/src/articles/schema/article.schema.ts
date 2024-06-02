@@ -63,7 +63,7 @@ export class Article extends Document implements IArticle {
     @Prop({ type: Date, required: true })
     lastUpdatedAt: Date;
 
-    @Prop({ type: [String], required: true, default: [], select: false })
+    @Prop({ type: [String], required: true, default: [] })
     blockIds: BlockId[];
 
     @Prop({

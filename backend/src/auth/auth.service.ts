@@ -36,7 +36,6 @@ export class AuthService {
             const refreshToken = user.createRefreshToken(this.jwtService);
             return { user, accessToken, refreshToken };
         } catch (e) {
-            console.log(e);
             if (e.message == "User already exists") {
                 throw new BadRequestException(
                     "Email or username already taken",
@@ -56,14 +55,13 @@ export class AuthService {
         const token = user.createMagicLinkToken();
         const link = `${process.env.FRONTEND_URL}/auth/login?magic-token=${token}`;
 
-        const mailStatus = await sendEmail({
+        await sendEmail({
             to: user.email,
             subject: "Magic link login",
             text: `Click on the link to login: ${link}`,
             html: `Click on the link to login: <a href="${link}">${link}</a>`,
         });
 
-        console.log(`Mail status: ${mailStatus}`);
         await user.save({ validateModifiedOnly: true });
     }
 
