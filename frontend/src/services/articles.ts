@@ -11,6 +11,7 @@ const ImageSchema = z.object({
 });
 
 const ParagraphSchema = z.object({
+    blockId: z.string(),
     type: z.literal("paragraph"),
     value: z.object({
         text: z.string(),
@@ -18,6 +19,7 @@ const ParagraphSchema = z.object({
 });
 
 const HeadingSchema = z.object({
+    blockId: z.string(),
     type: z.literal("heading"),
     value: z.object({
         text: z.string(),
@@ -26,11 +28,13 @@ const HeadingSchema = z.object({
 });
 
 const DividerSchema = z.object({
+    blockId: z.string(),
     type: z.literal("divider"),
     value: z.object({}),
 });
 
 const ImageBlockSchema = z.object({
+    blockId: z.string(),
     type: z.literal("image"),
     value: ImageSchema.merge(z.object({ caption: z.string().optional() })),
 });
@@ -61,7 +65,6 @@ export type Divider = z.infer<typeof DividerSchema>;
 export type Image = z.infer<typeof ImageBlockSchema>;
 export type Block = z.infer<typeof BlockSchema>;
 export type BlockId = string;
-export type ContentBlockType = Block & { blockId: BlockId };
 export type Article = z.infer<typeof ArticleSchema>;
 
 // ==================================

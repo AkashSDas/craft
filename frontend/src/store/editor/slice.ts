@@ -1,7 +1,6 @@
 import {
     Block,
     BlockId,
-    ContentBlockType,
     Divider,
     Heading,
     Image,
@@ -25,6 +24,7 @@ export const blocks: Block["type"][] = [
 class BlockManager {
     static createParagraph(): Paragraph {
         return {
+            blockId: createId("blk"),
             type: "paragraph",
             value: { text: "" },
         };
@@ -32,6 +32,7 @@ class BlockManager {
 
     static createHeading(variant: Heading["value"]["variant"]): Heading {
         return {
+            blockId: createId("blk"),
             type: "heading",
             value: { text: "", variant },
         };
@@ -39,6 +40,7 @@ class BlockManager {
 
     static createDivider(): Divider {
         return {
+            blockId: createId("blk"),
             type: "divider",
             value: {},
         };
@@ -46,6 +48,7 @@ class BlockManager {
 
     static createImage(URL: string, caption?: string): Image {
         return {
+            blockId: createId("blk"),
             type: "image",
             value: { URL, caption },
         };
@@ -63,7 +66,7 @@ type BlockChange = {
 
 type EditorState = {
     blockIds: BlockId[];
-    blocks: Record<BlockId, ContentBlockType>;
+    blocks: Record<BlockId, Block>;
     changedBlockIds: BlockChange[];
     files: Record<BlockId, File>;
 };
