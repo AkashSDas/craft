@@ -73,6 +73,7 @@ export async function fetchFromAPI<T>(
 }
 
 export const endpoints = Object.freeze({
+    // Auth
     emailSignup: "auth/email-signup",
     newAccessToken: "auth/access-token",
     logout: "auth/logout",
@@ -81,4 +82,7 @@ export const endpoints = Object.freeze({
     completeOAuthSignup: "auth/oauth-session",
     emailLogin: "auth/email-login",
     completeEmailLogin: "auth/email-login",
+
+    // Articles
+    createArticle: "articles/",
 });
