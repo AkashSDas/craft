@@ -1,7 +1,28 @@
-import { createArticle } from "@app/services/articles";
-import { useMutation } from "@tanstack/react-query";
+import { createArticle, getArticle } from "@app/services/articles";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { useToast } from "@chakra-ui/react";
 import { useRouter } from "next/router";
+import { useUser } from "./auth";
+
+export function useEditArticle() {
+    const { isLoggedIn, user } = useUser();
+    const router = useRouter();
+    const { data, isError, isLoading, error } = useQuery({
+        queryKey: ["article", user?.userId, router.query.articleId],
+        queryFn: () => getArticle(router.query.articleId as string),
+        enabled: isLoggedIn && router.query.articleId !== undefined,
+        staleTime: 1000 * 60 * 5,
+    });
+
+    return {
+        article: data?.article,
+        message: data?.message,
+        isOwner: (data?.article?.authorIds ?? []).includes(user?._id ?? ""),
+        isLoading,
+        isError,
+        error,
+    };
+}
 
 export function useCreateArticle() {
     const router = useRouter();

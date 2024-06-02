@@ -46,7 +46,6 @@ export function useUser() {
      */
     const isSignupCompleted = useMemo(
         function checkSignupStatus() {
-            console.log({ data });
             return data?.user?.username && data?.user?.email;
         },
         [data?.user]

@@ -80,12 +80,33 @@ export async function createArticle() {
     const { data, status } = res;
 
     if (status === 201 && data !== null && "article" in data) {
-        return {
-            success: true,
-            message: data.message,
-            article: data.article,
-        };
+        const article = ArticleSchema.parse(data.article);
+        return { success: true, message: data.message, article: article };
     } else if (status === 400 && data !== null && "message" in data) {
+        return { success: false, message: data.message };
+    }
+
+    return {
+        success: false,
+        message: res.error?.message ?? "Unknown error",
+    };
+}
+
+export async function getArticle(articleId: string) {
+    type SuccessResponse = { article: Article };
+    type ErrorResponse = { message: string };
+
+    const res = await fetchFromAPI<SuccessResponse | ErrorResponse>(
+        endpoints.getArticle(articleId),
+        { method: "GET" }
+    );
+    const { data, status } = res;
+
+    if (status === 200 && data !== null && "article" in data) {
+        const article = ArticleSchema.parse(data.article);
+        console.log({ m: article });
+        return { success: true, article };
+    } else if (status === 404 && data !== null && "message" in data) {
         return { success: false, message: data.message };
     }
 

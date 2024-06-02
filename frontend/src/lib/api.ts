@@ -85,4 +85,5 @@ export const endpoints = Object.freeze({
 
     // Articles
     createArticle: "articles/",
+    getArticle: (articleId: string) => `articles/${articleId}`,
 });
