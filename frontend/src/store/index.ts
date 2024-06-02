@@ -1,7 +1,10 @@
 import { UnknownAction, ThunkAction, configureStore } from "@reduxjs/toolkit";
+import { editorSlice } from "./editor/slice";
 
 export const store = configureStore({
-    reducer: {},
+    reducer: {
+        editor: editorSlice.reducer,
+    },
 });
 
 export type AppDispatch = typeof store.dispatch;
