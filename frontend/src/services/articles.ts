@@ -79,7 +79,7 @@ export async function createArticle() {
     );
     const { data, status } = res;
 
-    if (status === 200 && data !== null && "article" in data) {
+    if (status === 201 && data !== null && "article" in data) {
         return {
             success: true,
             message: data.message,
