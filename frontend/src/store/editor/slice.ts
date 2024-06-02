@@ -65,6 +65,7 @@ type BlockChange = {
 };
 
 type EditorState = {
+    initialPopulateEditorDone: boolean;
     blockIds: BlockId[];
     blocks: Record<BlockId, Block>;
     changedBlockIds: BlockChange[];
@@ -72,6 +73,7 @@ type EditorState = {
 };
 
 const initialState: EditorState = {
+    initialPopulateEditorDone: false,
     blockIds: [],
     blocks: {},
     changedBlockIds: [],
@@ -101,6 +103,7 @@ export const editorSlice = createSlice({
         /** Initialize the editor with the given blocks */
         populateEditor(state, action: PopulateEditorAction) {
             const { blockIds, blocks } = action.payload;
+            if (state.initialPopulateEditorDone) return;
             state.blockIds = blockIds;
             state.blocks = blocks;
         },

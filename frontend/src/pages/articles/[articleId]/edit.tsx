@@ -1,13 +1,25 @@
+import { Editor } from "@app/components/editor/Editor";
 import { useEditArticle } from "@app/hooks/editor";
 import { Spinner, Stack, Text } from "@chakra-ui/react";
 
 export default function EditArticle() {
-    const { article, isOwner } = useEditArticle();
+    const { article, isOwner, isLoading } = useEditArticle();
 
-    if (!article) {
+    if (isLoading) {
         return (
             <Stack justifyContent="center" alignItems="center" mt="32px">
                 <Spinner size="xl" thickness="4px" />
+            </Stack>
+        );
+    } else if (!article) {
+        return (
+            <Stack
+                justifyContent="center"
+                alignItems="center"
+                mt="64px"
+                px={{ base: "16px", md: "2rem" }}
+            >
+                <Text fontSize="2xl">Article not found</Text>
             </Stack>
         );
     } else if (!isOwner) {
@@ -34,5 +46,5 @@ export default function EditArticle() {
         );
     }
 
-    return <div>Edit Article</div>;
+    return <Editor />;
 }

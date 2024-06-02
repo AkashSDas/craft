@@ -3,7 +3,18 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { useToast } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import { useUser } from "./auth";
+import { useEffect } from "react";
+import { useAppDispatch } from "./store";
+import { populateEditor } from "@app/store/editor/slice";
 
+/**
+ * This hook should be used only once and i.e. inside the Edit Article page.
+ * This is because it fetches the article data and populates the editor with it.
+ * If fetched everywhere then it'll overwrite the editor data.
+ *
+ * But this is mitigated by using a flag in Redux store, so this hook can be used
+ * anywhere and it'll only populate the editor if the flag is false.
+ */
 export function useEditArticle() {
     const { isLoggedIn, user } = useUser();
     const router = useRouter();
@@ -13,6 +24,18 @@ export function useEditArticle() {
         enabled: isLoggedIn && router.query.articleId !== undefined,
         staleTime: 1000 * 60 * 5,
     });
+    const dispatch = useAppDispatch();
+
+    useEffect(function update() {
+        if (data?.article) {
+            dispatch(
+                populateEditor({
+                    blockIds: data.article.blockIds,
+                    blocks: data.article.blocks,
+                })
+            );
+        }
+    }, []);
 
     return {
         article: data?.article,
