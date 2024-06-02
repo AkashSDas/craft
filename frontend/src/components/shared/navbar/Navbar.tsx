@@ -1,8 +1,10 @@
 import { Button, HStack, Show, Spinner } from "@chakra-ui/react";
 import Link from "next/link";
 import { Logo } from "../logo";
-import { useLogout, useUser } from "@app/hooks/auth";
+import { useUser } from "@app/hooks/auth";
 import { MobileNav } from "./MobileNav";
+import { useCreateArticle } from "@app/hooks/editor";
+import { ProfilePicture } from "./ProfilePicture";
 
 export function Navbar() {
     const { isLoggedIn } = useUser();
@@ -31,22 +33,22 @@ export function Navbar() {
 }
 
 function LoggedInItems() {
-    const { isPending, logoutUser } = useLogout();
+    const { mutation } = useCreateArticle();
 
     return (
         <>
-            <Button variant="navItem" as={Link} href="/editor">
+            <Button
+                variant="navItem"
+                disabled={mutation.isPending}
+                onClick={() => mutation.mutateAsync()}
+                leftIcon={
+                    mutation.isPending ? <Spinner size="xs" /> : undefined
+                }
+            >
                 Write
             </Button>
 
-            <Button
-                variant="navItem"
-                onClick={logoutUser}
-                disabled={isPending}
-                isDisabled={isPending}
-            >
-                {isPending ? <Spinner size="xs" /> : "Logout"}
-            </Button>
+            <ProfilePicture />
         </>
     );
 }
