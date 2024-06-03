@@ -1,3 +1,5 @@
+import { useAppDispatch } from "@app/hooks/store";
+import { addBlock } from "@app/store/editor/slice";
 import {
     Input,
     InputGroup,
@@ -12,40 +14,46 @@ import { ChangeEvent, useEffect, useRef, useState } from "react";
 
 const blocks = [
     {
-        type: "paragraph",
+        type: "paragraph" as const,
         image: "/block-images/paragraph.png",
         label: "Paragraph",
         description: "Plain text",
     },
     {
-        type: "heading",
-        variant: "h1",
+        type: "heading" as const,
+        additionalData: {
+            variant: "h1",
+        },
         image: "/block-images/h1.png",
         label: "Heading 1",
         description: "Big section heading",
     },
     {
-        type: "heading",
-        variant: "h2",
+        type: "heading" as const,
+        additionalData: {
+            variant: "h2",
+        },
         image: "/block-images/h2.png",
         label: "Heading 2",
         description: "Medium section heading",
     },
     {
-        type: "heading",
-        variant: "h3",
+        type: "heading" as const,
+        additionalData: {
+            variant: "h3",
+        },
         image: "/block-images/h3.png",
         label: "Heading 3",
         description: "Small section heading",
     },
     {
-        type: "divider",
+        type: "divider" as const,
         image: "/block-images/divider.png",
         label: "Divider",
         description: "Visually divide block",
     },
     {
-        type: "image",
+        type: "image" as const,
         image: "/block-images/image.png",
         label: "Image",
         description: "Upload or embed with a link",
@@ -59,6 +67,7 @@ export function Sidebar() {
     const [activeBlockIndex, setActiveBlockIndex] = useState<number | null>(
         null
     );
+    const dispatch = useAppDispatch();
 
     function handleChange(e: ChangeEvent<HTMLInputElement>) {
         setInput(e.target.value);
@@ -109,7 +118,12 @@ export function Sidebar() {
                     return;
                 }
                 const activeBlock = matchingBlocks[activeBlockIndex];
-                console.log(activeBlock);
+                dispatch(
+                    addBlock({
+                        blockType: activeBlock.type,
+                        additionalData: activeBlock.additionalData,
+                    })
+                );
             }
 
             if (event.key === "Escape") {
@@ -154,7 +168,7 @@ export function Sidebar() {
                         },
                         _focus: {
                             border: "1.5px solid",
-                            borderColor: "brand.500",
+                            borderColor: "black",
                         },
                     }}
                     variant="outline"
@@ -207,6 +221,14 @@ export function Sidebar() {
                             _active={{
                                 bgColor: "gray.200",
                                 transform: "scale(0.96)",
+                            }}
+                            onClick={() => {
+                                dispatch(
+                                    addBlock({
+                                        blockType: block.type,
+                                        additionalData: block.additionalData,
+                                    })
+                                );
                             }}
                         >
                             <Image
