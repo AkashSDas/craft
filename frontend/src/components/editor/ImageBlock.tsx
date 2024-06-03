@@ -93,16 +93,16 @@ export function ImageBlock(props: Props) {
                 </MenuList>
             </Menu>
 
-            {!file ? (
-                <Button
-                    variant="outline"
-                    leftIcon={<AddIcon />}
-                    color="gray"
-                    onClick={() => inputRef.current?.click()}
-                >
-                    <Text>Add Image</Text>
-                </Button>
-            ) : (
+            <input
+                type="file"
+                ref={inputRef}
+                style={{ display: "none" }}
+                accept="image/*"
+                onChange={handleFileChange}
+            />
+
+            {/* Add file type and file size validation */}
+            {file && file.type.startsWith("image/") ? (
                 <Box pos="relative" height="300px" width="100%">
                     <NextImage
                         src={block.value.URL ?? ""}
@@ -114,15 +114,28 @@ export function ImageBlock(props: Props) {
                             border: "1.5px solid black",
                         }}
                     />
-                </Box>
-            )}
 
-            <input
-                type="file"
-                ref={inputRef}
-                style={{ display: "none" }}
-                onChange={handleFileChange}
-            />
+                    <Button
+                        size="sm"
+                        variant="paleSolid"
+                        pos="absolute"
+                        bottom="8px"
+                        right="8px"
+                        onClick={() => inputRef.current?.click()}
+                    >
+                        Update
+                    </Button>
+                </Box>
+            ) : (
+                <Button
+                    variant="outline"
+                    leftIcon={<AddIcon />}
+                    color="gray"
+                    onClick={() => inputRef.current?.click()}
+                >
+                    <Text>Add Image</Text>
+                </Button>
+            )}
         </Stack>
     );
 }

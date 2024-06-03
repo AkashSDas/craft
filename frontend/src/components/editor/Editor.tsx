@@ -1,4 +1,4 @@
-import { Box, Stack, Text } from "@chakra-ui/react";
+import { Box, Button, Stack } from "@chakra-ui/react";
 import { Sidebar } from "./Sidebar";
 import { useAppSelector } from "@app/hooks/store";
 import { selectBlockIds, selectBlocks } from "@app/store/editor/slice";
@@ -7,10 +7,12 @@ import { ParagraphInputBlock } from "./ParagraphInputBlock";
 import { HeadingBlock } from "./HeadingBlock";
 import { DividerBlock } from "./DividerBlock";
 import { ImageBlock } from "./ImageBlock";
+import { useSaveArticle } from "@app/hooks/editor";
 
 export function Editor() {
     const blocks = useAppSelector(selectBlocks);
     const blockIds = useAppSelector(selectBlockIds);
+    const { save } = useSaveArticle();
 
     return (
         <Box pos="relative" mt="70px">
@@ -21,6 +23,10 @@ export function Editor() {
                         const block = blocks[id];
                         return <DisplayBlock key={id} block={block} />;
                     })}
+
+                    <Button mt="2rem" onClick={save}>
+                        Save
+                    </Button>
                 </Stack>
             </Stack>
         </Box>
