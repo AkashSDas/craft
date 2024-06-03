@@ -15,6 +15,10 @@ export function Navbar() {
             justifyContent="space-between"
             px="2rem"
             bgColor="gray.900"
+            pos="fixed"
+            top="0"
+            width="100%"
+            zIndex="100"
             h="70px"
         >
             <Link href="/">

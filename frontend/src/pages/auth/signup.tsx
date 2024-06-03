@@ -20,6 +20,7 @@ export default function Signup() {
         <VStack
             as="main"
             my={{ base: "2rem", sm: "4rem" }}
+            mt={{ base: "calc(1rem + 70px)", sm: "calc(4rem + 70px)" }}
             w="100%"
             justifyContent="center"
         >
