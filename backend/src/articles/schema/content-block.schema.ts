@@ -7,22 +7,22 @@ import { createId } from "../../utils/ids";
 // Content block types
 // ====================================
 
-type Paragraph = {
+export type Paragraph = {
     type: "paragraph";
     value: { text: string };
 };
 
-type Heading = {
+export type Heading = {
     type: "heading";
     value: { text: string; variant: "h1" | "h2" | "h3" };
 };
 
-type Divider = {
+export type Divider = {
     type: "divider";
     value: Record<string, never>;
 };
 
-type Image = {
+export type Image = {
     type: "image";
     value: IImage & { caption?: string };
 };

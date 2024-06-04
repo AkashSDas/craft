@@ -13,6 +13,7 @@ import {
 import { ArticleService } from "./article.service";
 import { AccessTokenGuard } from "../auth/guard";
 import { IRequest } from "../index";
+import { UpdateArticleContentDto } from "./dto";
 
 @Controller("articles")
 export class ArticleController {
@@ -36,10 +37,17 @@ export class ArticleController {
         return { article };
     }
 
+    /**
+     * This is responsible for saving the non-file content of an article.
+     * For example paragraphs, headings, and dividers.
+     */
     @Put(":articleId/content")
     @HttpCode(HttpStatus.OK)
     @UseGuards(AccessTokenGuard)
-    async updateArticleContent(@Req() req: IRequest) {
+    async updateArticleContent(
+        @Req() req: IRequest,
+        body: UpdateArticleContentDto,
+    ) {
         const exists = await this.serv.checkOwnership(
             req.user._id,
             req.params.articleId,
@@ -50,6 +58,9 @@ export class ArticleController {
             );
         }
 
-        return { message: "hi" };
+        const article = await this.serv.getArticle(req.params.articleId);
+        this.serv.updateNonFileContent(article, body);
+
+        return { message: body };
     }
 }
