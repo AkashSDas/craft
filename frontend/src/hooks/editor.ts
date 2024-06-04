@@ -5,7 +5,44 @@ import { useRouter } from "next/router";
 import { useUser } from "./auth";
 import { useEffect } from "react";
 import { useAppDispatch } from "./store";
-import { populateEditor } from "@app/store/editor/slice";
+import {
+    populateEditor,
+    selectBlockChanges,
+    selectBlockIds,
+    selectBlocks,
+    selectFiles,
+} from "@app/store/editor/slice";
+import { useSelector } from "react-redux";
+
+export function useSaveArticle() {
+    const blockIds = useSelector(selectBlockIds);
+    const blocks = useSelector(selectBlocks);
+    const blockChanges = useSelector(selectBlockChanges);
+    const files = useSelector(selectFiles);
+
+    async function save() {
+        const finalAddedBlocks = new Set(
+            blockChanges.addedBlocks.filter((blockId) =>
+                blockIds.includes(blockId)
+            )
+        );
+        const finalChangedBlocks = new Set(
+            blockChanges.changedBlocks
+                .filter((blockId) => blockIds.includes(blockId))
+                .filter((blockId) => !finalAddedBlocks.has(blockId))
+        );
+
+        console.log({
+            blockIds,
+            blocks,
+            finalAddedBlocks,
+            finalChangedBlocks,
+            files,
+        });
+    }
+
+    return { save };
+}
 
 /**
  * This hook should be used only once and i.e. inside the Edit Article page.

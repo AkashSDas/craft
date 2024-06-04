@@ -63,7 +63,9 @@ type EditorState = {
     initialPopulateEditorDone: boolean;
     blockIds: BlockId[];
     blocks: Record<BlockId, Block>;
-    changedBlockIds: BlockId[];
+    addedBlocks: BlockId[];
+    deletedBlocks: BlockId[];
+    changedBlocks: BlockId[];
     files: Record<BlockId, File>;
 };
 
@@ -71,7 +73,9 @@ const initialState: EditorState = {
     initialPopulateEditorDone: false,
     blockIds: [],
     blocks: {},
-    changedBlockIds: [],
+    addedBlocks: [],
+    deletedBlocks: [],
+    changedBlocks: [],
     files: {},
 };
 
@@ -102,43 +106,6 @@ export const editorSlice = createSlice({
             state.blockIds = blockIds;
             state.blocks = blocks;
         },
-        updateImageBlock(
-            state,
-            action: { payload: { blockId: BlockId; file: File } }
-        ) {
-            const { blockId, file } = action.payload;
-            const block = state.blocks[blockId];
-            if (block?.type !== "image") return;
-            block.value.URL = URL.createObjectURL(file);
-            state.files[blockId] = file;
-            state.changedBlockIds.push(blockId);
-        },
-        updateParagraphBlock(
-            state,
-            action: { payload: { blockId: BlockId; text: string } }
-        ) {
-            const { blockId, text } = action.payload;
-            const block = state.blocks[blockId];
-            if (block?.type !== "paragraph") return;
-            block.value.text = text;
-            state.changedBlockIds.push(blockId);
-        },
-        updateHeadingBlock(
-            state,
-            action: { payload: { blockId: BlockId; text: string } }
-        ) {
-            const { blockId, text } = action.payload;
-            const block = state.blocks[blockId];
-            if (block?.type !== "heading") return;
-            block.value.text = text;
-            state.changedBlockIds.push(blockId);
-        },
-        deleteBlock(state, action: { payload: BlockId }) {
-            const blockId = action.payload;
-            const blockIdx = state.blockIds.indexOf(blockId);
-            state.blockIds.splice(blockIdx, 1);
-            delete state.blocks[blockId];
-        },
         /** Add a new block to the editor */
         addBlock(state, action: AddBlockAction) {
             const { blockType, afterBlockId, additionalData } = action.payload;
@@ -161,15 +128,52 @@ export const editorSlice = createSlice({
                     break;
             }
 
+            state.addedBlocks.push(newBlockId);
             state.blocks[newBlockId] = { ...block, blockId: newBlockId };
-            state.changedBlockIds.push(newBlockId);
-
             if (afterBlockId) {
                 const afterBlockIdx = state.blockIds.indexOf(afterBlockId);
                 state.blockIds.splice(afterBlockIdx + 1, 0, newBlockId);
             } else {
                 state.blockIds.push(newBlockId);
             }
+        },
+        deleteBlock(state, action: { payload: BlockId }) {
+            const blockId = action.payload;
+            const blockIdx = state.blockIds.indexOf(blockId);
+            state.deletedBlocks.push(blockId);
+            state.blockIds.splice(blockIdx, 1);
+            delete state.blocks[blockId];
+        },
+        updateImageBlock(
+            state,
+            action: { payload: { blockId: BlockId; file: File } }
+        ) {
+            const { blockId, file } = action.payload;
+            const block = state.blocks[blockId];
+            if (block?.type !== "image") return;
+            block.value.URL = URL.createObjectURL(file);
+            state.files[blockId] = file;
+            state.changedBlocks.push(blockId);
+        },
+        updateParagraphBlock(
+            state,
+            action: { payload: { blockId: BlockId; text: string } }
+        ) {
+            const { blockId, text } = action.payload;
+            const block = state.blocks[blockId];
+            if (block?.type !== "paragraph") return;
+            block.value.text = text;
+            state.changedBlocks.push(blockId);
+        },
+        updateHeadingBlock(
+            state,
+            action: { payload: { blockId: BlockId; text: string } }
+        ) {
+            const { blockId, text } = action.payload;
+            const block = state.blocks[blockId];
+            if (block?.type !== "heading") return;
+            block.value.text = text;
+            state.changedBlocks.push(blockId);
         },
     },
 });
@@ -190,7 +194,11 @@ export const selectFiles = (state: RootState) => {
     return state.editor.files;
 };
 export const selectBlockChanges = (state: RootState) => {
-    return state.editor.changedBlockIds;
+    return {
+        addedBlocks: state.editor.addedBlocks,
+        deletedBlocks: state.editor.deletedBlocks,
+        changedBlocks: state.editor.changedBlocks,
+    };
 };
 
 // ===================================
