@@ -39,18 +39,31 @@ export class ArticleService {
                 }
             }
 
-            article.blocks[blockId] = block as any;
+            article.blocks.set(blockId, block as any);
         }
 
         // Add new blocks
         for (const blockId of addedBlockIds) {
             const block = blocks[blockId];
-            article.blocks[blockId] = block as any;
+            console.log("addedBlock", article.blocks, block);
+            block["blockId"] = blockId;
+
+            if (block.type === "image") {
+                const url = block.value.URL;
+                // file will be saved in another request
+                if (url?.startsWith("blob:")) {
+                    block.value.URL = null;
+                }
+            }
+
+            article.blocks.set(blockId, block as any);
         }
 
         // Remove blocks
 
-        const existingBlockIds = Object.keys(article.blocks);
+        const existingBlockIds = Object.keys(article.blocks).filter((id) =>
+            id.startsWith("blk_"),
+        );
         const deletedBlockIds = existingBlockIds.filter(
             (id) => !blockIds.includes(id),
         );
@@ -64,12 +77,13 @@ export class ArticleService {
         }
 
         for (const id of deletedBlockIds) {
-            delete article.blocks[id];
+            article.blocks.delete(id);
         }
 
         this.deleteImages(article._id, imgBlocks);
 
         await article.save();
+        return article;
     }
 
     async deleteImages(articleId: string, imageBlocks: Image[]) {

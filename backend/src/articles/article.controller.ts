@@ -1,4 +1,5 @@
 import {
+    Body,
     Controller,
     ForbiddenException,
     Get,
@@ -46,7 +47,7 @@ export class ArticleController {
     @UseGuards(AccessTokenGuard)
     async updateArticleContent(
         @Req() req: IRequest,
-        body: UpdateArticleContentDto,
+        @Body() body: UpdateArticleContentDto,
     ) {
         const exists = await this.serv.checkOwnership(
             req.user._id,
@@ -59,8 +60,7 @@ export class ArticleController {
         }
 
         const article = await this.serv.getArticle(req.params.articleId);
-        this.serv.updateNonFileContent(article, body);
-
-        return { message: body };
+        await this.serv.updateNonFileContent(article, body);
+        return { message: "Updated successfully" };
     }
 }
