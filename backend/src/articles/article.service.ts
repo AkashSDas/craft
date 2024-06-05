@@ -2,7 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { ArticleRepository } from "./article.repository";
 import { Types } from "mongoose";
 import { UpdateArticleContentDto } from "./dto";
-import { Article, BlockId, Image } from "./schema";
+import { Article, BlockId } from "./schema";
 import { UploadApiResponse, v2 } from "cloudinary";
 import { UploadedFile } from "express-fileupload";
 
@@ -30,7 +30,6 @@ export class ArticleService {
                 existingFiles[blockId] = files[blockId];
             }
         }
-        console.log("existingFiles", existingFiles);
 
         // 2. delete existing images
 
@@ -45,7 +44,6 @@ export class ArticleService {
                 delete existingFiles[blockId];
             }
         }
-        console.log("deleteIds", deleteIds);
 
         if (deleteIds.length > 0) {
             const deletePromises: ReturnType<any>[] = [];
@@ -83,8 +81,7 @@ export class ArticleService {
             );
         }
 
-        const results = await Promise.all(uploadPromises);
-        console.log("results", uploadPromises, results);
+        await Promise.all(uploadPromises);
 
         // 4. update ids and urls in article for those blocks
 
@@ -107,53 +104,27 @@ export class ArticleService {
         const { addedBlockIds, blockIds, blocks, changedBlockIds } = dto;
 
         // Update block ids
+        const existingBlockIds = article.blockIds;
         article.blockIds = blockIds;
 
-        // Update existing blocks
-        for (const blockId of changedBlockIds) {
+        // Update existing blocks and add new blocks
+        const upsertBlockIds = new Set([...changedBlockIds, ...addedBlockIds]);
+        for (const blockId of Array.from(upsertBlockIds)) {
             const block = blocks[blockId];
-
-            if (block.type === "image") {
-                const url = block.value.URL;
-                // file will be saved in another request
-                if (url?.startsWith("blob:")) {
-                    block.value.URL = null;
-                }
-            }
-
             article.blocks.set(blockId, block as any);
         }
 
-        // Add new blocks
-        for (const blockId of addedBlockIds) {
-            const block = blocks[blockId];
-            console.log("addedBlock", article.blocks, block);
-            block["blockId"] = blockId;
+        // Delete blocks that are not in the new block ids
 
-            if (block.type === "image") {
-                const url = block.value.URL;
-                // file will be saved in another request
-                if (url?.startsWith("blob:")) {
-                    block.value.URL = null;
-                }
-            }
-
-            article.blocks.set(blockId, block as any);
-        }
-
-        // Remove blocks
-
-        const existingBlockIds = Array.from(article.blocks.keys());
         const deletedBlockIds = existingBlockIds.filter(
             (id) => !blockIds.includes(id),
         );
-        console.log(deletedBlockIds, existingBlockIds);
 
-        const imgBlocks: Image[] = [];
+        const deleteImgIds: string[] = [];
         for (const id of deletedBlockIds) {
             const block = article.blocks.get(id);
-            if (block && block.type === "image") {
-                imgBlocks.push(block);
+            if (block && block.type === "image" && block.value?.id) {
+                deleteImgIds.push(block.value.id);
             }
         }
 
@@ -161,34 +132,29 @@ export class ArticleService {
             article.blocks.delete(id);
         }
 
-        this.deleteImages(article._id, imgBlocks);
+        // Delete all of the images
+
+        const deletePromises: Promise<any>[] = [];
+        for (const id of deleteImgIds) {
+            deletePromises.push(
+                v2.uploader.destroy(id, {}, (error, result) => {
+                    if (error) {
+                        console.error(error);
+                    } else {
+                        console.log(result);
+                    }
+                }),
+            );
+        }
+        await Promise.all(deletePromises);
+
+        // Update article in database
 
         await this.repo.updateOne(article.articleId, {
             blockIds: article.blockIds,
             blocks: article.blocks,
         });
+
         return article;
-    }
-
-    async deleteImages(articleId: string, imageBlocks: Image[]) {
-        const deleteIds: string[] = [];
-        for (const img of imageBlocks) {
-            if (img.value?.id) {
-                deleteIds.push(img.value.id);
-            }
-        }
-
-        if (deleteIds.length === 0) return;
-
-        const deletePromises: ReturnType<any>[] = [];
-        for (const id of deleteIds) {
-            deletePromises.push(
-                v2.uploader.destroy(
-                    `${process.env.CLOUDINARY_DIR_ARTICLE_IMAGES}/${articleId}/${id}`,
-                ),
-            );
-        }
-
-        await Promise.all(deletePromises);
     }
 }
