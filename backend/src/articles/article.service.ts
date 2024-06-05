@@ -22,6 +22,13 @@ export class ArticleService {
         return await this.repo.getArticleById(articleId);
     }
 
+    async reorderBlocks(article: Article, blockIds: BlockId[]) {
+        await this.repo.updateOne(article.articleId, {
+            blockIds,
+        });
+        return article;
+    }
+
     async updateFiles(article: Article, files: Record<BlockId, UploadedFile>) {
         // Filter out files whose ids don't exist in article block ids
 
