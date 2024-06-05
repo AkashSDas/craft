@@ -3,6 +3,7 @@ import {
     createArticle,
     getArticle,
     updateArticleContent,
+    updateArticleFiles,
 } from "@app/services/articles";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useToast } from "@chakra-ui/react";
@@ -28,7 +29,8 @@ export function useSaveArticle() {
 
     const { mutateAsync, isPending } = useMutation({
         async mutationFn(payload: UpdateArticleContentPayload) {
-            return await updateArticleContent(payload);
+            await updateArticleContent(payload);
+            await updateArticleFiles(router.query.articleId as string, files);
         },
         onError(error, variables, context) {
             console.error(error);

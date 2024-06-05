@@ -3,7 +3,7 @@ import axios, { AxiosError, AxiosRequestConfig } from "axios";
 export const axiosInstance = axios.create({
     baseURL: process.env.NEXT_PUBLIC_BACKEND_URL,
     withCredentials: true,
-    timeout: 3000, // 3 seconds
+    // timeout: 3000, // 3 seconds
     timeoutErrorMessage: "Request timed out",
 });
 
@@ -88,5 +88,8 @@ export const endpoints = Object.freeze({
     getArticle: (articleId: string) => `articles/${articleId}`,
     updateArticleContent: (articleId: string) => {
         return `articles/${articleId}/content`;
+    },
+    addArticleFiles: (articleId: string) => {
+        return `articles/${articleId}/files`;
     },
 });
