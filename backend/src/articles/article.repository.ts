@@ -25,4 +25,12 @@ export class ArticleRepository {
     async getArticleById(articleId: string) {
         return await this.model.findOne({ articleId });
     }
+
+    async updateOne(articleId: string, update: Partial<Article>) {
+        return await this.model.updateOne(
+            { articleId },
+            { $set: update },
+            { runValidators: true },
+        );
+    }
 }

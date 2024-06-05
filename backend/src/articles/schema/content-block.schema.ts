@@ -55,7 +55,7 @@ export class ContentBlock extends Document implements IContentBlock {
     @Prop({ type: String, required: true, enum: blocks })
     type: Block["type"];
 
-    @Prop({ type: SchemaTypes.Map, required: true })
+    @Prop({ type: SchemaTypes.Mixed })
     value: Block["value"];
 }
 

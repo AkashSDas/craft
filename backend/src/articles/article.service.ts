@@ -2,8 +2,9 @@ import { Injectable } from "@nestjs/common";
 import { ArticleRepository } from "./article.repository";
 import { Types } from "mongoose";
 import { UpdateArticleContentDto } from "./dto";
-import { Article, Image } from "./schema";
-import { v2 } from "cloudinary";
+import { Article, BlockId, Image } from "./schema";
+import { UploadApiResponse, v2 } from "cloudinary";
+import { UploadedFile } from "express-fileupload";
 
 @Injectable()
 export class ArticleService {
@@ -19,6 +20,87 @@ export class ArticleService {
 
     async getArticle(articleId: string) {
         return await this.repo.getArticleById(articleId);
+    }
+
+    async updateFiles(article: Article, files: Record<BlockId, UploadedFile>) {
+        // 1. filter out files whose ids don't exist in article block ids
+        const existingFiles: Record<BlockId, UploadedFile> = {};
+        for (const blockId of Object.keys(files)) {
+            if (article.blockIds.includes(blockId)) {
+                existingFiles[blockId] = files[blockId];
+            }
+        }
+        console.log("existingFiles", existingFiles);
+
+        // 2. delete existing images
+
+        const deleteIds: string[] = [];
+        for (const blockId of Object.keys(existingFiles)) {
+            const block = article.blocks.get(blockId);
+            if (block) {
+                if (block.type === "image" && block.value?.id) {
+                    deleteIds.push(block.value.id);
+                }
+            } else {
+                delete existingFiles[blockId];
+            }
+        }
+        console.log("deleteIds", deleteIds);
+
+        if (deleteIds.length > 0) {
+            const deletePromises: ReturnType<any>[] = [];
+            for (const id of deleteIds) {
+                deletePromises.push(
+                    v2.uploader.destroy(
+                        `${process.env.CLOUDINARY_DIR_ARTICLE_IMAGES}/${article._id}/${id}`,
+                    ),
+                );
+            }
+
+            await Promise.all(deletePromises);
+        }
+
+        // 3. upload new images
+
+        const uploadPromises: ReturnType<any>[] = [];
+        const savedFiles: Record<BlockId, UploadApiResponse> = {};
+        for (const blockId of Object.keys(existingFiles)) {
+            const file = existingFiles[blockId];
+            uploadPromises.push(
+                v2.uploader.upload(
+                    file.tempFilePath,
+                    {
+                        folder: `${process.env.CLOUDINARY_DIR_ARTICLE_IMAGES}/${article._id}`,
+                    },
+                    (error, result) => {
+                        if (error) {
+                            console.error(error);
+                        } else {
+                            savedFiles[blockId] = result;
+                        }
+                    },
+                ),
+            );
+        }
+
+        const results = await Promise.all(uploadPromises);
+        console.log("results", uploadPromises, results);
+
+        // 4. update ids and urls in article for those blocks
+
+        for (const blockId of Object.keys(savedFiles)) {
+            const result = savedFiles[blockId];
+            const block = article.blocks.get(blockId);
+            if (block && block.type === "image") {
+                block.value.id = result.public_id;
+                block.value.URL = result.secure_url;
+                article.blocks.set(blockId, block as any);
+            }
+        }
+
+        await this.repo.updateOne(article.articleId, {
+            blocks: article.blocks,
+        });
     }
 
     async updateNonFileContent(article: Article, dto: UpdateArticleContentDto) {

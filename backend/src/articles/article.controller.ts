@@ -35,6 +35,7 @@ export class ArticleController {
         if (!article) {
             throw new NotFoundException("Article not found");
         }
+        console.log("article", article.blocks);
         return { article };
     }
 
@@ -61,6 +62,32 @@ export class ArticleController {
 
         const article = await this.serv.getArticle(req.params.articleId);
         await this.serv.updateNonFileContent(article, body);
+        return { message: "Updated successfully" };
+    }
+
+    @Put(":articleId/files")
+    @HttpCode(HttpStatus.OK)
+    @UseGuards(AccessTokenGuard)
+    async updateArticleFiles(@Req() req: IRequest) {
+        const exists = await this.serv.checkOwnership(
+            req.user._id,
+            req.params.articleId,
+        );
+        if (!exists) {
+            throw new ForbiddenException(
+                "You don't have permission to edit this article",
+            );
+        }
+
+        if (
+            typeof req.files === "object" &&
+            req.files !== null &&
+            Object.keys(req.files).length > 0
+        ) {
+            const article = await this.serv.getArticle(req.params.articleId);
+            await this.serv.updateFiles(article, req.files as any);
+        }
+
         return { message: "Updated successfully" };
     }
 }
