@@ -1,4 +1,4 @@
-import { Box, Button, Stack } from "@chakra-ui/react";
+import { Box, Button, Spinner, Stack } from "@chakra-ui/react";
 import { Sidebar } from "./Sidebar";
 import { useAppSelector } from "@app/hooks/store";
 import { selectBlockIds, selectBlocks } from "@app/store/editor/slice";
@@ -12,7 +12,7 @@ import { useSaveArticle } from "@app/hooks/editor";
 export function Editor() {
     const blocks = useAppSelector(selectBlocks);
     const blockIds = useAppSelector(selectBlockIds);
-    const { save } = useSaveArticle();
+    const { save, saveIsPending } = useSaveArticle();
 
     return (
         <Box pos="relative" mt="70px">
@@ -24,8 +24,8 @@ export function Editor() {
                         return <DisplayBlock key={id} block={block} />;
                     })}
 
-                    <Button mt="2rem" onClick={save}>
-                        Save
+                    <Button mt="2rem" onClick={save} disabled={saveIsPending}>
+                        {saveIsPending ? <Spinner /> : "Save"}
                     </Button>
                 </Stack>
             </Stack>

@@ -1,4 +1,9 @@
-import { createArticle, getArticle } from "@app/services/articles";
+import {
+    UpdateArticleContentPayload,
+    createArticle,
+    getArticle,
+    updateArticleContent,
+} from "@app/services/articles";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useToast } from "@chakra-ui/react";
 import { useRouter } from "next/router";
@@ -19,6 +24,19 @@ export function useSaveArticle() {
     const blocks = useSelector(selectBlocks);
     const blockChanges = useSelector(selectBlockChanges);
     const files = useSelector(selectFiles);
+    const router = useRouter();
+
+    const { mutateAsync, isPending } = useMutation({
+        async mutationFn(payload: UpdateArticleContentPayload) {
+            return await updateArticleContent(payload);
+        },
+        onError(error, variables, context) {
+            console.error(error);
+        },
+        onSuccess(data, variables, context) {
+            console.log(data);
+        },
+    });
 
     async function save() {
         const finalAddedBlocks = new Set(
@@ -39,9 +57,17 @@ export function useSaveArticle() {
             finalChangedBlocks,
             files,
         });
+
+        await mutateAsync({
+            articleId: router.query.articleId as string,
+            blockIds,
+            addedBlockIds: Array.from(finalAddedBlocks),
+            changedBlockIds: Array.from(finalChangedBlocks),
+            blocks,
+        });
     }
 
-    return { save };
+    return { save, saveIsPending: isPending };
 }
 
 /**
@@ -60,19 +86,23 @@ export function useEditArticle() {
         queryFn: () => getArticle(router.query.articleId as string),
         enabled: isLoggedIn && router.query.articleId !== undefined,
         staleTime: 1000 * 60 * 5,
+        throwOnError: true,
     });
     const dispatch = useAppDispatch();
 
-    useEffect(function update() {
-        if (data?.article) {
-            dispatch(
-                populateEditor({
-                    blockIds: data.article.blockIds,
-                    blocks: data.article.blocks,
-                })
-            );
-        }
-    }, []);
+    useEffect(
+        function update() {
+            if (data?.article) {
+                dispatch(
+                    populateEditor({
+                        blockIds: data.article.blockIds,
+                        blocks: data.article.blocks,
+                    })
+                );
+            }
+        },
+        [isLoading]
+    );
 
     return {
         article: data?.article,
