@@ -7,7 +7,7 @@ import { z } from "zod";
 
 const ImageSchema = z.object({
     id: z.string().optional(),
-    URL: z.string(),
+    URL: z.string().optional().nullish(),
 });
 
 const ParagraphSchema = z.object({
@@ -36,7 +36,9 @@ const DividerSchema = z.object({
 const ImageBlockSchema = z.object({
     blockId: z.string(),
     type: z.literal("image"),
-    value: ImageSchema.merge(z.object({ caption: z.string().optional() })),
+    value: ImageSchema.merge(
+        z.object({ caption: z.string().optional().nullish() })
+    ),
 });
 
 const BlockSchema = z.union([
@@ -107,9 +109,47 @@ export async function getArticle(articleId: string) {
 
     if (status === 200 && data !== null && "article" in data) {
         const article = ArticleSchema.parse(data.article);
-        console.log({ m: article });
         return { success: true, article };
     } else if (status === 404 && data !== null && "message" in data) {
+        return { success: false, message: data.message };
+    }
+
+    return {
+        success: false,
+        message: res.error?.message ?? "Unknown error",
+    };
+}
+
+export type UpdateArticleContentPayload = {
+    articleId: string;
+    blockIds: string[];
+    addedBlockIds: string[];
+    changedBlockIds: string[];
+    blocks: Record<string, Block>;
+};
+
+export async function updateArticleContent(
+    payload: UpdateArticleContentPayload
+) {
+    type SuccessResponse = { message: string };
+    type ErrorResponse = { message: string };
+
+    const { articleId, blockIds, addedBlockIds, changedBlockIds } = payload;
+    const { blocks } = payload;
+
+    const res = await fetchFromAPI<SuccessResponse | ErrorResponse>(
+        endpoints.updateArticleContent(articleId),
+        {
+            method: "PUT",
+            data: { blockIds, addedBlockIds, changedBlockIds, blocks },
+        },
+        true
+    );
+    const { data, status } = res;
+
+    if (status === 200 && data !== null && "message" in data) {
+        return { success: true };
+    } else if (status === 400 && data !== null && "message" in data) {
         return { success: false, message: data.message };
     }
 

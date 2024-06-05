@@ -86,4 +86,7 @@ export const endpoints = Object.freeze({
     // Articles
     createArticle: "articles/",
     getArticle: (articleId: string) => `articles/${articleId}`,
+    updateArticleContent: (articleId: string) => {
+        return `articles/${articleId}/content`;
+    },
 });
