@@ -143,17 +143,16 @@ export class ArticleService {
 
         // Remove blocks
 
-        const existingBlockIds = Object.keys(article.blocks).filter((id) =>
-            id.startsWith("blk_"),
-        );
+        const existingBlockIds = Array.from(article.blocks.keys());
         const deletedBlockIds = existingBlockIds.filter(
             (id) => !blockIds.includes(id),
         );
+        console.log(deletedBlockIds, existingBlockIds);
 
         const imgBlocks: Image[] = [];
         for (const id of deletedBlockIds) {
-            const block = article.blocks[id];
-            if (block.type === "image") {
+            const block = article.blocks.get(id);
+            if (block && block.type === "image") {
                 imgBlocks.push(block);
             }
         }
@@ -164,7 +163,10 @@ export class ArticleService {
 
         this.deleteImages(article._id, imgBlocks);
 
-        await article.save();
+        await this.repo.updateOne(article.articleId, {
+            blockIds: article.blockIds,
+            blocks: article.blocks,
+        });
         return article;
     }
 
