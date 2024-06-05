@@ -12,6 +12,7 @@ import { useUser } from "./auth";
 import { useEffect } from "react";
 import { useAppDispatch } from "./store";
 import {
+    emptyChanges,
     populateEditor,
     selectBlockChanges,
     selectBlockIds,
@@ -26,11 +27,18 @@ export function useSaveArticle() {
     const blockChanges = useSelector(selectBlockChanges);
     const files = useSelector(selectFiles);
     const router = useRouter();
+    const dispatch = useAppDispatch();
 
     const { mutateAsync, isPending } = useMutation({
         async mutationFn(payload: UpdateArticleContentPayload) {
             await updateArticleContent(payload);
-            await updateArticleFiles(router.query.articleId as string, files);
+            if (Object.keys(files).length > 0) {
+                await updateArticleFiles(
+                    router.query.articleId as string,
+                    files
+                );
+            }
+            dispatch(emptyChanges());
         },
         onError(error, variables, context) {
             console.error(error);
@@ -51,14 +59,6 @@ export function useSaveArticle() {
                 .filter((blockId) => blockIds.includes(blockId))
                 .filter((blockId) => !finalAddedBlocks.has(blockId))
         );
-
-        console.log({
-            blockIds,
-            blocks,
-            finalAddedBlocks,
-            finalChangedBlocks,
-            files,
-        });
 
         await mutateAsync({
             articleId: router.query.articleId as string,

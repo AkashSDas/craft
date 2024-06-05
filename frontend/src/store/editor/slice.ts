@@ -175,6 +175,12 @@ export const editorSlice = createSlice({
             block.value.text = text;
             state.changedBlocks.push(blockId);
         },
+        emptyChanges(state) {
+            state.addedBlocks = [];
+            state.deletedBlocks = [];
+            state.changedBlocks = [];
+            state.files = {};
+        },
     },
 });
 
@@ -212,4 +218,5 @@ export const {
     updateHeadingBlock,
     deleteBlock,
     updateImageBlock,
+    emptyChanges,
 } = editorSlice.actions;
