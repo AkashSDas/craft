@@ -102,7 +102,7 @@ export function ImageBlock(props: Props) {
             />
 
             {/* Add file type and file size validation */}
-            {file && file.type.startsWith("image/") ? (
+            {file || block.value.URL ? (
                 <Box pos="relative" height="300px" width="100%">
                     <NextImage
                         src={block.value.URL ?? ""}
@@ -128,12 +128,11 @@ export function ImageBlock(props: Props) {
                 </Box>
             ) : (
                 <Button
-                    variant="outline"
+                    variant="paleSolid"
                     leftIcon={<AddIcon />}
-                    color="gray"
                     onClick={() => inputRef.current?.click()}
                 >
-                    <Text>Add Image</Text>
+                    Add Image
                 </Button>
             )}
         </Stack>

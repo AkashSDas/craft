@@ -32,10 +32,20 @@ export function useSaveArticle() {
     const { mutateAsync, isPending } = useMutation({
         async mutationFn(payload: UpdateArticleContentPayload) {
             await updateArticleContent(payload);
-            if (Object.keys(files).length > 0) {
+
+            // don't upload images that are already saved
+            const uploadFileIds = Object.keys(files).filter(
+                (blockId) => !blockChanges.savedFileBlockIds.includes(blockId)
+            );
+            const uploadFiles: Record<string, File> = {};
+            for (const blockId of uploadFileIds) {
+                uploadFiles[blockId] = files[blockId];
+            }
+
+            if (uploadFileIds.length > 0) {
                 await updateArticleFiles(
                     router.query.articleId as string,
-                    files
+                    uploadFiles
                 );
             }
             dispatch(emptyChanges());

@@ -67,6 +67,12 @@ type EditorState = {
     deletedBlocks: BlockId[];
     changedBlocks: BlockId[];
     files: Record<BlockId, File>;
+
+    // since the files can't be emptied as they show images in the FE
+    // that's why keeping savedFileBlockIds to keep track of the files
+    // that have been saved previously and remove ids from this when
+    // the block image is updated
+    savedFileBlockIds: BlockId[];
 };
 
 const initialState: EditorState = {
@@ -77,6 +83,7 @@ const initialState: EditorState = {
     deletedBlocks: [],
     changedBlocks: [],
     files: {},
+    savedFileBlockIds: [],
 };
 
 // ===================================
@@ -154,6 +161,11 @@ export const editorSlice = createSlice({
             block.value.URL = URL.createObjectURL(file);
             state.files[blockId] = file;
             state.changedBlocks.push(blockId);
+
+            // remove the blockId from savedFileBlockIds as its being updated
+            state.savedFileBlockIds = state.savedFileBlockIds.filter(
+                (id) => id !== blockId
+            );
         },
         updateParagraphBlock(
             state,
@@ -179,7 +191,7 @@ export const editorSlice = createSlice({
             state.addedBlocks = [];
             state.deletedBlocks = [];
             state.changedBlocks = [];
-            state.files = {};
+            state.savedFileBlockIds = Object.keys(state.files);
         },
     },
 });
@@ -204,6 +216,7 @@ export const selectBlockChanges = (state: RootState) => {
         addedBlocks: state.editor.addedBlocks,
         deletedBlocks: state.editor.deletedBlocks,
         changedBlocks: state.editor.changedBlocks,
+        savedFileBlockIds: state.editor.savedFileBlockIds,
     };
 };
 
