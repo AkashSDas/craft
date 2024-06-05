@@ -92,21 +92,22 @@ class ImageBlockDto {
 // ====================================
 
 export class UpdateArticleContentDto {
-    @IsArray({ each: true })
+    @IsArray()
     @IsString({ each: true })
     blockIds: string[]; // all of the block ids
 
-    @IsArray({ each: true })
+    @IsArray()
     @IsString({ each: true })
     addedBlockIds: string[]; // added blocks (without deleted blocks)
 
-    @IsArray({ each: true })
+    @IsArray()
     @IsString({ each: true })
     changedBlockIds: string[]; // changed blocks (without deleted or newly added blocks)
 
     @IsObject()
     @Transform(({ value }) => {
-        return Object.fromEntries(
+        console.count("Transform");
+        const result = Object.fromEntries(
             Object.entries(value)
                 .filter(([, value]) => (value as any)?.type)
                 .map(([key, value]) => {
@@ -128,19 +129,21 @@ export class UpdateArticleContentDto {
                 })
                 .filter(([, value]) => value !== null),
         );
+
+        return result;
     })
-    @ValidateNested({ each: true })
-    @Type(() => Object, {
-        discriminator: {
-            property: "type",
-            subTypes: [
-                { value: ParagraphBlockDto, name: "paragraph" },
-                { value: HeadingBlockDto, name: "heading" },
-                { value: DividerBlockDto, name: "divider" },
-                { value: ImageBlockDto, name: "image" },
-            ],
-        },
-    })
+    // @ValidateNested({ each: true })
+    // @Type(() => Object, {
+    //     discriminator: {
+    //         property: "type",
+    //         subTypes: [
+    //             { value: ParagraphBlockDto, name: "paragraph" },
+    //             { value: HeadingBlockDto, name: "heading" },
+    //             { value: DividerBlockDto, name: "divider" },
+    //             { value: ImageBlockDto, name: "image" },
+    //         ],
+    //     },
+    // })
     blocks: Record<
         string,
         ParagraphBlockDto | HeadingBlockDto | DividerBlockDto | ImageBlockDto
