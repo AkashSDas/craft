@@ -1,7 +1,6 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { SchemaTypes, Document } from "mongoose";
 import { IImage } from "../../users/schema";
-import { createId } from "../../utils/ids";
 
 // ====================================
 // Content block types
@@ -50,13 +49,7 @@ export const blocks: Block["type"][] = [
 
 @Schema({ _id: false, timestamps: true })
 export class ContentBlock extends Document implements IContentBlock {
-    @Prop({
-        type: String,
-        required: true,
-        unique: true,
-        default: () => createId("blk"),
-        immutable: true,
-    })
+    @Prop({ type: String, required: true })
     blockId: BlockId;
 
     @Prop({ type: String, required: true, enum: blocks })

@@ -23,7 +23,7 @@ export interface IArticle {
 
     // Content
     blockIds: BlockId[];
-    blocks: Record<BlockId, ContentBlockType>;
+    blocks: Map<BlockId, ContentBlockType>;
 }
 
 @Schema({ timestamps: true })
@@ -73,7 +73,7 @@ export class Article extends Document implements IArticle {
         default: {},
         _id: false,
     })
-    blocks: Record<BlockId, ContentBlockType>;
+    blocks: Map<BlockId, ContentBlockType>;
 }
 
 export const ArticleSchema = SchemaFactory.createForClass(Article);
