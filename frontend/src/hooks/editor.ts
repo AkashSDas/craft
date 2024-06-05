@@ -2,6 +2,7 @@ import {
     UpdateArticleContentPayload,
     createArticle,
     getArticle,
+    reorderArticleBlocks,
     updateArticleContent,
     updateArticleFiles,
 } from "@app/services/articles";
@@ -28,6 +29,16 @@ export function useSaveArticle() {
     const files = useSelector(selectFiles);
     const router = useRouter();
     const dispatch = useAppDispatch();
+
+    const { mutateAsync: reorderMutateAsync, isPending: reorderIsPending } =
+        useMutation({
+            async mutationFn(blockIds: string[]) {
+                await reorderArticleBlocks(
+                    router.query.articleId as string,
+                    blockIds
+                );
+            },
+        });
 
     const { mutateAsync, isPending } = useMutation({
         async mutationFn(payload: UpdateArticleContentPayload) {
@@ -58,6 +69,10 @@ export function useSaveArticle() {
         },
     });
 
+    async function reorder() {
+        await reorderMutateAsync(blockIds);
+    }
+
     async function save() {
         const finalAddedBlocks = new Set(
             blockChanges.addedBlocks.filter((blockId) =>
@@ -79,7 +94,7 @@ export function useSaveArticle() {
         });
     }
 
-    return { save, saveIsPending: isPending };
+    return { save, saveIsPending: isPending, reorder, reorderIsPending };
 }
 
 /**

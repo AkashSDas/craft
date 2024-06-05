@@ -190,3 +190,29 @@ export async function updateArticleFiles(
         message: res.error?.message ?? "Unknown error",
     };
 }
+
+export async function reorderArticleBlocks(
+    articleId: string,
+    blockIds: BlockId[]
+) {
+    type SuccessResponse = { message: string };
+    type ErrorResponse = { message: string };
+
+    const res = await fetchFromAPI<SuccessResponse | ErrorResponse>(
+        endpoints.reorderArticleBlocks(articleId),
+        { method: "PUT", data: { blockIds } },
+        true
+    );
+    const { data, status } = res;
+
+    if (status === 200 && data !== null && "message" in data) {
+        return { success: true };
+    } else if (status === 400 && data !== null && "message" in data) {
+        return { success: false, message: data.message };
+    }
+
+    return {
+        success: false,
+        message: res.error?.message ?? "Unknown error",
+    };
+}

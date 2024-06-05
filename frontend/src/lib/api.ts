@@ -92,4 +92,7 @@ export const endpoints = Object.freeze({
     addArticleFiles: (articleId: string) => {
         return `articles/${articleId}/files`;
     },
+    reorderArticleBlocks: (articleId: string) => {
+        return `articles/${articleId}/reorder-blocks`;
+    },
 });
