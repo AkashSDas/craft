@@ -13,14 +13,19 @@ import { DragDropContext, Droppable, DropResult } from "react-beautiful-dnd";
 export function Editor() {
     const blocks = useAppSelector(selectBlocks);
     const blockIds = useAppSelector(selectBlockIds);
-    const { save, saveIsPending } = useSaveArticle();
+    const { save, saveIsPending, reorder, reorderIsPending } = useSaveArticle();
     const dispatch = useAppDispatch();
 
-    function onDragEnd(dropEvent: DropResult) {
+    async function onDragEnd(dropEvent: DropResult) {
         const source = dropEvent.source.index;
         const destination = dropEvent.destination?.index;
         if (destination === undefined) return;
         dispatch(reorderBlocks({ from: source, to: destination }));
+
+        const tmpBlockIds = [...blockIds];
+        const [removed] = tmpBlockIds.splice(source, 1);
+        tmpBlockIds.splice(destination, 0, removed);
+        await reorder(tmpBlockIds);
     }
 
     return (
@@ -55,7 +60,11 @@ export function Editor() {
                     </DragDropContext>
 
                     <Button mt="2rem" onClick={save} disabled={saveIsPending}>
-                        {saveIsPending ? <Spinner /> : "Save"}
+                        {saveIsPending || reorderIsPending ? (
+                            <Spinner />
+                        ) : (
+                            "Save"
+                        )}
                     </Button>
                 </Stack>
             </Stack>

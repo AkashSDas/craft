@@ -1,4 +1,5 @@
 import {
+    BlockId,
     UpdateArticleContentPayload,
     createArticle,
     getArticle,
@@ -69,7 +70,7 @@ export function useSaveArticle() {
         },
     });
 
-    async function reorder() {
+    async function reorder(blockIds: BlockId[]) {
         await reorderMutateAsync(blockIds);
     }
 
