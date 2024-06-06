@@ -407,6 +407,25 @@ export const theme = extendTheme({
                 height: "40px",
             },
             variants: {
+                tab: {
+                    color: "gray.600",
+                    bgColor: "white",
+                    borderRadius: "4px",
+                    height: "40px",
+                    border: "1.5px solid",
+                    borderColor: "gray.200",
+                    transition:
+                        "transform .3s cubic-bezier(.5,2.5,.7,.7),-webkit-transform .3s cubic-bezier(.5,2.5,.7,.7)",
+                    _hover: {
+                        filter: "brightness(0.95)",
+                        bgColor: "white",
+                    },
+                    _active: {
+                        filter: "brightness(0.9)",
+                        bgColor: "white",
+                        transform: "scale(0.96)",
+                    },
+                },
                 navItem: {
                     color: "white",
                     fontSize: "14px",
