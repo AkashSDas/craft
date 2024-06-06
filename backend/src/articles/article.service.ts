@@ -29,6 +29,16 @@ export class ArticleService {
         return article;
     }
 
+    async getUserArticles(authorId: Types.ObjectId, type: "draft" | "public") {
+        if (type === "public") {
+            return await this.repo.getUserPublishedArticles(authorId);
+        } else if (type === "draft") {
+            return await this.repo.getUserDraftArticles(authorId);
+        }
+
+        throw new Error("Invalid article type");
+    }
+
     async updateFiles(article: Article, files: Record<BlockId, UploadedFile>) {
         // Filter out files whose ids don't exist in article block ids
 

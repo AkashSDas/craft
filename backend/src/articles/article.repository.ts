@@ -33,4 +33,12 @@ export class ArticleRepository {
             { runValidators: true },
         );
     }
+
+    async getUserPublishedArticles(authorId: Types.ObjectId) {
+        return await this.model.find({ isPublic: true, authorIds: authorId });
+    }
+
+    async getUserDraftArticles(authorId: Types.ObjectId) {
+        return await this.model.find({ isPublic: false, authorIds: authorId });
+    }
 }

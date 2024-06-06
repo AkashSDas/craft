@@ -6,6 +6,7 @@ import {
     HttpCode,
     HttpStatus,
     NotFoundException,
+    Param,
     Post,
     Put,
     Req,
@@ -26,6 +27,17 @@ export class ArticleController {
     async createNewArticle(@Req() req: IRequest) {
         const article = await this.serv.createNewArticle(req.user._id);
         return { article, message: "Article created successfully" };
+    }
+
+    @Get("me")
+    @HttpCode(HttpStatus.OK)
+    @UseGuards(AccessTokenGuard)
+    async getUserArticles(
+        @Req() req: IRequest,
+        @Param("type") type: "draft" | "public",
+    ) {
+        const articles = await this.serv.getUserArticles(req.user._id, type);
+        return { articles };
     }
 
     @Get(":articleId")

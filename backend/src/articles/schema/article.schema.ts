@@ -20,6 +20,7 @@ export interface IArticle {
     topics: string[];
     readTimeInMs: number;
     lastUpdatedAt: Date;
+    isPublic: boolean;
 
     // Content
     blockIds: BlockId[];
@@ -74,6 +75,9 @@ export class Article extends Document implements IArticle {
         _id: false,
     })
     blocks: Map<BlockId, ContentBlockType>;
+
+    @Prop({ type: Boolean, required: true, default: false })
+    isPublic: boolean;
 }
 
 export const ArticleSchema = SchemaFactory.createForClass(Article);
