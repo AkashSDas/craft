@@ -1,28 +1,58 @@
 import { Box, Button, Spinner, Stack } from "@chakra-ui/react";
 import { Sidebar } from "./Sidebar";
-import { useAppSelector } from "@app/hooks/store";
-import { selectBlockIds, selectBlocks } from "@app/store/editor/slice";
-import { Block } from "@app/services/articles";
-import { ParagraphInputBlock } from "./ParagraphInputBlock";
-import { HeadingBlock } from "./HeadingBlock";
-import { DividerBlock } from "./DividerBlock";
-import { ImageBlock } from "./ImageBlock";
+import { useAppDispatch, useAppSelector } from "@app/hooks/store";
+import {
+    reorderBlocks,
+    selectBlockIds,
+    selectBlocks,
+} from "@app/store/editor/slice";
 import { useSaveArticle } from "@app/hooks/editor";
+import { DisplayBlock } from "./DisplayBlock";
+import { DragDropContext, Droppable, DropResult } from "react-beautiful-dnd";
 
 export function Editor() {
     const blocks = useAppSelector(selectBlocks);
     const blockIds = useAppSelector(selectBlockIds);
     const { save, saveIsPending } = useSaveArticle();
+    const dispatch = useAppDispatch();
+
+    function onDragEnd(dropEvent: DropResult) {
+        const source = dropEvent.source.index;
+        const destination = dropEvent.destination?.index;
+        if (destination === undefined) return;
+        dispatch(reorderBlocks({ from: source, to: destination }));
+    }
 
     return (
         <Box pos="relative" mt="70px">
             <Sidebar />
             <Stack ml="300px" alignItems="center">
                 <Stack maxW="700px" w="100%" px="4rem" my="2rem" gap="0">
-                    {blockIds.map(function (id) {
-                        const block = blocks[id];
-                        return <DisplayBlock key={id} block={block} />;
-                    })}
+                    <DragDropContext onDragEnd={onDragEnd}>
+                        <Droppable droppableId="droppable">
+                            {function (provided) {
+                                return (
+                                    <Box
+                                        {...provided.droppableProps}
+                                        ref={provided.innerRef}
+                                    >
+                                        {blockIds.map(function (id, index) {
+                                            const block = blocks[id];
+                                            return (
+                                                <DisplayBlock
+                                                    key={id}
+                                                    block={block}
+                                                    index={index}
+                                                />
+                                            );
+                                        })}
+
+                                        {provided.placeholder}
+                                    </Box>
+                                );
+                            }}
+                        </Droppable>
+                    </DragDropContext>
 
                     <Button mt="2rem" onClick={save} disabled={saveIsPending}>
                         {saveIsPending ? <Spinner /> : "Save"}
@@ -31,21 +61,4 @@ export function Editor() {
             </Stack>
         </Box>
     );
-}
-
-function DisplayBlock({ block }: { block: Block }) {
-    switch (block.type) {
-        case "paragraph":
-            return <ParagraphInputBlock blockId={block.blockId} />;
-        case "heading": {
-            const { variant } = block.value;
-            return <HeadingBlock blockId={block.blockId} variant={variant} />;
-        }
-        case "divider":
-            return <DividerBlock blockId={block.blockId} />;
-        case "image":
-            return <ImageBlock blockId={block.blockId} />;
-        default:
-            return null;
-    }
 }

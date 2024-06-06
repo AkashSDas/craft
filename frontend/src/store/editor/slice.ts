@@ -193,6 +193,14 @@ export const editorSlice = createSlice({
             state.changedBlocks = [];
             state.savedFileBlockIds = Object.keys(state.files);
         },
+        reorderBlocks(
+            state,
+            action: { payload: { from: number; to: number } }
+        ) {
+            const { from, to } = action.payload;
+            const [removed] = state.blockIds.splice(from, 1);
+            state.blockIds.splice(to, 0, removed);
+        },
     },
 });
 
@@ -232,4 +240,5 @@ export const {
     deleteBlock,
     updateImageBlock,
     emptyChanges,
+    reorderBlocks,
 } = editorSlice.actions;
