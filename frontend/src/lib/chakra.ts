@@ -412,8 +412,6 @@ export const theme = extendTheme({
                     bgColor: "white",
                     borderRadius: "4px",
                     height: "40px",
-                    border: "1.5px solid",
-                    borderColor: "gray.200",
                     transition:
                         "transform .3s cubic-bezier(.5,2.5,.7,.7),-webkit-transform .3s cubic-bezier(.5,2.5,.7,.7)",
                     _hover: {
