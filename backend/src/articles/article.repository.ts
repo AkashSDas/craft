@@ -23,7 +23,9 @@ export class ArticleRepository {
     }
 
     async getArticleById(articleId: string) {
-        return await this.model.findOne({ articleId });
+        return await this.model
+            .findOne({ articleId })
+            .populate("authorIds", "username profilePic userId");
     }
 
     async updateOne(articleId: string, update: Partial<Article>) {
