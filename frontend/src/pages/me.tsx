@@ -1,29 +1,21 @@
 import { EditArticleCard } from "@app/components/studio/EditArticleCard";
 import { useUser } from "@app/hooks/auth";
 import { useCreateArticle } from "@app/hooks/editor";
-import {
-    Article,
-    Image as ImageBlock,
-    getUserArticles,
-} from "@app/services/articles";
+import { getUserArticles } from "@app/services/articles";
 import { fontStyles } from "@app/utils/fonts";
 import { AddIcon } from "@chakra-ui/icons";
 import {
-    Box,
     Button,
     Divider,
     HStack,
     Heading,
-    IconButton,
     Spinner,
     Text,
     VStack,
 } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
-import Image from "next/image";
-import Link from "next/link";
 import { useRouter } from "next/router";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 
 export default function UserArticlesPage() {
     const [tab, setTab] = useState<"draft" | "public">("draft");

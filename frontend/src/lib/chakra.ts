@@ -1,4 +1,4 @@
-import { StyleFunctionProps, extendTheme, keyframes } from "@chakra-ui/react";
+import { extendTheme, keyframes } from "@chakra-ui/react";
 import localFont from "next/font/local";
 import { Source_Serif_4, Ubuntu_Mono } from "next/font/google";
 
