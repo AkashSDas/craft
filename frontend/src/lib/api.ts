@@ -95,4 +95,7 @@ export const endpoints = Object.freeze({
     reorderArticleBlocks: (articleId: string) => {
         return `articles/${articleId}/reorder-blocks`;
     },
+    getUserArtilces: (type: "draft" | "public") => {
+        return `articles/me?type=${type}`;
+    },
 });

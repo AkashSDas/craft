@@ -61,6 +61,8 @@ const ArticleSchema = z.object({
     blocks: z.record(z.string(), BlockSchema),
 });
 
+const ArticlesSchema = z.array(ArticleSchema);
+
 export type Paragraph = z.infer<typeof ParagraphSchema>;
 export type Heading = z.infer<typeof HeadingSchema>;
 export type Divider = z.infer<typeof DividerSchema>;
@@ -207,6 +209,30 @@ export async function reorderArticleBlocks(
 
     if (status === 200 && data !== null && "message" in data) {
         return { success: true };
+    } else if (status === 400 && data !== null && "message" in data) {
+        return { success: false, message: data.message };
+    }
+
+    return {
+        success: false,
+        message: res.error?.message ?? "Unknown error",
+    };
+}
+
+export async function getUserArticles(type: "draft" | "public") {
+    type SuccessResponse = { articles: Article[] };
+    type ErrorResponse = { message: string };
+
+    const res = await fetchFromAPI<SuccessResponse | ErrorResponse>(
+        endpoints.getUserArtilces(type),
+        { method: "GET" },
+        true
+    );
+    const { data, status } = res;
+
+    if (status === 200 && data !== null && "articles" in data) {
+        const articles = ArticlesSchema.parse(data.articles);
+        return { success: true, articles };
     } else if (status === 400 && data !== null && "message" in data) {
         return { success: false, message: data.message };
     }
