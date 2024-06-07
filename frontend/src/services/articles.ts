@@ -50,13 +50,22 @@ const BlockSchema = z.union([
 
 const ArticleSchema = z.object({
     articleId: z.string(),
-    authorIds: z.array(z.string()).min(1),
+    authorIds: z
+        .array(
+            z.object({
+                userId: z.string(),
+                username: z.string(),
+                profilePic: ImageSchema.optional(),
+            })
+        )
+        .min(1),
     headline: z.string().optional(),
     description: z.string().optional(),
     coverImage: ImageSchema.optional(),
     topics: z.array(z.string()),
     readTimeInMs: z.number().int().min(0),
     lastUpdatedAt: z.string(),
+    isPublic: z.boolean(),
     blockIds: z.array(z.string()),
     blocks: z.record(z.string(), BlockSchema),
 });
