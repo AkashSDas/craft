@@ -19,6 +19,7 @@ import { Logo } from "../logo";
 import Image from "next/image";
 import { useRef } from "react";
 import { useLogout, useUser } from "@app/hooks/auth";
+import { useCreateArticle } from "@app/hooks/editor";
 
 function ForwardIcon(): React.JSX.Element {
     return (
@@ -36,6 +37,7 @@ export function MobileNav() {
     const menuBtnRef = useRef<HTMLButtonElement>(null);
     const { isPending, logoutUser } = useLogout();
     const { isLoggedIn } = useUser();
+    const { mutation } = useCreateArticle();
 
     return (
         <Show below="sm">
@@ -81,45 +83,124 @@ export function MobileNav() {
 
                     <DrawerBody>
                         <VStack gap="0.5rem">
-                            <HStack
-                                w="100%"
-                                px="8px"
-                                py="12px"
-                                justifyContent="space-between"
-                                borderRadius="4px"
-                                cursor="pointer"
-                                _hover={{ bgColor: "gray.100" }}
-                                _active={{ bgColor: "gray.200" }}
-                                onClick={onClose}
-                            >
-                                <Text
-                                    fontWeight="600"
-                                    fontSize="24px"
-                                    color="gray.700"
-                                >
-                                    About
-                                </Text>
-                                <ForwardIcon />
-                            </HStack>
-
-                            <Divider />
-
                             {isLoggedIn ? (
-                                <Button
-                                    variant="paleSolid"
-                                    onClick={logoutUser}
-                                    disabled={isPending}
-                                    isDisabled={isPending}
-                                    fontSize="1rem"
-                                    w="100%"
-                                    mt="1rem"
-                                >
-                                    {isPending ? (
-                                        <Spinner size="xs" />
-                                    ) : (
-                                        "Logout"
-                                    )}
-                                </Button>
+                                <>
+                                    <HStack
+                                        w="100%"
+                                        px="8px"
+                                        py="12px"
+                                        justifyContent="space-between"
+                                        borderRadius="4px"
+                                        cursor="pointer"
+                                        _hover={{ bgColor: "gray.100" }}
+                                        _active={{ bgColor: "gray.200" }}
+                                        onClick={onClose}
+                                    >
+                                        <Text
+                                            fontWeight="600"
+                                            fontSize="24px"
+                                            color="gray.700"
+                                        >
+                                            Profile
+                                        </Text>
+                                        <ForwardIcon />
+                                    </HStack>
+
+                                    <HStack
+                                        w="100%"
+                                        px="8px"
+                                        py="12px"
+                                        justifyContent="space-between"
+                                        borderRadius="4px"
+                                        cursor="pointer"
+                                        _hover={{ bgColor: "gray.100" }}
+                                        _active={{ bgColor: "gray.200" }}
+                                        onClick={onClose}
+                                    >
+                                        <Text
+                                            fontWeight="600"
+                                            fontSize="24px"
+                                            color="gray.700"
+                                        >
+                                            Library
+                                        </Text>
+                                        <ForwardIcon />
+                                    </HStack>
+
+                                    <HStack
+                                        w="100%"
+                                        px="8px"
+                                        py="12px"
+                                        justifyContent="space-between"
+                                        borderRadius="4px"
+                                        cursor="pointer"
+                                        _hover={{ bgColor: "gray.100" }}
+                                        _active={{ bgColor: "gray.200" }}
+                                        onClick={onClose}
+                                        as={Link}
+                                        href="/me"
+                                    >
+                                        <Text
+                                            fontWeight="600"
+                                            fontSize="24px"
+                                            color="gray.700"
+                                        >
+                                            Studio
+                                        </Text>
+                                        <ForwardIcon />
+                                    </HStack>
+
+                                    <HStack
+                                        w="100%"
+                                        variant="none"
+                                        h="60px"
+                                        px="8px"
+                                        py="12px"
+                                        justifyContent="space-between"
+                                        borderRadius="4px"
+                                        cursor="pointer"
+                                        _hover={{ bgColor: "gray.100" }}
+                                        _active={{ bgColor: "gray.200" }}
+                                        as={Button}
+                                        onClick={() => {
+                                            onClose();
+                                            mutation.mutateAsync();
+                                        }}
+                                        disabled={mutation.isPending}
+                                        leftIcon={
+                                            mutation.isPending ? (
+                                                <Spinner size="md" />
+                                            ) : undefined
+                                        }
+                                    >
+                                        <Text
+                                            flexGrow={1}
+                                            fontWeight="600"
+                                            fontSize="24px"
+                                            color="gray.700"
+                                            textAlign="start"
+                                        >
+                                            Write
+                                        </Text>
+                                        <ForwardIcon />
+                                    </HStack>
+
+                                    <Button
+                                        variant="paleSolid"
+                                        onClick={logoutUser}
+                                        disabled={isPending}
+                                        isDisabled={isPending}
+                                        fontSize="1rem"
+                                        w="100%"
+                                        mt="1rem"
+                                    >
+                                        {isPending ? (
+                                            <Spinner size="xs" />
+                                        ) : (
+                                            "Logout"
+                                        )}
+                                    </Button>
+                                </>
                             ) : (
                                 <>
                                     <HStack

@@ -7,8 +7,10 @@ import {
     Divider,
     Spinner,
     Box,
+    MenuIcon,
 } from "@chakra-ui/react";
 import Image from "next/image";
+import Link from "next/link";
 
 export function ProfilePicture() {
     const { user } = useUser();
@@ -55,7 +57,15 @@ export function ProfilePicture() {
                     transformOrigin="center"
                     fontWeight="500"
                     _hover={{ bgColor: "gray.100" }}
-                    _active={{ bgColor: "gray.200", transform: "scale(0.96)" }}
+                    _active={{ bgColor: "gray.200", transform: "scale(0.98)" }}
+                    icon={
+                        <Image
+                            src="/icons/user.png"
+                            alt="Profile"
+                            width={18}
+                            height={18}
+                        />
+                    }
                 >
                     Profile
                 </MenuItem>
@@ -67,9 +77,39 @@ export function ProfilePicture() {
                     transformOrigin="center"
                     fontWeight="500"
                     _hover={{ bgColor: "gray.100" }}
-                    _active={{ bgColor: "gray.200", transform: "scale(0.96)" }}
+                    _active={{ bgColor: "gray.200", transform: "scale(0.98)" }}
+                    icon={
+                        <Image
+                            src="/icons/library.png"
+                            alt="Profile"
+                            width={18}
+                            height={18}
+                        />
+                    }
                 >
                     Library
+                </MenuItem>
+
+                <MenuItem
+                    as={Link}
+                    href="/me"
+                    h="36px"
+                    borderRadius="4px"
+                    transition="transform 0.3s cubic-bezier(.5,2.5,.7,.7)"
+                    transformOrigin="center"
+                    fontWeight="500"
+                    _hover={{ bgColor: "gray.100" }}
+                    _active={{ bgColor: "gray.200", transform: "scale(0.98)" }}
+                    icon={
+                        <Image
+                            src="/icons/pen.png"
+                            alt="Profile"
+                            width={18}
+                            height={18}
+                        />
+                    }
+                >
+                    Studio
                 </MenuItem>
 
                 <Divider my="12px" />
@@ -80,10 +120,18 @@ export function ProfilePicture() {
                     transformOrigin="center"
                     fontWeight="500"
                     _hover={{ bgColor: "gray.100" }}
-                    _active={{ bgColor: "gray.200", transform: "scale(0.96)" }}
+                    _active={{ bgColor: "gray.200", transform: "scale(0.98)" }}
                     onClick={logoutUser}
                     disabled={isPending}
                     isDisabled={isPending}
+                    icon={
+                        <Image
+                            src="/icons/logout.png"
+                            alt="Profile"
+                            width={18}
+                            height={18}
+                        />
+                    }
                 >
                     {isPending ? <Spinner size="sm" mx="auto" /> : "Logout"}
                 </MenuItem>
