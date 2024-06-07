@@ -6,9 +6,9 @@ import {
     HttpCode,
     HttpStatus,
     NotFoundException,
-    Param,
     Post,
     Put,
+    Query,
     Req,
     UseGuards,
 } from "@nestjs/common";
@@ -34,7 +34,7 @@ export class ArticleController {
     @UseGuards(AccessTokenGuard)
     async getUserArticles(
         @Req() req: IRequest,
-        @Param("type") type: "draft" | "public",
+        @Query("type") type: "draft" | "public",
     ) {
         const articles = await this.serv.getUserArticles(req.user._id, type);
         return { articles };
@@ -47,7 +47,6 @@ export class ArticleController {
         if (!article) {
             throw new NotFoundException("Article not found");
         }
-        console.log("article", article.blocks);
         return { article };
     }
 
@@ -74,6 +73,7 @@ export class ArticleController {
 
         const article = await this.serv.getArticle(req.params.articleId);
         await this.serv.updateNonFileContent(article, body);
+        await this.serv.updateArticleInfoUsingBlocks(req.params.articleId);
         return { message: "Updated successfully" };
     }
 
@@ -117,6 +117,7 @@ export class ArticleController {
         ) {
             const article = await this.serv.getArticle(req.params.articleId);
             await this.serv.updateFiles(article, req.files as any);
+            await this.serv.updateArticleInfoUsingBlocks(req.params.articleId);
         }
 
         return { message: "Updated successfully" };

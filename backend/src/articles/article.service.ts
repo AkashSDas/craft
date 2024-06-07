@@ -2,7 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { ArticleRepository } from "./article.repository";
 import { Types } from "mongoose";
 import { UpdateArticleContentDto } from "./dto";
-import { Article, BlockId, Image } from "./schema";
+import { Article, BlockId, Heading, Image, Paragraph } from "./schema";
 import { UploadApiResponse, v2 } from "cloudinary";
 import { UploadedFile } from "express-fileupload";
 
@@ -121,6 +121,39 @@ export class ArticleService {
         await this.repo.updateOne(article.articleId, {
             blocks: article.blocks,
         });
+    }
+
+    async updateArticleInfoUsingBlocks(articleId: string) {
+        const article = await this.repo.getArticleById(articleId);
+        const blocks = article.blocks;
+
+        const heading = Array.from(blocks.values()).find(
+            (block) => block.type === "heading" && block.value.variant === "h1",
+        ) as Heading | undefined;
+
+        const description = Array.from(blocks.values()).find(
+            (block) => block.type === "paragraph",
+        ) as Paragraph | undefined;
+
+        const coverImg = Array.from(blocks.values()).find(
+            (block) => block.type === "image",
+        ) as Image | undefined;
+        console.log(heading);
+        console.log(description);
+        console.log(coverImg);
+
+        const update: Partial<Article> = {};
+        if (heading) {
+            update["title"] = heading.value.text;
+        }
+        if (description) {
+            update["description"] = description.value.text;
+        }
+        if (coverImg && coverImg.value.URL) {
+            update["coverImg"] = { URL: coverImg.value.URL };
+        }
+
+        await this.repo.updateOne(articleId, update);
     }
 
     async updateNonFileContent(article: Article, dto: UpdateArticleContentDto) {
