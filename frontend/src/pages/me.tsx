@@ -83,7 +83,7 @@ export default function UserArticlesPage() {
 
                 <Divider my="1rem" borderColor="gray.300" />
 
-                <VStack justifyContent="center" w="100%">
+                <VStack justifyContent="center" w="100%" gap="1rem">
                     {isLoading || isError ? (
                         <Spinner size="xl" thickness="3px" mt="4rem" />
                     ) : (
@@ -98,12 +98,13 @@ export default function UserArticlesPage() {
 
                 {!isLoading && !isError && data?.articles?.length === 0 && (
                     <HStack
-                        h="280px"
+                        h={{ base: "200px", sm: "280px" }}
                         w="100%"
                         borderRadius="4px"
                         bgColor="black"
                         justifyContent="center"
-                        gap="2rem"
+                        gap={{ base: "1rem", sm: "2rem" }}
+                        flexDirection={{ base: "column", sm: "row" }}
                     >
                         <EmptyHeading />
                         <Button
@@ -128,7 +129,7 @@ export default function UserArticlesPage() {
 
 function EmptyHeading() {
     return (
-        <Heading as="h3" color="white" fontSize={{ base: "24px", sm: "40px" }}>
+        <Heading as="h3" color="white" fontSize={{ base: "36px", sm: "40px" }}>
             <Text as="span" {...fontStyles["expandedBoldItalic"]}>
                 E
             </Text>

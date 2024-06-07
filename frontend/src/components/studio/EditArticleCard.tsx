@@ -81,8 +81,10 @@ export function EditArticleCard(props: EditArticleCardProps) {
 
     return (
         <HStack
+            flexDir={{ base: "column", sm: "row" }}
             alignItems="start"
             borderRadius="4px"
+            pos="relative"
             p="6px"
             border="2px solid"
             borderColor="gray.200"
@@ -101,6 +103,7 @@ export function EditArticleCard(props: EditArticleCardProps) {
             <HStack
                 as={Link}
                 href={`/articles/${props.article.articleId}/edit`}
+                flexDir={{ base: "column", sm: "row" }}
                 role="group"
                 w="100%"
                 alignItems="start"
@@ -110,26 +113,40 @@ export function EditArticleCard(props: EditArticleCardProps) {
                     transform: "scale(0.98)",
                 }}
             >
-                <Box pos="relative" w="100%" maxW="240px" h="130px">
+                <Box
+                    pos="relative"
+                    w={{ base: "100%", sm: "240px" }}
+                    maxW={{ base: "100%", sm: "240px" }}
+                    minW={{ base: "100%", sm: "240px" }}
+                    h={{ base: "180px", sm: "130px" }}
+                >
                     <Image
                         src={firstImgBlockURL}
                         alt="Cover image"
                         fill
-                        style={{
-                            borderRadius: "4px",
-                            objectFit: "cover",
-                        }}
+                        style={{ borderRadius: "4px", objectFit: "cover" }}
                     />
                 </Box>
 
-                <VStack gap="0px" alignItems="start" flexGrow={1}>
-                    <Text fontSize="1.25rem" fontWeight="bold">
+                <VStack gap="0px" alignItems="start" w="100%">
+                    <Text fontSize="1.25rem" fontWeight="bold" noOfLines={2}>
                         {heading}
                     </Text>
-                    <Text fontSize="1rem" color="gray.500" mt="2px">
+                    <Text
+                        fontSize="14px"
+                        color="gray.500"
+                        mt="2px"
+                        noOfLines={2}
+                        fontWeight="500"
+                    >
                         {about}
                     </Text>
-                    <Text fontSize="13px" color="gray.500" mt="12px">
+                    <Text
+                        fontSize="13px"
+                        color="gray.400"
+                        mt="2px"
+                        fontWeight="500"
+                    >
                         Last edited on{" "}
                         {new Date(props.article.lastUpdatedAt).toDateString()}
                     </Text>
@@ -138,6 +155,9 @@ export function EditArticleCard(props: EditArticleCardProps) {
 
             <Menu onClose={() => setMenuOpen(false)}>
                 <MenuButton
+                    pos={{ base: "absolute", sm: "static" }}
+                    right={{ base: "18px", sm: "auto" }}
+                    top={{ base: "18px", sm: "auto" }}
                     as={IconButton}
                     aria-label="More options"
                     variant="paleSolid"
@@ -147,7 +167,7 @@ export function EditArticleCard(props: EditArticleCardProps) {
                         e.stopPropagation();
                         setMenuOpen(true);
                     }}
-                    opacity={isMenuOpen ? 1 : 0}
+                    opacity={{ base: 1, sm: isMenuOpen ? 1 : 0 }}
                     _groupHover={{ opacity: 1 }}
                     transition="opacity 0.2s ease-in-out"
                     sx={{
