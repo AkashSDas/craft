@@ -144,7 +144,7 @@ export class ArticleService {
 
         const update: Partial<Article> = {};
         if (heading) {
-            update["title"] = heading.value.text;
+            update["headline"] = heading.value.text;
         }
         if (description) {
             update["description"] = description.value.text;
