@@ -37,10 +37,14 @@ export class ArticleRepository {
     }
 
     async getUserPublishedArticles(authorId: Types.ObjectId) {
-        return await this.model.find({ isPublic: true, authorIds: authorId });
+        return await this.model
+            .find({ isPublic: true, authorIds: authorId })
+            .populate("authorIds", "username profilePic userId");
     }
 
     async getUserDraftArticles(authorId: Types.ObjectId) {
-        return await this.model.find({ isPublic: false, authorIds: authorId });
+        return await this.model
+            .find({ isPublic: false, authorIds: authorId })
+            .populate("authorIds", "username profilePic userId");
     }
 }
