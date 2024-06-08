@@ -3,6 +3,7 @@ import { ParagraphBlock } from "./ParagraphBlock";
 import { HeadingBlock } from "./HeadingBlock";
 import { DividerBlock } from "./DividerBlock";
 import { ImageBlock } from "./ImageBlock";
+import { QuoteBlock } from "./QuoteBlock";
 
 type Props = {
     block: Block;
@@ -18,6 +19,8 @@ export function DisplayBlock({ block }: Props): React.JSX.Element | null {
             return <DividerBlock />;
         case "image":
             return <ImageBlock block={block} />;
+        case "quote":
+            return <QuoteBlock block={block} />;
         default:
             return null;
     }
