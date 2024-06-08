@@ -7,7 +7,11 @@ export default function EditArticle() {
 
     if (isLoading) {
         return (
-            <Stack justifyContent="center" alignItems="center" mt="32px">
+            <Stack
+                justifyContent="center"
+                alignItems="center"
+                mt="calc(70px + 32px)"
+            >
                 <Spinner size="xl" thickness="4px" />
             </Stack>
         );
@@ -16,7 +20,7 @@ export default function EditArticle() {
             <Stack
                 justifyContent="center"
                 alignItems="center"
-                mt="64px"
+                mt="calc(70px + 64px)"
                 px={{ base: "16px", md: "2rem" }}
             >
                 <Text fontSize="2xl">Article not found</Text>
@@ -27,7 +31,7 @@ export default function EditArticle() {
             <Stack
                 justifyContent="center"
                 alignItems="center"
-                mt="64px"
+                mt="calc(70px + 64px)"
                 px={{ base: "16px", md: "2rem" }}
             >
                 <Text fontSize="2xl">

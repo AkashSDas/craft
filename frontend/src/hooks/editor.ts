@@ -11,7 +11,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { useToast } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import { useUser } from "./auth";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { useAppDispatch } from "./store";
 import {
     emptyChanges,
@@ -132,10 +132,21 @@ export function useEditArticle() {
         [isLoading]
     );
 
+    const isOwner: boolean = useMemo(
+        function () {
+            const matchingOwner = data?.article?.authorIds.find(
+                (author) => author.userId === user?.userId
+            );
+
+            return matchingOwner !== undefined;
+        },
+        [data?.article, user?.userId]
+    );
+
     return {
         article: data?.article,
         message: data?.message,
-        isOwner: (data?.article?.authorIds ?? []).includes(user?._id ?? ""),
+        isOwner,
         isLoading,
         isError,
         error,
