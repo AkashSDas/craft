@@ -87,6 +87,24 @@ class ImageBlockDto {
     value: ImageBlockValueDto;
 }
 
+class QuoteBlockValueDto {
+    @IsString()
+    text: string;
+}
+
+class QuoteBlockDto {
+    @IsString()
+    blockId: string;
+
+    @IsEnum(["quote"])
+    type: "quote";
+
+    @IsObject()
+    @ValidateNested({ each: true })
+    @Type(() => QuoteBlockValueDto)
+    value: QuoteBlockValueDto;
+}
+
 // ====================================
 // Main validator
 // ====================================
@@ -123,6 +141,8 @@ export class UpdateArticleContentDto {
                             return [key, plainToClass(DividerBlockDto, value)];
                         case "image":
                             return [key, plainToClass(ImageBlockDto, value)];
+                        case "quote":
+                            return [key, plainToClass(QuoteBlockDto, value)];
                         default:
                             return [key, null];
                     }
@@ -146,6 +166,10 @@ export class UpdateArticleContentDto {
     // })
     blocks: Record<
         string,
-        ParagraphBlockDto | HeadingBlockDto | DividerBlockDto | ImageBlockDto
+        | ParagraphBlockDto
+        | HeadingBlockDto
+        | DividerBlockDto
+        | ImageBlockDto
+        | QuoteBlockDto
     >;
 }

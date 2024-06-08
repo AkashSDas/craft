@@ -26,7 +26,12 @@ export type Image = {
     value: IImage & { caption?: string };
 };
 
-export type Block = Paragraph | Heading | Divider | Image;
+export type Quote = {
+    type: "quote";
+    value: { text: string };
+};
+
+export type Block = Paragraph | Heading | Divider | Image | Quote;
 export type BlockId = string;
 export type ContentBlockType = Block & { blockId: BlockId };
 
@@ -45,6 +50,7 @@ export const blocks: Block["type"][] = [
     "heading",
     "divider",
     "image",
+    "quote",
 ] as const;
 
 @Schema({ _id: false, timestamps: true })
