@@ -1,0 +1,31 @@
+{
+    // Not using for this project
+    "Barrel Export": {
+        "prefix": "barrel",
+        "scope": "typescript",
+        "body": [
+            "export { default } from './${TM_DIRECTORY/^.+\\/(.*)$/$1/}';"
+        ],
+        "description": "Create a barrel export for the current directory"
+    },
+    "Main component": {
+        "prefix": "comp",
+        "scope": "typescriptreact",
+        "body": [
+            "type Props = {",
+            "    $1: $2",
+            "};",
+            "",
+            "export function ${TM_FILENAME_BASE}(props: Props): React.JSX.Element {",
+            "  return <div>${TM_FILENAME_BASE}</div>;",
+            "}"
+        ],
+        "description": "Create a main component"
+    },
+    "Other components": {
+        "prefix": "othcomp",
+        "scope": "typescriptreact",
+        "body": ["function $1(): React.JSX.Element {", "  return $2", "}"],
+        "description": "Create a component"
+    }
+}
