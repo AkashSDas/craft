@@ -16,3 +16,5 @@ In FE:
 - Create zod schema and update article zod schema `services/articles.ts`
 - Create a block for editor and add it in `DisplayBlock` (for editor)
 - Create a block display and add it in `DisplayBlock` (for displaying)
+- Add the block in `Sidebar.tsx`
+- Add handler to manage updating the block in `editor/slice.ts`
