@@ -16,8 +16,8 @@ export function ControlPanel() {
                     <Image
                         src="/icons/play.png"
                         alt="Play audio"
-                        width={20}
-                        height={20}
+                        width={24}
+                        height={24}
                     />
                 </Button>
 
