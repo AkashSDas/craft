@@ -5,6 +5,7 @@ import {
     Heading,
     Image,
     Paragraph,
+    Quote,
 } from "@app/services/articles";
 import { createId } from "@app/utils/ids";
 import { createSlice } from "@reduxjs/toolkit";
@@ -19,6 +20,7 @@ export const blocks: Block["type"][] = [
     "heading",
     "divider",
     "image",
+    "quote",
 ] as const;
 
 class BlockManager {
@@ -51,6 +53,14 @@ class BlockManager {
             blockId: createId("blk"),
             type: "image",
             value: { URL, caption },
+        };
+    }
+
+    static createQuote(): Quote {
+        return {
+            blockId: createId("blk"),
+            type: "quote",
+            value: { text: "" },
         };
     }
 }
@@ -133,6 +143,9 @@ export const editorSlice = createSlice({
                 case "image":
                     block = BlockManager.createImage("");
                     break;
+                case "quote":
+                    block = BlockManager.createQuote();
+                    break;
             }
 
             state.addedBlocks.push(newBlockId);
@@ -174,6 +187,16 @@ export const editorSlice = createSlice({
             const { blockId, text } = action.payload;
             const block = state.blocks[blockId];
             if (block?.type !== "paragraph") return;
+            block.value.text = text;
+            state.changedBlocks.push(blockId);
+        },
+        updateQuoteBlock(
+            state,
+            action: { payload: { blockId: BlockId; text: string } }
+        ) {
+            const { blockId, text } = action.payload;
+            const block = state.blocks[blockId];
+            if (block?.type !== "quote") return;
             block.value.text = text;
             state.changedBlocks.push(blockId);
         },
@@ -239,6 +262,7 @@ export const {
     updateHeadingBlock,
     deleteBlock,
     updateImageBlock,
+    updateQuoteBlock,
     emptyChanges,
     reorderBlocks,
 } = editorSlice.actions;

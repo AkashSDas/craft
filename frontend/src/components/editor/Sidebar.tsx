@@ -47,6 +47,12 @@ const blocks = [
         description: "Small section heading",
     },
     {
+        type: "quote" as const,
+        image: "/block-images/quote.png",
+        label: "Quote",
+        description: "Capture a quote",
+    },
+    {
         type: "divider" as const,
         image: "/block-images/divider.png",
         label: "Divider",

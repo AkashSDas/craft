@@ -41,11 +41,20 @@ const ImageBlockSchema = z.object({
     ),
 });
 
+const QuoteSchema = z.object({
+    blockId: z.string(),
+    type: z.literal("quote"),
+    value: z.object({
+        text: z.string(),
+    }),
+});
+
 const BlockSchema = z.union([
     ParagraphSchema,
     HeadingSchema,
     DividerSchema,
     ImageBlockSchema,
+    QuoteSchema,
 ]);
 
 const ArticleSchema = z.object({
@@ -76,6 +85,7 @@ export type Paragraph = z.infer<typeof ParagraphSchema>;
 export type Heading = z.infer<typeof HeadingSchema>;
 export type Divider = z.infer<typeof DividerSchema>;
 export type Image = z.infer<typeof ImageBlockSchema>;
+export type Quote = z.infer<typeof QuoteSchema>;
 export type Block = z.infer<typeof BlockSchema>;
 export type BlockId = string;
 export type Article = z.infer<typeof ArticleSchema>;

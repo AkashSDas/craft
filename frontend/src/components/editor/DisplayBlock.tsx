@@ -3,6 +3,7 @@ import { DividerBlock } from "./DividerBlock";
 import { HeadingBlock } from "./HeadingBlock";
 import { ImageBlock } from "./ImageBlock";
 import { ParagraphInputBlock } from "./ParagraphInputBlock";
+import { QuoteBlock } from "./QuoteBlock";
 
 type Props = {
     block: Block;
@@ -41,6 +42,14 @@ export function DisplayBlock({ block, index }: Props) {
         case "image":
             return (
                 <ImageBlock
+                    key={block.blockId}
+                    blockId={block.blockId}
+                    index={index}
+                />
+            );
+        case "quote":
+            return (
+                <QuoteBlock
                     key={block.blockId}
                     blockId={block.blockId}
                     index={index}
