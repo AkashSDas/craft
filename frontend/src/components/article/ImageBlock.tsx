@@ -8,7 +8,11 @@ type Props = {
 
 export function ImageBlock({ block }: Props): React.JSX.Element {
     return (
-        <Box pos="relative" height="300px" width="100%">
+        <Box
+            pos="relative"
+            height={{ base: "220px", sm: "300px" }}
+            width="100%"
+        >
             <NextImage
                 src={block.value.URL ?? ""}
                 alt="Image"
