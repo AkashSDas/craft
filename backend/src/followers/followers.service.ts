@@ -22,4 +22,16 @@ export class FollowersService {
             exists._id.toString(),
         );
     }
+
+    async unfollowAuthor(followerId: Types.ObjectId, authorId: string) {
+        const exists = await this.userRepo.exists({ userId: authorId });
+        if (!exists) {
+            throw new BadRequestException("Author does not exist");
+        }
+
+        return await this.repo.deleteFollower(
+            followerId.toString(),
+            exists._id.toString(),
+        );
+    }
 }

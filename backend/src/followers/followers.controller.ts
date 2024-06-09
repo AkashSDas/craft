@@ -1,6 +1,7 @@
 import {
     Body,
     Controller,
+    Delete,
     HttpCode,
     HttpStatus,
     Post,
@@ -22,5 +23,12 @@ export class FollowersController {
     async followAuthor(@Req() req: IRequest, @Body() dto: FollowAuthorDto) {
         await this.serv.followAuthor(req.user._id, dto.followingAuthorId);
         return { message: "You are now following this author" };
+    }
+
+    @Delete("")
+    @HttpCode(HttpStatus.NO_CONTENT)
+    @UseGuards(AccessTokenGuard)
+    async unfollowAuthor(@Req() req: IRequest, @Body() dto: FollowAuthorDto) {
+        await this.serv.unfollowAuthor(req.user._id, dto.followingAuthorId);
     }
 }
