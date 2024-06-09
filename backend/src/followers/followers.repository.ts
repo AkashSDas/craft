@@ -28,10 +28,14 @@ export class FollowersRepository {
     }
 
     async getFollowers(followingId: string) {
-        return await this.model.find({ followingId });
+        return await this.model
+            .find({ followingId })
+            .populate("followerId", "username userId profilePic");
     }
 
     async getFollowing(followerId: string) {
-        return await this.model.find({ followerId });
+        return await this.model
+            .find({ followerId })
+            .populate("followingId", "username userId profilePic");
     }
 }

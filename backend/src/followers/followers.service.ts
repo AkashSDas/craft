@@ -34,4 +34,12 @@ export class FollowersService {
             exists._id.toString(),
         );
     }
+
+    async getFollowing(followerId: Types.ObjectId) {
+        return await this.repo.getFollowing(followerId.toString());
+    }
+
+    async getFollowers(followingId: Types.ObjectId) {
+        return await this.repo.getFollowers(followingId.toString());
+    }
 }

@@ -1,9 +1,12 @@
 import {
+    BadRequestException,
     Body,
     Controller,
     Delete,
+    Get,
     HttpCode,
     HttpStatus,
+    Param,
     Post,
     Req,
     UseGuards,
@@ -30,5 +33,23 @@ export class FollowersController {
     @UseGuards(AccessTokenGuard)
     async unfollowAuthor(@Req() req: IRequest, @Body() dto: FollowAuthorDto) {
         await this.serv.unfollowAuthor(req.user._id, dto.followingAuthorId);
+    }
+
+    @Get()
+    @UseGuards(AccessTokenGuard)
+    async getFollowersOrFollowings(
+        @Req() req: IRequest,
+        @Param("type") type: "following" | "followers",
+    ) {
+        switch (type) {
+            case "following":
+                return await this.serv.getFollowing(req.user._id);
+            case "followers":
+                return await this.serv.getFollowers(req.user._id);
+            default:
+                break;
+        }
+
+        throw new BadRequestException("Invalid type");
     }
 }
