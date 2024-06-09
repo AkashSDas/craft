@@ -36,4 +36,16 @@ export class LikesRepository {
     async getLikedArticles(userId: Types.ObjectId) {
         return await this.model.find({ userId });
     }
+
+    async getLikesCountForArticles(articleIds: Types.ObjectId[]) {
+        return await this.model.aggregate([
+            { $match: { articleId: { $in: articleIds } } },
+            {
+                $group: {
+                    _id: "$articleId",
+                    count: { $sum: 1 },
+                },
+            },
+        ]);
+    }
 }

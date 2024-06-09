@@ -31,4 +31,11 @@ export class LikesService {
         const articles = await this.articleRepo.getArticles(articleIds);
         return articles;
     }
+
+    async getArticlesLikes(articleIds: Types.ObjectId[]) {
+        const res = await this.repo.getLikesCountForArticles(articleIds);
+        const map = new Map();
+        res.forEach((r) => map.set(r._id, r.count));
+        return map;
+    }
 }

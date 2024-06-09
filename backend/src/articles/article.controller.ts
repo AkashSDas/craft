@@ -16,10 +16,14 @@ import { ArticleService } from "./article.service";
 import { AccessTokenGuard } from "../auth/guard";
 import { IRequest } from "../index";
 import { UpdateArticleContentDto } from "./dto";
+import { LikesService } from "src/likes/likes.service";
 
 @Controller("articles")
 export class ArticleController {
-    constructor(private serv: ArticleService) {}
+    constructor(
+        private serv: ArticleService,
+        private likesService: LikesService,
+    ) {}
 
     @Post("")
     @HttpCode(HttpStatus.CREATED)
@@ -37,7 +41,16 @@ export class ArticleController {
         @Query("type") type: "draft" | "public",
     ) {
         const articles = await this.serv.getUserArticles(req.user._id, type);
-        return { articles };
+        const likes = await this.likesService.getArticlesLikes(
+            articles.map((a) => a._id),
+        );
+
+        const likeCount = new Map();
+        likes.forEach((v, k) => {
+            likeCount.set(k, v);
+        });
+
+        return { articles, likeCount };
     }
 
     @Get(":articleId")
@@ -47,7 +60,10 @@ export class ArticleController {
         if (!article) {
             throw new NotFoundException("Article not found");
         }
-        return { article };
+
+        const likes = await this.likesService.getArticlesLikes([article._id]);
+        const likeCount = likes.get(article._id) ?? 0;
+        return { article, likeCount };
     }
 
     /**
