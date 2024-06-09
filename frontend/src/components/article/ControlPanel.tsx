@@ -1,12 +1,15 @@
+import { Article } from "@app/services/articles";
 import { HStack, Button } from "@chakra-ui/react";
 import Image from "next/image";
+import { LikeButton } from "./LikeButton";
 
 type Props = {
     likeCount: number;
+    article: Article;
 };
 
 export function ControlPanel(props: Props) {
-    const { likeCount } = props;
+    const { likeCount, article } = props;
 
     return (
         <HStack
@@ -38,20 +41,7 @@ export function ControlPanel(props: Props) {
             </HStack>
 
             <HStack>
-                <Button
-                    h="38px"
-                    variant="tab"
-                    leftIcon={
-                        <Image
-                            src="/icons/love.png"
-                            alt="Like"
-                            width={20}
-                            height={20}
-                        />
-                    }
-                >
-                    {likeCount}
-                </Button>
+                <LikeButton likeCount={likeCount} article={article} />
 
                 <Button h="38px" variant="tab">
                     <Image

@@ -13,6 +13,7 @@ export const getServerSideProps: GetServerSideProps<{
 }> = async function (ctx) {
     const articleId = ctx.params?.articleId as string;
     const res = await getArticle(articleId);
+    console.log(res);
     if (!res.article || !res?.article?.isPublic) {
         return { notFound: true };
     }
@@ -90,7 +91,7 @@ export default function ArticlePage(props: Props) {
                         lastUpdatedAt={article.lastUpdatedAt}
                     />
 
-                    <ControlPanel likeCount={likeCount} />
+                    <ControlPanel likeCount={likeCount} article={article} />
 
                     <VStack w="100%" alignItems="start" mt="2rem">
                         {blockIds.map((id) => {
