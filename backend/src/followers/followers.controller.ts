@@ -6,8 +6,8 @@ import {
     Get,
     HttpCode,
     HttpStatus,
-    Param,
     Post,
+    Query,
     Req,
     UseGuards,
 } from "@nestjs/common";
@@ -39,10 +39,10 @@ export class FollowersController {
     @UseGuards(AccessTokenGuard)
     async getFollowersOrFollowings(
         @Req() req: IRequest,
-        @Param("type") type: "following" | "followers",
+        @Query("type") type: "followings" | "followers",
     ) {
         switch (type) {
-            case "following":
+            case "followings":
                 return await this.serv.getFollowing(req.user._id);
             case "followers":
                 return await this.serv.getFollowers(req.user._id);
