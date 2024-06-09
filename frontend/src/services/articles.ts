@@ -57,7 +57,7 @@ const BlockSchema = z.union([
     QuoteSchema,
 ]);
 
-const ArticleSchema = z.object({
+export const ArticleSchema = z.object({
     articleId: z.string(),
     authorIds: z
         .array(

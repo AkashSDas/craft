@@ -104,4 +104,8 @@ export const endpoints = Object.freeze({
     unfollowAuthor: "followers",
     getFollowers: "followers",
     getFollowings: "followers",
+
+    // Likes
+    likeOrDislikeArticle: "likes",
+    getLikedArticles: "likes",
 });
