@@ -9,12 +9,31 @@ import { endpoints, fetchFromAPI } from "@app/lib/api";
 const FollowerUserSchema = z.object({
     userId: z.string(),
     username: z.string(),
-    profilePic: ImageSchema,
+    profilePic: ImageSchema.optional(),
 });
 
 const FollowingsResponseSchema = z.object({
     message: z.string(),
-    followings: z.array(FollowerUserSchema),
+    followings: z.array(
+        z.object({
+            _id: z.string(),
+            user: FollowerUserSchema,
+            createdAt: z.string(),
+            updatedAt: z.string(),
+        })
+    ),
+});
+
+const FollowersResponseSchema = z.object({
+    message: z.string(),
+    followers: z.array(
+        z.object({
+            _id: z.string(),
+            user: FollowerUserSchema,
+            createdAt: z.string(),
+            updatedAt: z.string(),
+        })
+    ),
 });
 
 export type FollowerUser = z.infer<typeof FollowerUserSchema>;
@@ -85,7 +104,7 @@ export async function getFollowings() {
         return {
             success: true,
             message: data.message,
-            followings: parsedData.followings,
+            followings: parsedData.followings ?? [],
         };
     } else if (status === 400 && data !== null && "message" in data) {
         return { success: false, message: data.message };
@@ -109,11 +128,11 @@ export async function getFollowers() {
     const { data, status } = res;
 
     if (status === 200 && data !== null) {
-        const parsedData = FollowingsResponseSchema.parse(data);
+        const parsedData = FollowersResponseSchema.parse(data);
         return {
             success: true,
             message: data.message,
-            followers: parsedData.followings,
+            followers: parsedData.followers ?? [],
         };
     } else if (status === 400 && data !== null && "message" in data) {
         return { success: false, message: data.message };

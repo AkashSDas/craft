@@ -5,6 +5,7 @@ import {
     followAuthor,
     getFollowers,
     getFollowings,
+    unfollowAuthor,
 } from "@app/services/followers";
 import { useToast } from "@chakra-ui/react";
 
@@ -27,20 +28,25 @@ export function useFollowerManager() {
         staleTime: 1000 * 60 * 5, // 5 minutes
     });
 
+    type FollowersData = (typeof followersQuery)["data"];
+
     const unfollowAuthorMutation = useMutation({
-        mutationFn: (author: FollowerUser) => followAuthor(author.userId),
+        mutationFn: (author: FollowerUser) => unfollowAuthor(author.userId),
         onMutate(variables) {
             const prev = queryClient.getQueryData(["followers", user?.userId]);
             queryClient.setQueryData(
                 ["followers", user?.userId],
-                (old: any) => {
-                    return {
+                (old: FollowersData | undefined): FollowersData | undefined => {
+                    if (!old) return old;
+                    const data = {
                         ...old,
-                        data: old.data.filter(
-                            (follower: FollowerUser) =>
-                                follower.userId !== variables.userId
-                        ),
+                        followers:
+                            old.followers?.filter((f) => {
+                                return f.user.userId !== variables.userId;
+                            }) ?? [],
                     };
+
+                    return data;
                 }
             );
 
@@ -54,7 +60,7 @@ export function useFollowerManager() {
 
             return { previousData: prev };
         },
-        onError(_, __, context) {
+        onError(error, variables, context) {
             if (context) {
                 queryClient.setQueryData(
                     ["followers", user?.userId],
@@ -70,12 +76,9 @@ export function useFollowerManager() {
                 isClosable: true,
             });
         },
-        onSuccess(data, variables, context) {
-            queryClient.invalidateQueries({
+        async onSuccess(data, variables, context) {
+            await queryClient.invalidateQueries({
                 queryKey: ["followers", user?.userId],
-            });
-            queryClient.invalidateQueries({
-                queryKey: ["followings", user?.userId],
             });
         },
     });
@@ -86,10 +89,19 @@ export function useFollowerManager() {
             const prev = queryClient.getQueryData(["followers", user?.userId]);
             queryClient.setQueryData(
                 ["followers", user?.userId],
-                (old: any) => {
+                (old: FollowersData | undefined): FollowersData | undefined => {
+                    if (!old) return old;
                     return {
                         ...old,
-                        data: [...old.data, variables],
+                        followers: [
+                            ...(old.followers ?? []),
+                            {
+                                _id: "",
+                                user: variables,
+                                createdAt: new Date().toISOString(),
+                                updatedAt: new Date().toISOString(),
+                            },
+                        ],
                     };
                 }
             );
@@ -104,7 +116,7 @@ export function useFollowerManager() {
 
             return { previousData: prev };
         },
-        onError(_, __, context) {
+        onError(error, variables, context) {
             if (context) {
                 queryClient.setQueryData(
                     ["followers", user?.userId],
@@ -120,12 +132,9 @@ export function useFollowerManager() {
                 isClosable: true,
             });
         },
-        onSuccess(data, variables, context) {
-            queryClient.invalidateQueries({
+        async onSuccess(data, variables, context) {
+            await queryClient.invalidateQueries({
                 queryKey: ["followers", user?.userId],
-            });
-            queryClient.invalidateQueries({
-                queryKey: ["followings", user?.userId],
             });
         },
     });
