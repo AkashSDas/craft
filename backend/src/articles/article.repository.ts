@@ -15,6 +15,10 @@ export class ArticleRepository {
         });
     }
 
+    async exists(articleId: string) {
+        return await this.model.exists({ articleId });
+    }
+
     async checkArticleExists(authorId: Types.ObjectId, articleId: string) {
         return await this.model.findOne(
             { articleId, authorIds: authorId },

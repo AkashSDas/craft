@@ -1,4 +1,27 @@
-import { Injectable } from "@nestjs/common";
+import { BadRequestException, Injectable } from "@nestjs/common";
+import { LikesRepository } from "./likes.repository";
+import { ArticleRepository } from "src/articles/article.repository";
+import { Types } from "mongoose";
 
 @Injectable()
-export class LikesService {}
+export class LikesService {
+    constructor(
+        private repo: LikesRepository,
+        private articleRepo: ArticleRepository,
+    ) {}
+
+    async likeArticle(articleId: string, userId: Types.ObjectId) {
+        const exists = await this.articleRepo.exists(articleId);
+        if (!exists) {
+            throw new BadRequestException("Arrticle doesn't exists");
+        }
+
+        const hasLiked = await this.repo.exists(exists._id, userId);
+
+        if (hasLiked) {
+            await this.repo.createLike(exists._id, userId);
+        } else {
+            await this.repo.deleteLike(exists._id, userId);
+        }
+    }
+}
