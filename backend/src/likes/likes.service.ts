@@ -18,7 +18,7 @@ export class LikesService {
 
         const hasLiked = await this.repo.exists(exists._id, userId);
 
-        if (hasLiked) {
+        if (!hasLiked) {
             await this.repo.createLike(exists._id, userId);
         } else {
             await this.repo.deleteLike(exists._id, userId);
@@ -33,9 +33,11 @@ export class LikesService {
     }
 
     async getArticlesLikes(articleIds: Types.ObjectId[]) {
-        const res = await this.repo.getLikesCountForArticles(articleIds);
-        const map = new Map();
-        res.forEach((r) => map.set(r._id, r.count));
+        const res: { _id: Types.ObjectId; count: number }[] =
+            await this.repo.getLikesCountForArticles(articleIds);
+
+        const map = new Map<string, number>();
+        res.forEach((r) => map.set(r._id.toString(), r.count));
         return map;
     }
 }

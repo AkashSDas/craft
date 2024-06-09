@@ -62,7 +62,7 @@ export class ArticleController {
         }
 
         const likes = await this.likesService.getArticlesLikes([article._id]);
-        const likeCount = likes.get(article._id) ?? 0;
+        const likeCount = likes.get(article._id.toString()) ?? 0;
         return { article, likeCount };
     }
 
