@@ -18,3 +18,19 @@ In FE:
 - Create a block display and add it in `DisplayBlock` (for displaying)
 - Add the block in `Sidebar.tsx`
 - Add handler to manage updating the block in `editor/slice.ts`
+
+## Commands
+
+```bash
+# create new module
+pnpx @nestjs/cli@latest g module <name>
+
+# create new controller
+pnpx @nestjs/cli@latest g controller <name>
+
+# create new service
+pnpx @nestjs/cli@latest g service <name>
+
+# create new provider
+pnpx @nestjs/cli@latest g provider <name>
+```
