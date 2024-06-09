@@ -24,4 +24,11 @@ export class LikesService {
             await this.repo.deleteLike(exists._id, userId);
         }
     }
+
+    async getLikedArticles(userId: Types.ObjectId) {
+        const res = await this.repo.getLikedArticles(userId);
+        const articleIds = res.map((r) => r.articleId);
+        const articles = await this.articleRepo.getArticles(articleIds);
+        return articles;
+    }
 }

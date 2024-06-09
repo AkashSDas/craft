@@ -13,5 +13,6 @@ import { ArticleRepository } from "./article.repository";
     ],
     controllers: [ArticleController],
     providers: [ArticleService, ArticleRepository],
+    exports: [ArticleRepository],
 })
 export class ArticleModule {}

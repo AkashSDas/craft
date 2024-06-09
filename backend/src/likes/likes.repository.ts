@@ -33,7 +33,7 @@ export class LikesRepository {
         return await this.model.find({ articleId }).countDocuments();
     }
 
-    async getUserLikes(userId: Types.ObjectId) {
-        return await this.model.findOne({ userId });
+    async getLikedArticles(userId: Types.ObjectId) {
+        return await this.model.find({ userId });
     }
 }

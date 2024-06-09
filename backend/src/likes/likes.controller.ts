@@ -1,4 +1,4 @@
-import { Body, Controller, Post, Req, UseGuards } from "@nestjs/common";
+import { Body, Controller, Get, Post, Req, UseGuards } from "@nestjs/common";
 import { LikesService } from "./likes.service";
 import { LikeArticleDto } from "./dto";
 import { IRequest } from "src";
@@ -13,5 +13,12 @@ export class LikesController {
     async likeArticle(@Req() req: IRequest, @Body() dto: LikeArticleDto) {
         await this.serv.likeArticle(dto.articleId, req.user._id);
         return { message: "Article liked/disliked" };
+    }
+
+    @Get("")
+    @UseGuards(AccessTokenGuard)
+    async getLikedArticles(@Req() req: IRequest) {
+        const articles = await this.serv.getLikedArticles(req.user._id);
+        return { articles, message: "Liked articles" };
     }
 }

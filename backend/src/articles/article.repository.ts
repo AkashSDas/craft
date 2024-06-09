@@ -51,4 +51,10 @@ export class ArticleRepository {
             .find({ isPublic: false, authorIds: authorId })
             .populate("authorIds", "username profilePic userId");
     }
+
+    async getArticles(articleIds: Types.ObjectId[]) {
+        return await this.model
+            .find({ _id: { $in: articleIds } })
+            .populate("authorIds", "username profilePic userId");
+    }
 }
