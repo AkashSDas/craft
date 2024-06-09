@@ -17,6 +17,16 @@ export class FollowersService {
             throw new BadRequestException("Author does not exist");
         }
 
+        const isFollowing = await this.repo.exists(
+            followerId.toString(),
+            exists._id.toString(),
+        );
+        if (isFollowing) {
+            throw new BadRequestException(
+                "You are already following this author",
+            );
+        }
+
         return await this.repo.createFollower(
             followerId.toString(),
             exists._id.toString(),

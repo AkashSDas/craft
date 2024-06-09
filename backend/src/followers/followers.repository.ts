@@ -17,6 +17,10 @@ export class FollowersRepository {
         });
     }
 
+    async exists(followerId: string, followingId: string) {
+        return await this.model.exists({ followerId, followingId });
+    }
+
     async deleteFollower(
         followerId: string,
         followingId: string,
