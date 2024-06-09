@@ -119,7 +119,7 @@ export async function createArticle() {
 }
 
 export async function getArticle(articleId: string) {
-    type SuccessResponse = { article: Article };
+    type SuccessResponse = { article: Article; likeCount: number };
     type ErrorResponse = { message: string };
 
     const res = await fetchFromAPI<SuccessResponse | ErrorResponse>(
@@ -130,7 +130,7 @@ export async function getArticle(articleId: string) {
 
     if (status === 200 && data !== null && "article" in data) {
         const article = ArticleSchema.parse(data.article);
-        return { success: true, article };
+        return { success: true, article, likeCount: data.likeCount ?? 0 };
     } else if (status === 404 && data !== null && "message" in data) {
         return { success: false, message: data.message };
     }

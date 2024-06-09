@@ -9,6 +9,7 @@ import { useMemo } from "react";
 
 export const getServerSideProps: GetServerSideProps<{
     article: Article;
+    likeCount: number;
 }> = async function (ctx) {
     const articleId = ctx.params?.articleId as string;
     const res = await getArticle(articleId);
@@ -19,6 +20,7 @@ export const getServerSideProps: GetServerSideProps<{
     return {
         props: {
             article: res.article,
+            likeCount: res.likeCount,
         },
     };
 };
@@ -26,7 +28,7 @@ export const getServerSideProps: GetServerSideProps<{
 type Props = InferGetServerSidePropsType<typeof getServerSideProps>;
 
 export default function ArticlePage(props: Props) {
-    const { article } = props;
+    const { article, likeCount } = props;
     const blockIds = useMemo(
         function removeInfoBlocks() {
             const headline = Object.values(article.blocks).find((blk) => {
@@ -88,7 +90,7 @@ export default function ArticlePage(props: Props) {
                         lastUpdatedAt={article.lastUpdatedAt}
                     />
 
-                    <ControlPanel />
+                    <ControlPanel likeCount={likeCount} />
 
                     <VStack w="100%" alignItems="start" mt="2rem">
                         {blockIds.map((id) => {
