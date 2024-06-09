@@ -5,7 +5,7 @@ import { z } from "zod";
 // Validators
 // ==================================
 
-const ImageSchema = z.object({
+export const ImageSchema = z.object({
     id: z.string().optional(),
     URL: z.string().optional().nullish(),
 });

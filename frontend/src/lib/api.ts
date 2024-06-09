@@ -98,4 +98,10 @@ export const endpoints = Object.freeze({
     getUserArtilces: (type: "draft" | "public") => {
         return `articles/me?type=${type}`;
     },
+
+    // Followers
+    followAuthor: "followers",
+    unfollowAuthor: "followers",
+    getFollowers: "followers",
+    getFollowings: "followers",
 });
