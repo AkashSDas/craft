@@ -17,7 +17,7 @@ const FollowingsResponseSchema = z.object({
     followings: z.array(FollowerUserSchema),
 });
 
-type FollowerUser = z.infer<typeof FollowerUserSchema>;
+export type FollowerUser = z.infer<typeof FollowerUserSchema>;
 
 // ==================================
 // Services
