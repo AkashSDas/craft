@@ -42,10 +42,30 @@ export class FollowersController {
         @Query("type") type: "followings" | "followers",
     ) {
         switch (type) {
-            case "followings":
-                return await this.serv.getFollowing(req.user._id);
-            case "followers":
-                return await this.serv.getFollowers(req.user._id);
+            case "followings": {
+                const res = await this.serv.getFollowing(req.user._id);
+                return {
+                    message: "Followings",
+                    followings: res.map((f) => ({
+                        _id: f._id,
+                        createdAt: (f as any).createdAt,
+                        updatedAt: (f as any).updatedAt,
+                        user: f.followingId,
+                    })),
+                };
+            }
+            case "followers": {
+                const res = await this.serv.getFollowers(req.user._id);
+                return {
+                    message: "Followers",
+                    followers: res.map((f) => ({
+                        _id: f._id,
+                        createdAt: (f as any).createdAt,
+                        updatedAt: (f as any).updatedAt,
+                        user: f.followerId,
+                    })),
+                };
+            }
             default:
                 break;
         }
