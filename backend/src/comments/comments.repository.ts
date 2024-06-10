@@ -33,15 +33,6 @@ export class CommentRepository {
                     as: "author",
                 },
             },
-            {
-                $lookup: {
-                    from: "comments",
-                    localField: "_id",
-                    foreignField: "parentCommentId",
-                    as: "replies",
-                },
-            },
-
             { $unwind: "$author" },
             {
                 $project: {
@@ -52,7 +43,6 @@ export class CommentRepository {
                     "author.username": 1,
                     "author.userId": 1,
                     "author.profilePic": 1,
-                    replies: 1,
                 },
             },
         ]);
