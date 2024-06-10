@@ -97,7 +97,20 @@ export function CommentInput(props: Props): React.JSX.Element {
                 <FormLabel fontSize="14px">Comment</FormLabel>
 
                 <InputGroup>
-                    <Input variant="outline" {...form.register("text")} />
+                    <Input
+                        _focusVisible={{ outline: "none" }}
+                        sx={{
+                            "&::placeholder": {
+                                color: "gray.300",
+                            },
+                            _focus: {
+                                border: "1.5px solid",
+                                borderColor: "black",
+                            },
+                        }}
+                        variant="outline"
+                        {...form.register("text")}
+                    />
 
                     <InputRightElement>
                         <IconButton
