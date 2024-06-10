@@ -55,7 +55,11 @@ export function CommentsDrawer(props: Props): React.JSX.Element {
                         <Spinner size="lg" thickness="3px" />
                     ) : (
                         commentsQuery.data?.comments?.map((comment) => (
-                            <CommentCard key={comment._id} comment={comment} />
+                            <CommentCard
+                                key={comment._id}
+                                comment={comment}
+                                articleId={props.articleId}
+                            />
                         ))
                     )}
                 </VStack>

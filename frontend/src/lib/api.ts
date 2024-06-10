@@ -111,4 +111,7 @@ export const endpoints = Object.freeze({
 
     // Comments
     addComment: "comments",
+    getComments: "comments",
+    deleteComment: (commentId: string) => `comments/${commentId}`,
+    reportComment: (commentId: string) => `comments/${commentId}/report`,
 });

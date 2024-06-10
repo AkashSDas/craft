@@ -1,3 +1,5 @@
+import { useUser } from "@app/hooks/auth";
+import { useCommentsManager } from "@app/hooks/comments";
 import { GetComment } from "@app/services/comments";
 import { DeleteIcon } from "@chakra-ui/icons";
 import {
@@ -16,11 +18,15 @@ import { useState } from "react";
 
 type Props = {
     comment: GetComment[number];
+    articleId: string;
 };
 
-export function CommentCard({ comment }: Props) {
+export function CommentCard({ comment, articleId }: Props) {
     const { author } = comment;
+    const { user } = useUser();
     const [isMenuOpen, setMenuOpen] = useState(false);
+    const { deleteCommentMutation, reportCommentMutation } =
+        useCommentsManager(articleId);
 
     return (
         <HStack w="100%" role="group" alignItems="start" gap="1rem">
@@ -43,7 +49,7 @@ export function CommentCard({ comment }: Props) {
                     <Text fontWeight="600" fontSize="14px">
                         {author.username}
                     </Text>
-                    <Text fontSize="14px" color="gray">
+                    <Text fontSize="14px" color="gray" fontWeight="500">
                         {new Date(comment.updatedAt).toLocaleDateString(
                             "en-US",
                             {
@@ -100,16 +106,49 @@ export function CommentCard({ comment }: Props) {
                         fontSize="14px"
                         color="gray.400"
                         fontWeight="medium"
-                        _hover={{
-                            bgColor: "gray.100",
-                            color: "red.500",
-                        }}
+                        _hover={{ bgColor: "gray.100" }}
                         _active={{ bgColor: "gray.200" }}
-                        onClick={() => {}}
-                        icon={<DeleteIcon fontSize="medium" />}
+                        isDisabled={reportCommentMutation.isPending}
+                        onClick={async () => {
+                            await reportCommentMutation.mutateAsync(
+                                comment._id
+                            );
+                        }}
+                        icon={
+                            <Image
+                                src="/icons/dislike.png"
+                                alt="Report"
+                                height={18}
+                                width={18}
+                            />
+                        }
                     >
-                        Delete
+                        Report
                     </MenuItem>
+
+                    {user?.userId === author.userId ? (
+                        <MenuItem
+                            h="36px"
+                            borderRadius="4px"
+                            fontSize="14px"
+                            color="gray.400"
+                            fontWeight="medium"
+                            _hover={{
+                                bgColor: "gray.100",
+                                color: "red.500",
+                            }}
+                            _active={{ bgColor: "gray.200" }}
+                            isDisabled={deleteCommentMutation.isPending}
+                            onClick={async () => {
+                                await deleteCommentMutation.mutateAsync(
+                                    comment._id
+                                );
+                            }}
+                            icon={<DeleteIcon fontSize="medium" />}
+                        >
+                            Delete
+                        </MenuItem>
+                    ) : null}
                 </MenuList>
             </Menu>
         </HStack>
