@@ -36,8 +36,11 @@ export class ReadingListsController {
         @Req() req: IRequest,
         @Body() dto: CreateReadingListDto,
     ) {
-        await this.serv.createReadingList(req.user._id, dto);
-        return { message: "Reading list created" };
+        const readingList = await this.serv.createReadingList(
+            req.user._id,
+            dto,
+        );
+        return { message: "Reading list created", readingList };
     }
 
     @Get("")
