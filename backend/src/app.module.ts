@@ -6,7 +6,8 @@ import { UserModule } from "./users/user.module";
 import { ArticleModule } from "./articles/article.module";
 import { CloudinaryProvider } from "./utils/cloudinary";
 import { FollowersModule } from "./followers/followers.module";
-import { LikesModule } from './likes/likes.module';
+import { LikesModule } from "./likes/likes.module";
+import { CommentModule } from "./comments/comments.module";
 
 @Module({
     imports: [
@@ -17,6 +18,7 @@ import { LikesModule } from './likes/likes.module';
         ArticleModule,
         FollowersModule,
         LikesModule,
+        CommentModule,
     ],
     providers: [CloudinaryProvider],
 })
