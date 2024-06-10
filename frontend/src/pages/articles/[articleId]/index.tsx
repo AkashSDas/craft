@@ -2,6 +2,7 @@ import { CommentsDrawer } from "@app/components/comments/CommentsDrawer";
 import { AuthorInfo } from "@app/components/display-article/AuthorInfo";
 import { ControlPanel } from "@app/components/display-article/ControlPanel";
 import { DisplayBlock } from "@app/components/display-article/DisplayBlock";
+import { ReadingListsDrawer } from "@app/components/reading-lists/ReadingListsDrawer";
 import { Article, getArticle } from "@app/services/articles";
 import { Heading, Text, VStack, useDisclosure } from "@chakra-ui/react";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
@@ -31,6 +32,8 @@ type Props = InferGetServerSidePropsType<typeof getServerSideProps>;
 
 export default function ArticlePage(props: Props) {
     const comments = useDisclosure();
+    const readingLists = useDisclosure();
+
     const { article, likeCount } = props;
     const blockIds = useMemo(
         function removeInfoBlocks() {
@@ -69,7 +72,13 @@ export default function ArticlePage(props: Props) {
                 mt={{ base: "calc(1rem + 70px)", sm: "calc(4rem + 70px)" }}
                 w="100%"
                 alignItems="center"
-                px="2rem"
+                px="2px"
+                transition="all 0.3s ease-in-out"
+                transform={
+                    readingLists.isOpen || comments.isOpen
+                        ? "scale(0.98)"
+                        : "scale(1)"
+                }
             >
                 <VStack gap="0px" w="100%" maxW="700px" alignItems="start">
                     <Heading
@@ -97,6 +106,7 @@ export default function ArticlePage(props: Props) {
                         likeCount={likeCount}
                         article={article}
                         openCommentsDrawer={comments.onOpen}
+                        openReadingListsDrawer={readingLists.onOpen}
                     />
 
                     <VStack w="100%" alignItems="start" mt="2rem">
@@ -112,6 +122,11 @@ export default function ArticlePage(props: Props) {
             <CommentsDrawer
                 isOpen={comments.isOpen}
                 onClose={comments.onClose}
+                articleId={article.articleId}
+            />
+            <ReadingListsDrawer
+                isOpen={readingLists.isOpen}
+                onClose={readingLists.onClose}
                 articleId={article.articleId}
             />
         </>

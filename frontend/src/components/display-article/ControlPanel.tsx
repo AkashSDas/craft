@@ -1,5 +1,5 @@
 import { Article } from "@app/services/articles";
-import { HStack, Button } from "@chakra-ui/react";
+import { HStack, Button, IconButton } from "@chakra-ui/react";
 import Image from "next/image";
 import { LikeButton } from "./LikeButton";
 import { useCommentsManager } from "@app/hooks/comments";
@@ -8,6 +8,7 @@ type Props = {
     likeCount: number;
     article: Article;
     openCommentsDrawer: () => void;
+    openReadingListsDrawer: () => void;
 };
 
 export function ControlPanel(props: Props) {
@@ -62,14 +63,19 @@ export function ControlPanel(props: Props) {
                     {commentsQuery.data?.comments?.length ?? 0}
                 </Button>
 
-                <Button h="38px" variant="tab">
+                <IconButton
+                    h="38px"
+                    variant="tab"
+                    onClick={props.openReadingListsDrawer}
+                    aria-label="Save article"
+                >
                     <Image
                         src="/icons/bookmark.png"
                         alt="Save"
                         width={20}
                         height={20}
                     />
-                </Button>
+                </IconButton>
 
                 <Button h="38px" variant="tab">
                     <Image
