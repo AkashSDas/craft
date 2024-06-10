@@ -2,9 +2,11 @@ import {
     BadRequestException,
     Body,
     Controller,
+    Get,
     HttpCode,
     HttpStatus,
     Post,
+    Query,
     Req,
     UseGuards,
 } from "@nestjs/common";
@@ -37,5 +39,20 @@ export class CommentController {
         );
 
         return { comment, message: "Comment added" };
+    }
+
+    @Get("")
+    async getCommentsForArticle(@Query("articleId") articleId: string) {
+        if (!articleId) {
+            throw new BadRequestException("Article ID is required");
+        }
+
+        const exists = await this.articleServ.exists(articleId);
+        if (!exists) {
+            throw new BadRequestException("Article not found");
+        }
+
+        const comments = await this.serv.getComments(exists._id);
+        return { comments, message: "Comments retrieved" };
     }
 }

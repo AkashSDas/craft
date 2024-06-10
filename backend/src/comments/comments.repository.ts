@@ -23,7 +23,39 @@ export class CommentRepository {
     }
 
     async getCommentsByArticleId(articleId: Types.ObjectId) {
-        return this.model.find({ articleId });
+        return this.model.aggregate([
+            { $match: { articleId, parentCommentId: null } },
+            {
+                $lookup: {
+                    from: "users",
+                    localField: "authorId",
+                    foreignField: "_id",
+                    as: "author",
+                },
+            },
+            {
+                $lookup: {
+                    from: "comments",
+                    localField: "_id",
+                    foreignField: "parentCommentId",
+                    as: "replies",
+                },
+            },
+
+            { $unwind: "$author" },
+            {
+                $project: {
+                    _id: 1,
+                    text: 1,
+                    createdAt: 1,
+                    updatedAt: 1,
+                    "author.username": 1,
+                    "author.userId": 1,
+                    "author.profilePic": 1,
+                    replies: 1,
+                },
+            },
+        ]);
     }
 
     async getChildComments(parentCommentId: Types.ObjectId) {

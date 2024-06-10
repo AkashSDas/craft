@@ -13,4 +13,8 @@ export class CommentService {
     ) {
         return this.repo.createComment({ text, articleId, authorId });
     }
+
+    async getComments(articleId: Types.ObjectId) {
+        return this.repo.getCommentsByArticleId(articleId);
+    }
 }
