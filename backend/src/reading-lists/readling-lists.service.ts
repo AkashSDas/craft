@@ -39,6 +39,7 @@ export class ReadingListsService {
         return await this.repo.create({
             userId,
             name: dto.name,
+            isPrivate: dto.isPrivate,
             articleIds,
         });
     }

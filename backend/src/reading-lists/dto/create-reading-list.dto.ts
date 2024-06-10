@@ -1,4 +1,10 @@
-import { IsArray, IsOptional, IsString, MinLength } from "class-validator";
+import {
+    IsArray,
+    IsBoolean,
+    IsOptional,
+    IsString,
+    MinLength,
+} from "class-validator";
 
 export class CreateReadingListDto {
     @IsString()
@@ -9,4 +15,7 @@ export class CreateReadingListDto {
     @IsString({ each: true })
     @IsOptional()
     articleIds?: string[];
+
+    @IsBoolean()
+    isPrivate: boolean;
 }

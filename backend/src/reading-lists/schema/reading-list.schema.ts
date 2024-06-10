@@ -13,6 +13,8 @@ export interface IReadingList {
      * created when account is created
      **/
     isReadLater: boolean;
+
+    isPrivate: boolean;
 }
 
 @Schema({ timestamps: true })
@@ -33,6 +35,9 @@ export class ReadingList extends Document implements IReadingList {
 
     @Prop({ type: Boolean, required: true, default: false })
     isReadLater: boolean;
+
+    @Prop({ type: Boolean, required: true, default: false })
+    isPrivate: boolean;
 }
 
 export const ReadingListSchema = SchemaFactory.createForClass(ReadingList);
