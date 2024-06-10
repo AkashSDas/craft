@@ -4,9 +4,12 @@ import {
     DrawerCloseButton,
     DrawerContent,
     DrawerOverlay,
+    Spinner,
+    VStack,
 } from "@chakra-ui/react";
 import { CommentInput } from "./CommentInput";
 import { useCommentsManager } from "@app/hooks/comments";
+import { CommentCard } from "./CommentCard";
 
 type Props = {
     isOpen: boolean;
@@ -38,6 +41,16 @@ export function CommentsDrawer(props: Props): React.JSX.Element {
                     articleId={props.articleId}
                     closeDrawer={props.onClose}
                 />
+
+                <VStack gap="1rem" w="100%" maxW="700px" px="1rem" mt="2rem">
+                    {commentsQuery.isLoading ? (
+                        <Spinner size="lg" thickness="3px" />
+                    ) : (
+                        commentsQuery.data?.comments?.map((comment) => (
+                            <CommentCard key={comment._id} comment={comment} />
+                        ))
+                    )}
+                </VStack>
             </DrawerContent>
         </Drawer>
     );

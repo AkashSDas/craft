@@ -2,6 +2,7 @@ import { Article } from "@app/services/articles";
 import { HStack, Button } from "@chakra-ui/react";
 import Image from "next/image";
 import { LikeButton } from "./LikeButton";
+import { useCommentsManager } from "@app/hooks/comments";
 
 type Props = {
     likeCount: number;
@@ -11,6 +12,7 @@ type Props = {
 
 export function ControlPanel(props: Props) {
     const { likeCount, article } = props;
+    const { commentsQuery } = useCommentsManager(article.articleId);
 
     return (
         <HStack
@@ -57,7 +59,7 @@ export function ControlPanel(props: Props) {
                         />
                     }
                 >
-                    0
+                    {commentsQuery.data?.comments?.length ?? 0}
                 </Button>
 
                 <Button h="38px" variant="tab">

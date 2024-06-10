@@ -7,17 +7,19 @@ import { ImageSchema } from "./articles";
 // ==================================
 
 const CommentSchema = z.object({
+    _id: z.string(),
     text: z.string(),
-    authorId: ImageSchema,
+    author: z.object({
+        userId: z.string(),
+        username: z.string(),
+        profilePic: ImageSchema,
+    }),
     articleId: z.string(),
     updatedAt: z.string(),
     createdAt: z.string(),
 });
 
-const GetCommentsSchema = z.object({
-    comments: z.array(CommentSchema),
-    message: z.string(),
-});
+const GetCommentsSchema = z.array(CommentSchema);
 
 export type Comment = z.infer<typeof CommentSchema>;
 
