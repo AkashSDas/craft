@@ -1,6 +1,6 @@
-import { AuthorInfo } from "@app/components/article/AuthorInfo";
-import { ControlPanel } from "@app/components/article/ControlPanel";
-import { DisplayBlock } from "@app/components/article/DisplayBlock";
+import { AuthorInfo } from "@app/components/display-article/AuthorInfo";
+import { ControlPanel } from "@app/components/display-article/ControlPanel";
+import { DisplayBlock } from "@app/components/display-article/DisplayBlock";
 import { Article, getArticle } from "@app/services/articles";
 import { Heading, Text, VStack } from "@chakra-ui/react";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
