@@ -9,7 +9,7 @@ import { ImageSchema } from "./articles";
 const CommentSchema = z.object({
     _id: z.string(),
     text: z.string(),
-    author: z.object({
+    authorId: z.object({
         userId: z.string(),
         username: z.string(),
         profilePic: ImageSchema,
@@ -19,9 +19,22 @@ const CommentSchema = z.object({
     createdAt: z.string(),
 });
 
-const GetCommentsSchema = z.array(CommentSchema);
+const GetCommentsSchema = z.array(
+    z.object({
+        _id: z.string(),
+        text: z.string(),
+        author: z.object({
+            userId: z.string(),
+            username: z.string(),
+            profilePic: ImageSchema,
+        }),
+        updatedAt: z.string(),
+        createdAt: z.string(),
+    })
+);
 
 export type Comment = z.infer<typeof CommentSchema>;
+export type GetComment = z.infer<typeof GetCommentsSchema>;
 
 // ==================================
 // Services
@@ -62,6 +75,7 @@ export async function getCommentsForArticle(articleId: string) {
     const { data, status } = res;
 
     if (status === 200 && data !== null && "comments" in data) {
+        console.log(data.comments);
         const comments = GetCommentsSchema.parse(data.comments);
         return { success: true, message: data.message, comments };
     } else if (status === 400 && data !== null && "message" in data) {

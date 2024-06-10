@@ -6,6 +6,7 @@ export function useCommentsManager(articleId: string) {
         queryKey: ["comments", articleId],
         queryFn: () => getCommentsForArticle(articleId),
         staleTime: 1000 * 60 * 5, // 5 minutes
+        throwOnError: true,
     });
 
     return { commentsQuery };

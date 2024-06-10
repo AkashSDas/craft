@@ -1,5 +1,6 @@
 import {
     Button,
+    Divider,
     Drawer,
     DrawerCloseButton,
     DrawerContent,
@@ -42,7 +43,14 @@ export function CommentsDrawer(props: Props): React.JSX.Element {
                     closeDrawer={props.onClose}
                 />
 
-                <VStack gap="1rem" w="100%" maxW="700px" px="1rem" mt="2rem">
+                <VStack
+                    gap="1rem"
+                    w="100%"
+                    maxW="700px"
+                    px="1rem"
+                    mt="2rem"
+                    divider={<Divider />}
+                >
                     {commentsQuery.isLoading ? (
                         <Spinner size="lg" thickness="3px" />
                     ) : (

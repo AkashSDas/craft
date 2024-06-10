@@ -1,4 +1,4 @@
-import { Comment } from "@app/services/comments";
+import { GetComment } from "@app/services/comments";
 import { DeleteIcon } from "@chakra-ui/icons";
 import {
     HStack,
@@ -15,7 +15,7 @@ import Link from "next/link";
 import { useState } from "react";
 
 type Props = {
-    comment: Comment;
+    comment: GetComment[number];
 };
 
 export function CommentCard({ comment }: Props) {
