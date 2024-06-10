@@ -44,7 +44,7 @@ export function CommentsDrawer(props: Props): React.JSX.Element {
                 />
 
                 <VStack
-                    gap="1rem"
+                    gap="8px"
                     w="100%"
                     maxW="700px"
                     px="1rem"
