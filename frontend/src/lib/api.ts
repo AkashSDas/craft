@@ -108,4 +108,7 @@ export const endpoints = Object.freeze({
     // Likes
     likeOrDislikeArticle: "likes",
     getLikedArticles: "likes",
+
+    // Comments
+    addComment: "comments",
 });

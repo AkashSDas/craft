@@ -6,6 +6,7 @@ import { LikeButton } from "./LikeButton";
 type Props = {
     likeCount: number;
     article: Article;
+    openCommentsDrawer: () => void;
 };
 
 export function ControlPanel(props: Props) {
@@ -43,13 +44,20 @@ export function ControlPanel(props: Props) {
             <HStack>
                 <LikeButton likeCount={likeCount} article={article} />
 
-                <Button h="38px" variant="tab">
-                    <Image
-                        src="/icons/chat.png"
-                        alt="Comments"
-                        width={20}
-                        height={20}
-                    />
+                <Button
+                    h="38px"
+                    variant="tab"
+                    onClick={props.openCommentsDrawer}
+                    leftIcon={
+                        <Image
+                            src="/icons/chat.png"
+                            alt="Comments"
+                            width={20}
+                            height={20}
+                        />
+                    }
+                >
+                    0
                 </Button>
 
                 <Button h="38px" variant="tab">

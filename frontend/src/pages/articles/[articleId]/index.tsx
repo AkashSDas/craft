@@ -1,8 +1,9 @@
+import { CommentsDrawer } from "@app/components/comments/CommentsDrawer";
 import { AuthorInfo } from "@app/components/display-article/AuthorInfo";
 import { ControlPanel } from "@app/components/display-article/ControlPanel";
 import { DisplayBlock } from "@app/components/display-article/DisplayBlock";
 import { Article, getArticle } from "@app/services/articles";
-import { Heading, Text, VStack } from "@chakra-ui/react";
+import { Heading, Text, VStack, useDisclosure } from "@chakra-ui/react";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import Head from "next/head";
 import { useMemo } from "react";
@@ -29,6 +30,7 @@ export const getServerSideProps: GetServerSideProps<{
 type Props = InferGetServerSidePropsType<typeof getServerSideProps>;
 
 export default function ArticlePage(props: Props) {
+    const comments = useDisclosure();
     const { article, likeCount } = props;
     const blockIds = useMemo(
         function removeInfoBlocks() {
@@ -91,7 +93,11 @@ export default function ArticlePage(props: Props) {
                         lastUpdatedAt={article.lastUpdatedAt}
                     />
 
-                    <ControlPanel likeCount={likeCount} article={article} />
+                    <ControlPanel
+                        likeCount={likeCount}
+                        article={article}
+                        openCommentsDrawer={comments.onOpen}
+                    />
 
                     <VStack w="100%" alignItems="start" mt="2rem">
                         {blockIds.map((id) => {
@@ -102,6 +108,12 @@ export default function ArticlePage(props: Props) {
                     </VStack>
                 </VStack>
             </VStack>
+
+            <CommentsDrawer
+                isOpen={comments.isOpen}
+                onClose={comments.onClose}
+                articleId={article.articleId}
+            />
         </>
     );
 }
