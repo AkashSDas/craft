@@ -6,6 +6,7 @@ import {
     DrawerOverlay,
 } from "@chakra-ui/react";
 import { CommentInput } from "./CommentInput";
+import { useCommentsManager } from "@app/hooks/comments";
 
 type Props = {
     isOpen: boolean;
@@ -14,6 +15,8 @@ type Props = {
 };
 
 export function CommentsDrawer(props: Props): React.JSX.Element {
+    const { commentsQuery } = useCommentsManager(props.articleId);
+
     return (
         <Drawer
             isOpen={props.isOpen}

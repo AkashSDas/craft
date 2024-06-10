@@ -1,8 +1,6 @@
-import { emailSignup } from "@app/services/auth";
 import { addComment } from "@app/services/comments";
 import { AddIcon } from "@chakra-ui/icons";
 import {
-    Button,
     FormControl,
     FormErrorMessage,
     FormLabel,
@@ -11,8 +9,6 @@ import {
     Input,
     InputGroup,
     InputRightElement,
-    Spinner,
-    VStack,
     useToast,
 } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
