@@ -44,28 +44,10 @@ export class ReadingListsService {
     }
 
     async createReadingList(userId: Types.ObjectId, dto: CreateReadingListDto) {
-        const articleIds: Types.ObjectId[] = [];
-
-        // Get article ids and check if they exist
-        if (dto.articleIds && dto.articleIds.length > 0) {
-            const promises = dto.articleIds.map((id) => {
-                return this.articleRepo.exists(id);
-            });
-            const articles = await Promise.all(promises);
-
-            articles.forEach((article) => {
-                if (article) {
-                    articleIds.push(article._id);
-                }
-            });
-        }
-
-        // Create the reading list
         return await this.repo.create({
             userId,
             name: dto.name,
             isPrivate: dto.isPrivate,
-            articleIds,
         });
     }
 
