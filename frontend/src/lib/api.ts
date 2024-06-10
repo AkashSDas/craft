@@ -114,4 +114,7 @@ export const endpoints = Object.freeze({
     getComments: "comments",
     deleteComment: (commentId: string) => `comments/${commentId}`,
     reportComment: (commentId: string) => `comments/${commentId}/report`,
+
+    // Reading list
+    createReadingList: "reading-lists",
 });
