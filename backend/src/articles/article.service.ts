@@ -221,4 +221,8 @@ export class ArticleService {
 
         return article;
     }
+
+    async exists(articleId: string) {
+        return await this.repo.exists(articleId);
+    }
 }
