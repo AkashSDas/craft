@@ -33,12 +33,14 @@ import {
 import { User } from "../users/schema";
 import { hash } from "argon2";
 import { InvalidOAuthLoginFilter } from "./filter";
+import { ReadingListsService } from "src/reading-lists/readling-lists.service";
 
 @Controller("auth")
 export class AuthController {
     constructor(
         private service: AuthService,
         private configService: ConfigService,
+        private readingListService: ReadingListsService,
     ) {}
 
     @Post("email-signup")
@@ -48,6 +50,7 @@ export class AuthController {
         @Res({ passthrough: true }) res: Response,
     ) {
         const result = await this.service.emailSignup(dto);
+        await this.readingListService.createReadLaterList(result.user._id);
 
         // This key should be same as the one used in RefreshTokenStrategy
         res.cookie("refreshToken", result.refreshToken, {
@@ -167,6 +170,7 @@ export class AuthController {
         @Res({ passthrough: true }) res: Response,
     ) {
         const result = await this.service.createOAuthSession(dto);
+        await this.readingListService.createReadLaterList(result.user._id);
 
         res.cookie("refreshToken", result.refreshToken, {
             httpOnly: true,

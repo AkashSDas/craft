@@ -10,9 +10,15 @@ import {
 } from "./strategy";
 import { AuthService } from "./auth.service";
 import { AuthController } from "./auth.controller";
+import { ReadingListsModule } from "src/reading-lists/readling-lists.module";
 
 @Module({
-    imports: [JwtModule.register({}), PassportModule, UserModule],
+    imports: [
+        JwtModule.register({}),
+        PassportModule,
+        UserModule,
+        ReadingListsModule,
+    ],
     controllers: [AuthController],
     providers: [
         AccessTokenStrategy,
