@@ -39,7 +39,9 @@ export class ReadingListsRepository {
     }
 
     async getUserReadingLists(userId: Types.ObjectId) {
-        return this.model.find({ userId }).populate("articleIds");
+        return this.model
+            .find({ userId })
+            .populate("userId", "userId username profilePic");
     }
 
     async checkIfReadLaterForUserExists(userId: Types.ObjectId) {

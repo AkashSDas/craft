@@ -42,4 +42,8 @@ export class ReadingListsService {
             articleIds,
         });
     }
+
+    async getReadingLists(userId: Types.ObjectId) {
+        return await this.repo.getUserReadingLists(userId);
+    }
 }

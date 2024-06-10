@@ -1,6 +1,7 @@
 import {
     Body,
     Controller,
+    Get,
     HttpCode,
     HttpStatus,
     Post,
@@ -25,5 +26,13 @@ export class ReadingListsController {
     ) {
         await this.serv.createReadingList(req.user._id, dto);
         return { message: "Reading list created" };
+    }
+
+    @Get("")
+    @HttpCode(HttpStatus.OK)
+    @UseGuards(AccessTokenGuard)
+    async getReadingLists(@Req() req: IRequest) {
+        const readingLists = await this.serv.getReadingLists(req.user._id);
+        return { readingLists, message: "Reading lists" };
     }
 }
