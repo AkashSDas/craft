@@ -32,9 +32,10 @@ export class CommentController {
 
         const comment = await this.serv.addComment(
             dto.text,
-            exists._id,
             req.user._id,
+            exists._id,
         );
+
         return { comment, message: "Comment added" };
     }
 }

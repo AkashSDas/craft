@@ -8,7 +8,10 @@ export class CommentRepository {
     constructor(@InjectModel(Comment.name) private model: Model<Comment>) {}
 
     async createComment(comment: Partial<Comment>) {
-        return this.model.create(comment);
+        return (await this.model.create(comment)).populate(
+            "authorId",
+            "username userId profilePic",
+        );
     }
 
     async deleteComment(commentId: Types.ObjectId) {
