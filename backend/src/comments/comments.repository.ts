@@ -55,4 +55,8 @@ export class CommentRepository {
     async updateCommentText(commentId: Types.ObjectId, text: string) {
         return this.model.findByIdAndUpdate(commentId, { text });
     }
+
+    async getCommentById(commentId: string) {
+        return this.model.findOne({ _id: commentId });
+    }
 }

@@ -5,7 +5,8 @@ import { User } from "src/users/schema";
 
 export interface IComment {
     text: string;
-    reportCount: number;
+    /** user ids */
+    reports: Types.ObjectId[];
     authorId: Types.ObjectId;
     articleId: Types.ObjectId;
     parentCommentId?: Types.ObjectId;
@@ -22,8 +23,13 @@ export class Comment extends Document implements IComment {
     @Prop({ type: String, trim: true, required: true })
     text: string;
 
-    @Prop({ type: Number, trim: true, required: true, default: 0 })
-    reportCount: number;
+    @Prop({
+        type: [SchemaTypes.ObjectId],
+        default: [],
+        required: true,
+        ref: User.name,
+    })
+    reports: Types.ObjectId[];
 
     @Prop({ type: SchemaTypes.ObjectId, ref: Comment.name })
     parentCommentId: Types.ObjectId;

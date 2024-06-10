@@ -2,9 +2,11 @@ import {
     BadRequestException,
     Body,
     Controller,
+    Delete,
     Get,
     HttpCode,
     HttpStatus,
+    Param,
     Post,
     Query,
     Req,
@@ -54,5 +56,31 @@ export class CommentController {
 
         const comments = await this.serv.getComments(exists._id);
         return { comments, message: "Comments retrieved" };
+    }
+
+    @Post(":commentId/report")
+    @HttpCode(HttpStatus.OK)
+    @UseGuards(AccessTokenGuard)
+    async reportComment(
+        @Req() req: IRequest,
+        @Param("commentId") commentId: string,
+    ) {
+        if (!commentId) {
+            throw new BadRequestException("Comment ID is required");
+        }
+        await this.serv.reportComment(commentId, req.user._id);
+        return { message: "Comment reported" };
+    }
+
+    @Delete(":commentId")
+    @HttpCode(HttpStatus.OK)
+    @UseGuards(AccessTokenGuard)
+    async deleteComment(@Param("commentId") commentId: string) {
+        if (!commentId) {
+            throw new BadRequestException("Comment ID is required");
+        }
+
+        await this.serv.deleteComment(commentId);
+        return { message: "Comment deleted" };
     }
 }
