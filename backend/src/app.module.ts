@@ -8,6 +8,7 @@ import { CloudinaryProvider } from "./utils/cloudinary";
 import { FollowersModule } from "./followers/followers.module";
 import { LikesModule } from "./likes/likes.module";
 import { CommentModule } from "./comments/comments.module";
+import { ReadingListsModule } from "./reading-lists/readling-lists.module";
 
 @Module({
     imports: [
@@ -19,6 +20,7 @@ import { CommentModule } from "./comments/comments.module";
         FollowersModule,
         LikesModule,
         CommentModule,
+        ReadingListsModule,
     ],
     providers: [CloudinaryProvider],
 })
