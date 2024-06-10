@@ -47,4 +47,8 @@ export class ReadingListsRepository {
     async checkIfReadLaterForUserExists(userId: Types.ObjectId) {
         return this.model.findOne({ userId, isReadLater: true });
     }
+
+    async findReadingLists(listIds: string[]) {
+        return this.model.find({ _id: { $in: listIds } });
+    }
 }

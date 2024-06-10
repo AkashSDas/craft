@@ -5,17 +5,29 @@ import {
     HttpCode,
     HttpStatus,
     Post,
+    Put,
     Req,
     UseGuards,
 } from "@nestjs/common";
 import { ReadingListsService } from "./readling-lists.service";
 import { AccessTokenGuard } from "src/auth/guard";
 import { IRequest } from "src";
-import { CreateReadingListDto } from "./dto";
+import { AddArticleToReadingListsDto, CreateReadingListDto } from "./dto";
 
 @Controller("reading-lists")
 export class ReadingListsController {
     constructor(private serv: ReadingListsService) {}
+
+    @Put("")
+    @HttpCode(HttpStatus.OK)
+    @UseGuards(AccessTokenGuard)
+    async addArticleToReadingLists(
+        @Req() req: IRequest,
+        @Body() dto: AddArticleToReadingListsDto,
+    ) {
+        await this.serv.addToReadingLists(req.user._id, dto);
+        return { message: "Article added to reading lists" };
+    }
 
     @Post("")
     @HttpCode(HttpStatus.CREATED)
