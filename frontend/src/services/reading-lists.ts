@@ -18,9 +18,30 @@ const CreateReadingListResponseSchema = z.object({
     }),
 });
 
+const ReadingListSchema = z.object({
+    _id: z.string(),
+    name: z.string(),
+    isPrivate: z.boolean(),
+    isReadLater: z.boolean(),
+    userId: z.object({
+        userId: z.string(),
+        username: z.string(),
+        profilePic: ImageSchema,
+    }),
+    articleIds: z.array(z.string()),
+    createdAt: z.string(),
+});
+
+const GetReadingListsResponseSchema = z.object({
+    message: z.string(),
+    readingLists: z.array(ReadingListSchema),
+});
+
 export type CreateReadingListResponse = z.infer<
     typeof CreateReadingListResponseSchema
 >;
+type GetReadingListsResponse = z.infer<typeof GetReadingListsResponseSchema>;
+export type ReadingListType = z.infer<typeof ReadingListSchema>;
 
 // ==================================
 // Services
@@ -43,6 +64,34 @@ export async function createReadingList(payload: ReadingListInputsType) {
             success: true,
             message: data.message,
             readingList: parsed.readingList,
+        };
+    } else if (status === 400 && data !== null && "message" in data) {
+        return { success: false, message: data.message };
+    }
+
+    return {
+        success: false,
+        message: res.error?.message ?? "Unknown error",
+    };
+}
+
+export async function getReadingLists() {
+    type SuccessResponse = GetReadingListsResponse;
+    type ErrorResponse = { message: string };
+
+    const res = await fetchFromAPI<SuccessResponse | ErrorResponse>(
+        endpoints.createReadingList,
+        { method: "GET" },
+        true
+    );
+    const { data, status } = res;
+
+    if (status === 200 && data !== null && "readingLists" in data) {
+        const parsed = await GetReadingListsResponseSchema.parseAsync(data);
+        return {
+            success: true,
+            message: data.message,
+            readingLists: parsed.readingLists,
         };
     } else if (status === 400 && data !== null && "message" in data) {
         return { success: false, message: data.message };
