@@ -246,7 +246,8 @@ export function EditArticleCard(props: EditArticleCardProps) {
                         fontWeight="medium"
                         _hover={{ bgColor: "gray.100", color: "gray.500" }}
                         _active={{ bgColor: "gray.200" }}
-                        onClick={() => {}}
+                        as={Link}
+                        href={`/articles/${props.article.articleId}/edit`}
                         icon={
                             <Image
                                 src="/icons/edit.png"
