@@ -1,3 +1,4 @@
+import { useReadingListsManager } from "@app/hooks/reading-lists";
 import { createReadingList } from "@app/services/reading-lists";
 import {
     Button,
@@ -6,6 +7,8 @@ import {
     FormControl,
     FormErrorMessage,
     FormLabel,
+    HStack,
+    Heading,
     Input,
     InputGroup,
     Spinner,
@@ -20,6 +23,7 @@ import { z } from "zod";
 type Props = {
     articleId: string;
     closeDrawer: () => void;
+    goBack: () => void;
 };
 
 type ReadingListInputs = {
@@ -45,6 +49,7 @@ export function ReadingListInput(props: Props): React.JSX.Element {
         defaultValues,
         resolver: zodResolver(schema),
     });
+    const { readingListsQuery } = useReadingListsManager();
 
     const mutation = useMutation({
         mutationFn: (payload: ReadingListInputsType) => {
@@ -53,6 +58,8 @@ export function ReadingListInput(props: Props): React.JSX.Element {
         async onSuccess(data, _variables, _context) {
             if (data.success) {
                 form.reset();
+                props.goBack();
+                readingListsQuery.refetch();
             } else {
                 toast({
                     title: "Error",
@@ -86,8 +93,12 @@ export function ReadingListInput(props: Props): React.JSX.Element {
             onSubmit={createList}
             px="1rem"
             maxW="700px"
-            alignItems="center"
+            alignItems="start"
         >
+            <Heading size="md" mb="1rem">
+                Create a new reading list
+            </Heading>
+
             <FormControl
                 isInvalid={form.formState.errors.name ? true : false}
                 mb="0.5rem"
@@ -145,24 +156,46 @@ export function ReadingListInput(props: Props): React.JSX.Element {
 
             <Divider mb="1rem" />
 
-            <Button
-                variant="solid"
-                type="submit"
-                aria-label="Add comment"
-                disabled={form.formState.isSubmitting}
-                style={{
-                    width: "44px !important",
-                    height: "44px !important",
-                }}
-                sx={{
-                    w: "100%",
-                    maxW: "300px",
-                    fontSize: { base: "14px", sm: "16px" },
-                }}
-                isLoading={form.formState.isSubmitting}
+            <HStack
+                w="100%"
+                gap={{ base: "24px", sm: "16px" }}
+                flexDirection={{ base: "column-reverse", sm: "row" }}
             >
-                Save
-            </Button>
+                <Button
+                    variant="paleSolid"
+                    type="button"
+                    disabled={form.formState.isSubmitting}
+                    style={{
+                        width: "44px !important",
+                        height: "44px !important",
+                    }}
+                    sx={{
+                        w: "100%",
+                        fontSize: { base: "14px", sm: "16px" },
+                    }}
+                    onClick={props.goBack}
+                >
+                    Cancel
+                </Button>
+
+                <Button
+                    variant="solid"
+                    type="submit"
+                    aria-label="Add comment"
+                    disabled={form.formState.isSubmitting}
+                    style={{
+                        width: "44px !important",
+                        height: "44px !important",
+                    }}
+                    sx={{
+                        w: "100%",
+                        fontSize: { base: "14px", sm: "16px" },
+                    }}
+                    isLoading={form.formState.isSubmitting}
+                >
+                    Save
+                </Button>
+            </HStack>
         </VStack>
     );
 }
