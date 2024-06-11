@@ -72,11 +72,11 @@ export default function ArticlePage(props: Props) {
                 mt={{ base: "calc(1rem + 70px)", sm: "calc(4rem + 70px)" }}
                 w="100%"
                 alignItems="center"
-                px="2px"
-                transition="all 0.3s ease-in-out"
+                px="2rem"
+                transition="transform .3s cubic-bezier(.5,2.5,.7,.7),-webkit-transform .3s cubic-bezier(.5,2.5,.7,.7)"
                 transform={
                     readingLists.isOpen || comments.isOpen
-                        ? "scale(0.98)"
+                        ? "scale(0.96)"
                         : "scale(1)"
                 }
             >
