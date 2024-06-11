@@ -28,7 +28,13 @@ export function CommentsDrawer(props: Props): React.JSX.Element {
             placement="bottom"
         >
             <DrawerOverlay />
-            <DrawerContent minH="500px" alignItems="center" py="3rem">
+            <DrawerContent
+                minH="500px"
+                maxH="500px"
+                overflowY="auto"
+                alignItems="center"
+                py="3rem"
+            >
                 <DrawerCloseButton
                     as={Button}
                     variant="paleSolid"
