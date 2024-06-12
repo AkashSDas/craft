@@ -69,6 +69,17 @@ export class ReadingListsController {
             userId,
             readingListId,
         );
-        return { readingList: list, articles, likes, message: "Reading list" };
+
+        const likesObj = {};
+        likes.forEach((v, k) => {
+            likesObj[k] = v;
+        });
+
+        return {
+            readingList: list,
+            articles,
+            likes: likesObj,
+            message: "Reading list",
+        };
     }
 }
