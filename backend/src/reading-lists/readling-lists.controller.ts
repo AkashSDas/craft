@@ -4,8 +4,10 @@ import {
     Get,
     HttpCode,
     HttpStatus,
+    Param,
     Post,
     Put,
+    Query,
     Req,
     UseGuards,
 } from "@nestjs/common";
@@ -55,5 +57,18 @@ export class ReadingListsController {
     async getReadingLists(@Req() req: IRequest) {
         const readingLists = await this.serv.getReadingLists(req.user._id);
         return { readingLists, message: "Reading lists" };
+    }
+
+    @Get(":readingListId")
+    @HttpCode(HttpStatus.OK)
+    async getReadingList(
+        @Query("userId") userId: string,
+        @Param("readingListId") readingListId: string,
+    ) {
+        const { list, articles, likes } = await this.serv.getReadingList(
+            userId,
+            readingListId,
+        );
+        return { readingList: list, articles, likes, message: "Reading list" };
     }
 }

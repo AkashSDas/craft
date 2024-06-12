@@ -5,6 +5,8 @@ import { ReadingListsController } from "./readling-lists.controller";
 import { MongooseModule } from "@nestjs/mongoose";
 import { ReadingList, ReadingListSchema } from "./schema";
 import { ArticleModule } from "src/articles/article.module";
+import { UserModule } from "src/users/user.module";
+import { LikesModule } from "src/likes/likes.module";
 
 @Module({
     imports: [
@@ -12,6 +14,8 @@ import { ArticleModule } from "src/articles/article.module";
             { name: ReadingList.name, schema: ReadingListSchema },
         ]),
         ArticleModule,
+        UserModule,
+        LikesModule,
     ],
     controllers: [ReadingListsController],
     providers: [ReadingListsRepository, ReadingListsService],

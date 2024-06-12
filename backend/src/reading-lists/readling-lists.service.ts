@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
+import {
+    ForbiddenException,
+    Injectable,
+    NotFoundException,
+} from "@nestjs/common";
 import { ReadingListsRepository } from "./readling-lists.repository";
 import { Types } from "mongoose";
 import {
@@ -6,12 +10,17 @@ import {
     CreateReadingListDto,
 } from "./dto";
 import { ArticleRepository } from "src/articles/article.repository";
+import { UserRepository } from "src/users/user.repository";
+import { LikesService } from "src/likes/likes.service";
+import { Article } from "src/articles/schema";
 
 @Injectable()
 export class ReadingListsService {
     constructor(
         private repo: ReadingListsRepository,
         private articleRepo: ArticleRepository,
+        private userRepo: UserRepository,
+        private likesService: LikesService,
     ) {}
 
     async createReadLaterList(userId: Types.ObjectId) {
@@ -56,5 +65,42 @@ export class ReadingListsService {
 
     async getReadingLists(userId: Types.ObjectId) {
         return await this.repo.getUserReadingLists(userId);
+    }
+
+    async getReadingList(userId: string, readingListId: string) {
+        const list = await this.repo.findOne(readingListId);
+        if (!list) {
+            throw new NotFoundException("Reading list not found");
+        }
+
+        if (list.isPrivate) {
+            if (!userId) {
+                throw new ForbiddenException(
+                    "You are not authorized to view this list",
+                );
+            }
+
+            const user = await this.userRepo.findOne({ userId });
+            if (!user) {
+                throw new ForbiddenException(
+                    "You are not authorized to view this list",
+                );
+            }
+
+            if (list.userId._id.toString() !== user._id.toString()) {
+                throw new ForbiddenException(
+                    "You are not authorized to view this list",
+                );
+            }
+        }
+
+        const articles = await this.articleRepo.getArticlesForReadListPreview(
+            list.articleIds,
+        );
+        const likes = await this.likesService.getArticlesLikes(
+            articles.map((art: Article) => art._id),
+        );
+
+        return { list, articles, likes };
     }
 }

@@ -59,4 +59,10 @@ export class ReadingListsRepository {
             );
         }
     }
+
+    async findOne(listId: string) {
+        return this.model
+            .findOne({ _id: listId })
+            .populate("userId", "username userId profilePic");
+    }
 }
