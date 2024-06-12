@@ -1,6 +1,10 @@
 import { ReadingListCard } from "@app/components/reading-lists/ReadingListCard";
+import { ArticlePreviewCard } from "@app/components/shared/article-preview-card/ArticlePreviewCard";
 import { useUser } from "@app/hooks/auth";
-import { useReadingListsManager } from "@app/hooks/reading-lists";
+import {
+    useGetReadingList,
+    useReadingListsManager,
+} from "@app/hooks/reading-lists";
 import { ReadingListType } from "@app/services/reading-lists";
 import { fontStyles } from "@app/utils/fonts";
 import { ArrowBackIcon } from "@chakra-ui/icons";
@@ -23,6 +27,7 @@ export default function UserLibraryPage() {
     const router = useRouter();
     const { readingListsQuery } = useReadingListsManager();
     const { isLoading, isError, data } = readingListsQuery;
+    const getReadingListQuery = useGetReadingList(selectedList?._id);
 
     if (status !== "success") {
         return (
@@ -87,6 +92,35 @@ export default function UserLibraryPage() {
                         >
                             {selectedList.name}
                         </Button>
+
+                        {getReadingListQuery.isLoading ||
+                        getReadingListQuery.isError ? (
+                            <Spinner size="xl" thickness="3px" mt="4rem" />
+                        ) : getReadingListQuery.readingList?.articleIds
+                              .length ? (
+                            getReadingListQuery.readingList?.articleIds.map(
+                                (articleId) => {
+                                    const article =
+                                        getReadingListQuery.articles.find(
+                                            (article) =>
+                                                article.articleId === articleId
+                                        );
+
+                                    if (!article) {
+                                        return null;
+                                    }
+
+                                    return (
+                                        <ArticlePreviewCard
+                                            key={articleId}
+                                            article={article}
+                                        />
+                                    );
+                                }
+                            )
+                        ) : (
+                            <Text>No articles in this list</Text>
+                        )}
                     </VStack>
                 )}
             </VStack>

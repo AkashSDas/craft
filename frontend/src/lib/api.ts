@@ -118,4 +118,5 @@ export const endpoints = Object.freeze({
     // Reading list
     createReadingList: "reading-lists",
     addArticleToReadingLists: "reading-lists",
+    getReadingList: (readingListId: string) => `reading-lists/${readingListId}`,
 });
