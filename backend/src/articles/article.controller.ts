@@ -17,6 +17,7 @@ import { AccessTokenGuard } from "../auth/guard";
 import { IRequest } from "../index";
 import { UpdateArticleContentDto } from "./dto";
 import { LikesService } from "src/likes/likes.service";
+import { Request } from "express";
 
 @Controller("articles")
 export class ArticleController {
@@ -55,7 +56,7 @@ export class ArticleController {
 
     @Get(":articleId")
     @HttpCode(HttpStatus.OK)
-    async getArticle(@Req() req: IRequest) {
+    async getArticle(@Req() req: Request) {
         const article = await this.serv.getArticle(req.params.articleId);
         if (!article) {
             throw new NotFoundException("Article not found");
