@@ -68,7 +68,10 @@ export function ArticlePreviewCard(props: Props): React.JSX.Element {
             _active={{
                 bgColor: "gray.100",
                 borderColor: "black",
+                transform: "scale(0.98)",
             }}
+            transition="transform .3s cubic-bezier(.5,2.5,.7,.7),-webkit-transform .3s cubic-bezier(.5,2.5,.7,.7)"
+            transformOrigin="center"
             role="group"
         >
             <HStack
@@ -76,11 +79,6 @@ export function ArticlePreviewCard(props: Props): React.JSX.Element {
                 role="group"
                 w="100%"
                 alignItems="start"
-                transition="all 0.2s ease-in-out"
-                transformOrigin="center"
-                _active={{
-                    transform: "scale(0.98)",
-                }}
             >
                 <Box
                     pos="relative"
