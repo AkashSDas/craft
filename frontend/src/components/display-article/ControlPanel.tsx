@@ -3,6 +3,8 @@ import { HStack, Button, IconButton } from "@chakra-ui/react";
 import Image from "next/image";
 import { LikeButton } from "./LikeButton";
 import { useCommentsManager } from "@app/hooks/comments";
+import { useReadingListsManager } from "@app/hooks/reading-lists";
+import { useMemo } from "react";
 
 type Props = {
     likeCount: number;
@@ -14,6 +16,18 @@ type Props = {
 export function ControlPanel(props: Props) {
     const { likeCount, article } = props;
     const { commentsQuery } = useCommentsManager(article.articleId);
+    const { readingListsQuery } = useReadingListsManager();
+
+    const isPartOfReadingList = useMemo(
+        function checkIfArticleIsInAnyReadingList() {
+            return (
+                readingListsQuery.data?.readingLists?.some((list) => {
+                    return list.articleIds.includes(article.articleId);
+                }) ?? false
+            );
+        },
+        [readingListsQuery.data, article.articleId]
+    );
 
     return (
         <HStack
@@ -70,7 +84,11 @@ export function ControlPanel(props: Props) {
                     aria-label="Save article"
                 >
                     <Image
-                        src="/icons/bookmark.png"
+                        src={
+                            isPartOfReadingList
+                                ? "/icons/bookmark-solid.png"
+                                : "/icons/bookmark.png"
+                        }
                         alt="Save"
                         width={20}
                         height={20}
