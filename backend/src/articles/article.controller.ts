@@ -139,4 +139,23 @@ export class ArticleController {
 
         return { message: "Updated successfully" };
     }
+
+    @Put(":articleId/publish")
+    @HttpCode(HttpStatus.OK)
+    @UseGuards(AccessTokenGuard)
+    async publishArticle(@Req() req: IRequest) {
+        const exists = await this.serv.checkOwnership(
+            req.user._id,
+            req.params.articleId,
+        );
+        if (!exists) {
+            throw new ForbiddenException(
+                "You don't have permission to edit this article",
+            );
+        }
+
+        const article = await this.serv.getArticle(req.params.articleId);
+        await this.serv.publishArticle(article);
+        return { message: "Updated successfully" };
+    }
 }

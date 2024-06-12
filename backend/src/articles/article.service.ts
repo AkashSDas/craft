@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { BadRequestException, Injectable } from "@nestjs/common";
 import { ArticleRepository } from "./article.repository";
 import { Types } from "mongoose";
 import { UpdateArticleContentDto } from "./dto";
@@ -150,7 +150,7 @@ export class ArticleService {
             update["description"] = description.value.text;
         }
         if (coverImg && coverImg.value.URL) {
-            update["coverImg"] = { URL: coverImg.value.URL };
+            update["coverImage"] = { URL: coverImg.value.URL };
         }
 
         await this.repo.updateOne(articleId, update);
@@ -228,5 +228,27 @@ export class ArticleService {
 
     async getArticlesForReadListPreview(articleIds: string[]) {
         return await this.repo.getArticlesForReadListPreview(articleIds);
+    }
+
+    async publishArticle(article: Article) {
+        // check if the article has headline, description, cover image
+        // if not, throw error
+        console.log(article);
+
+        if (
+            !article.headline ||
+            !article.description ||
+            !article.coverImage ||
+            !article.coverImage.URL
+        ) {
+            throw new BadRequestException(
+                "Headline, description, and cover image are required to publish an article",
+            );
+        }
+
+        await this.repo.updateOne(article.articleId, {
+            isPublic: true,
+        });
+        return article;
     }
 }
