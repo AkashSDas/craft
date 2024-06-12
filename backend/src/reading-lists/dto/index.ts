@@ -1,2 +1,2 @@
 export * from "./create-reading-list.dto";
-export * from "./add-article-to-reading-lists.dto";
+export * from "./add-or-remove-article-to-reading-lists.dto";

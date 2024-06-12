@@ -13,23 +13,6 @@ export class ReadingListsRepository {
         return this.model.create(data);
     }
 
-    async pushArticleToList(listId: Types.ObjectId, articleId: Types.ObjectId) {
-        return this.model.updateOne(
-            { _id: listId },
-            { $push: { articleIds: articleId } },
-        );
-    }
-
-    async removeArticleFromList(
-        listId: Types.ObjectId,
-        articleId: Types.ObjectId,
-    ) {
-        return this.model.updateOne(
-            { _id: listId },
-            { $pull: { articleIds: articleId } },
-        );
-    }
-
     async update(listId: Types.ObjectId, data: Partial<ReadingList>) {
         return this.model.updateOne({ _id: listId }, data);
     }
@@ -48,7 +31,25 @@ export class ReadingListsRepository {
         return this.model.findOne({ userId, isReadLater: true });
     }
 
-    async findReadingLists(listIds: string[]) {
-        return this.model.find({ _id: { $in: listIds } });
+    async addArticleToLists(
+        userId: Types.ObjectId,
+        articleId: Types.ObjectId,
+        readingListIds: Types.ObjectId[],
+    ) {
+        return this.model.updateMany(
+            { _id: { $in: readingListIds }, userId },
+            { $addToSet: { articles: articleId } },
+        );
+    }
+
+    async removeArticleFromListsNotMentioned(
+        userId: Types.ObjectId,
+        articleId: Types.ObjectId,
+        readingListIds: Types.ObjectId[],
+    ) {
+        return this.model.updateMany(
+            { _id: { $nin: readingListIds }, userId },
+            { $pull: { articles: articleId } },
+        );
     }
 }

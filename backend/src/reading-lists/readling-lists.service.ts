@@ -1,7 +1,10 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { ReadingListsRepository } from "./readling-lists.repository";
 import { Types } from "mongoose";
-import { AddArticleToReadingListsDto, CreateReadingListDto } from "./dto";
+import {
+    AddOrRemoveArticleToReadingListsDto,
+    CreateReadingListDto,
+} from "./dto";
 import { ArticleRepository } from "src/articles/article.repository";
 
 @Injectable()
@@ -18,29 +21,29 @@ export class ReadingListsService {
         }
     }
 
-    async addToReadingLists(
+    async addOrRemoveFromReadingLists(
         userId: Types.ObjectId,
-        dto: AddArticleToReadingListsDto,
+        dto: AddOrRemoveArticleToReadingListsDto,
     ) {
         const artExists = await this.articleRepo.exists(dto.articleId);
         if (!artExists) throw new NotFoundException("Article not found");
 
-        const readingLists = await this.repo.findReadingLists(
-            dto.readingListIds,
+        // add it to the reading lists (if not already exists) whose ids are
+        // provided in the dto
+
+        await this.repo.addArticleToLists(
+            userId,
+            artExists._id,
+            dto.readingListIds.map((id) => new Types.ObjectId(id)),
         );
 
-        readingLists.forEach((list) => {
-            if (list.userId.toString() !== userId.toString()) {
-                throw new NotFoundException("Reading list not found");
-            }
-        });
+        // remove the article from the reading lists in which it is not mentioned
 
-        const promises: Promise<any>[] = [];
-        readingLists.forEach((list) => {
-            promises.push(this.repo.pushArticleToList(list._id, artExists._id));
-        });
-
-        await Promise.all(promises);
+        await this.repo.removeArticleFromListsNotMentioned(
+            userId,
+            artExists._id,
+            dto.readingListIds.map((id) => new Types.ObjectId(id)),
+        );
     }
 
     async createReadingList(userId: Types.ObjectId, dto: CreateReadingListDto) {

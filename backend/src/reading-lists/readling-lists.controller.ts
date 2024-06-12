@@ -12,21 +12,27 @@ import {
 import { ReadingListsService } from "./readling-lists.service";
 import { AccessTokenGuard } from "src/auth/guard";
 import { IRequest } from "src";
-import { AddArticleToReadingListsDto, CreateReadingListDto } from "./dto";
+import {
+    AddOrRemoveArticleToReadingListsDto,
+    CreateReadingListDto,
+} from "./dto";
 
 @Controller("reading-lists")
 export class ReadingListsController {
     constructor(private serv: ReadingListsService) {}
 
+    /**
+     * Update reading lists (add/remove) in which the article is saved
+     */
     @Put("")
     @HttpCode(HttpStatus.OK)
     @UseGuards(AccessTokenGuard)
-    async addArticleToReadingLists(
+    async addOrRemoveArticleFromReadingLists(
         @Req() req: IRequest,
-        @Body() dto: AddArticleToReadingListsDto,
+        @Body() dto: AddOrRemoveArticleToReadingListsDto,
     ) {
-        await this.serv.addToReadingLists(req.user._id, dto);
-        return { message: "Article added to reading lists" };
+        await this.serv.addOrRemoveFromReadingLists(req.user._id, dto);
+        return { message: "Article updated in the reading lists." };
     }
 
     @Post("")
