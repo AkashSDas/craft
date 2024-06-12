@@ -117,4 +117,5 @@ export const endpoints = Object.freeze({
 
     // Reading list
     createReadingList: "reading-lists",
+    addArticleToReadingLists: "reading-lists",
 });

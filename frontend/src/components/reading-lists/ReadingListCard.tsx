@@ -19,7 +19,7 @@ type Props = {
     onClick: () => void;
     readingList: ReadingListType;
     isActive?: boolean;
-    actionItems?: React.JSX.Element;
+    actionItems?: React.JSX.Element | null;
 };
 
 export function ReadingListCard(props: Props): React.JSX.Element {
@@ -36,11 +36,12 @@ export function ReadingListCard(props: Props): React.JSX.Element {
             p="6px"
             border="2px solid"
             borderColor={isActive ? "black" : "gray.200"}
+            bgColor={isActive ? "gray.100" : "transparent"}
             w="100%"
             cursor="pointer"
             _hover={{
-                bgColor: "gray.50",
-                borderColor: "gray.300",
+                bgColor: isActive ? "gray.100" : "gray.50",
+                borderColor: isActive ? "black" : "gray.300",
             }}
             _active={{
                 bgColor: "gray.100",
@@ -103,7 +104,9 @@ export function ReadingListCard(props: Props): React.JSX.Element {
                 </VStack>
             </HStack>
 
-            {actionItems ?? (
+            {actionItems || actionItems === null ? (
+                actionItems
+            ) : (
                 <Menu onClose={() => setMenuOpen(false)}>
                     <MenuButton
                         pos={{ base: "absolute", sm: "static" }}

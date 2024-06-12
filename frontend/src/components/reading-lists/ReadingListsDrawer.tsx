@@ -12,7 +12,7 @@ import {
 } from "@chakra-ui/react";
 import { ReadingListInput } from "./ReadingListInput";
 import { useState } from "react";
-import { AddIcon } from "@chakra-ui/icons";
+import { AddIcon, CheckIcon } from "@chakra-ui/icons";
 import { useReadingListsManager } from "@app/hooks/reading-lists";
 import { ReadingListCard } from "./ReadingListCard";
 
@@ -24,7 +24,9 @@ type Props = {
 
 export function ReadingListsDrawer(props: Props): React.JSX.Element {
     const [showForm, setShowForm] = useState(false);
-    const { readingListsQuery } = useReadingListsManager();
+    const { readingListsQuery, addArticleToReadingListMutation } =
+        useReadingListsManager();
+    const [selectedLists, setSelectedLists] = useState<string[]>([]);
 
     return (
         <Drawer
@@ -36,7 +38,13 @@ export function ReadingListsDrawer(props: Props): React.JSX.Element {
             placement="bottom"
         >
             <DrawerOverlay />
-            <DrawerContent minH="500px" alignItems="center" py="3rem">
+            <DrawerContent
+                minH="500px"
+                maxHeight="500px"
+                alignItems="center"
+                py="3rem"
+                overflowY="auto"
+            >
                 <DrawerCloseButton
                     as={Button}
                     variant="paleSolid"
@@ -85,15 +93,66 @@ export function ReadingListsDrawer(props: Props): React.JSX.Element {
                                 <VStack w="100%">
                                     {readingListsQuery.data?.readingLists?.map(
                                         (list) => {
+                                            const isSelected =
+                                                selectedLists.includes(
+                                                    list._id
+                                                );
+
                                             return (
                                                 <ReadingListCard
                                                     key={list._id}
-                                                    onClick={() => {}}
+                                                    isActive={isSelected}
+                                                    actionItems={
+                                                        isSelected ? (
+                                                            <CheckIcon fontSize="larger" />
+                                                        ) : null
+                                                    }
+                                                    onClick={() => {
+                                                        if (isSelected) {
+                                                            setSelectedLists(
+                                                                selectedLists.filter(
+                                                                    (id) =>
+                                                                        id !==
+                                                                        list._id
+                                                                )
+                                                            );
+                                                        } else {
+                                                            setSelectedLists([
+                                                                ...selectedLists,
+                                                                list._id,
+                                                            ]);
+                                                        }
+                                                    }}
                                                     readingList={list}
                                                 />
                                             );
                                         }
                                     )}
+
+                                    <Button
+                                        w="100%"
+                                        leftIcon={<AddIcon />}
+                                        variant="solid"
+                                        mt="1rem"
+                                        disabled={
+                                            selectedLists.length === 0 ||
+                                            addArticleToReadingListMutation.isPending
+                                        }
+                                        onClick={async () => {
+                                            await addArticleToReadingListMutation.mutateAsync(
+                                                {
+                                                    articleId: props.articleId,
+                                                    readingListIds:
+                                                        selectedLists,
+                                                }
+                                            );
+                                        }}
+                                        isLoading={
+                                            addArticleToReadingListMutation.isPending
+                                        }
+                                    >
+                                        Save
+                                    </Button>
                                 </VStack>
                             )}
                         </>
