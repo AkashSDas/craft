@@ -57,4 +57,26 @@ export class ArticleRepository {
             .find({ _id: { $in: articleIds } })
             .populate("authorIds", "username profilePic userId");
     }
+
+    async getArticlesForReadListPreview(articleIds: string[]): Promise<any> {
+        return await this.model
+            .find({ articleId: { $in: articleIds }, isPublic: true })
+            .select(
+                "articleId headline description coverImage lastUpdatedAt readTimeInMs blocks",
+            )
+            .populate("authorIds", "username profilePic userId")
+            .then((articles) =>
+                articles.map((article) => {
+                    const filteredBlocks: typeof article.blocks = new Map();
+                    for (const [key, value] of article.blocks.entries()) {
+                        if (value.type === "image") {
+                            filteredBlocks.set(key, { ...value });
+                        }
+                    }
+
+                    article.blocks = filteredBlocks;
+                    return article;
+                }),
+            );
+    }
 }

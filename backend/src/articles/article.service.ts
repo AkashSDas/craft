@@ -225,4 +225,8 @@ export class ArticleService {
     async exists(articleId: string) {
         return await this.repo.exists(articleId);
     }
+
+    async getArticlesForReadListPreview(articleIds: string[]) {
+        return await this.repo.getArticlesForReadListPreview(articleIds);
+    }
 }
