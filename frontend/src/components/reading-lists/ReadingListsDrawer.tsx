@@ -102,6 +102,9 @@ export function ReadingListsDrawer(props: Props): React.JSX.Element {
                                                 <ReadingListCard
                                                     key={list._id}
                                                     isActive={isSelected}
+                                                    isReadingLater={
+                                                        list.isReadLater
+                                                    }
                                                     actionItems={
                                                         isSelected ? (
                                                             <CheckIcon fontSize="larger" />

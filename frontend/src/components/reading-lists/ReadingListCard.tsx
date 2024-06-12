@@ -20,10 +20,11 @@ type Props = {
     readingList: ReadingListType;
     isActive?: boolean;
     actionItems?: React.JSX.Element | null;
+    isReadingLater: boolean;
 };
 
 export function ReadingListCard(props: Props): React.JSX.Element {
-    const { isActive, actionItems } = props;
+    const { isActive, actionItems, isReadingLater } = props;
     const { name, createdAt, userId: user } = props.readingList;
     const [isMenuOpen, setMenuOpen] = useState(false);
 
@@ -69,7 +70,11 @@ export function ReadingListCard(props: Props): React.JSX.Element {
                     h={{ base: "180px", sm: "130px" }}
                 >
                     <Image
-                        src="/default-cover.png"
+                        src={
+                            !isReadingLater
+                                ? "/default-cover.png"
+                                : "/default-cover-light.png"
+                        }
                         alt="Cover image"
                         fill
                         style={{ borderRadius: "4px", objectFit: "cover" }}

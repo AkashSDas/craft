@@ -88,10 +88,18 @@ export async function getReadingLists() {
 
     if (status === 200 && data !== null && "readingLists" in data) {
         const parsed = await GetReadingListsResponseSchema.parseAsync(data);
+
+        // move isReadLater to the start of the array
+        const readingLists = parsed.readingLists.sort((a, b) => {
+            if (a.isReadLater) return -1;
+            if (b.isReadLater) return 1;
+            return 0;
+        });
+
         return {
             success: true,
             message: data.message,
-            readingLists: parsed.readingLists,
+            readingLists,
         };
     } else if (status === 400 && data !== null && "message" in data) {
         return { success: false, message: data.message };
