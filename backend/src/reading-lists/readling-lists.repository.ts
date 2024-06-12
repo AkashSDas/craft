@@ -38,7 +38,7 @@ export class ReadingListsRepository {
     ) {
         return this.model.updateMany(
             { _id: { $in: readingListIds }, userId },
-            { $addToSet: { articles: articleId } },
+            { $addToSet: { articleIds: articleId } },
         );
     }
 
@@ -47,9 +47,16 @@ export class ReadingListsRepository {
         articleId: Types.ObjectId,
         readingListIds: Types.ObjectId[],
     ) {
-        return this.model.updateMany(
-            { _id: { $nin: readingListIds }, userId },
-            { $pull: { articles: articleId } },
-        );
+        if (readingListIds.length === 0) {
+            return this.model.updateMany(
+                { userId },
+                { $pull: { articleIds: articleId } },
+            );
+        } else {
+            return this.model.updateMany(
+                { _id: { $nin: readingListIds }, userId },
+                { $pull: { articleIds: articleId } },
+            );
+        }
     }
 }
