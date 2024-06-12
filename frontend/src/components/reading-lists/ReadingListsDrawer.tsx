@@ -11,7 +11,7 @@ import {
     VStack,
 } from "@chakra-ui/react";
 import { ReadingListInput } from "./ReadingListInput";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AddIcon, CheckIcon } from "@chakra-ui/icons";
 import { useReadingListsManager } from "@app/hooks/reading-lists";
 import { ReadingListCard } from "./ReadingListCard";
@@ -27,6 +27,20 @@ export function ReadingListsDrawer(props: Props): React.JSX.Element {
     const { readingListsQuery, addArticleToReadingListMutation } =
         useReadingListsManager();
     const [selectedLists, setSelectedLists] = useState<string[]>([]);
+
+    useEffect(
+        function updateSelectedListsWithArticleReadingLists() {
+            if (readingListsQuery.data?.readingLists) {
+                const articleReadingLists =
+                    readingListsQuery.data.readingLists.filter((list) => {
+                        return list.articleIds.includes(props.articleId);
+                    });
+
+                setSelectedLists(articleReadingLists.map((list) => list._id));
+            }
+        },
+        [readingListsQuery.data, props.articleId]
+    );
 
     return (
         <Drawer
@@ -79,11 +93,14 @@ export function ReadingListsDrawer(props: Props): React.JSX.Element {
                                 Create Reading List
                             </Button>
 
-                            <HStack my="1.5rem">
-                                <Divider />
-                                <Text fontStyle="italic">OR</Text>
-                                <Divider />
-                            </HStack>
+                            {readingListsQuery.data?.readingLists &&
+                            readingListsQuery.data.readingLists.length !== 0 ? (
+                                <HStack my="1.5rem">
+                                    <Divider />
+                                    <Text fontStyle="italic">OR</Text>
+                                    <Divider />
+                                </HStack>
+                            ) : null}
 
                             {readingListsQuery?.isLoading ? (
                                 <VStack w="100%">
@@ -132,30 +149,35 @@ export function ReadingListsDrawer(props: Props): React.JSX.Element {
                                         }
                                     )}
 
-                                    <Button
-                                        w="100%"
-                                        leftIcon={<AddIcon />}
-                                        variant="solid"
-                                        mt="1rem"
-                                        disabled={
-                                            selectedLists.length === 0 ||
-                                            addArticleToReadingListMutation.isPending
-                                        }
-                                        onClick={async () => {
-                                            await addArticleToReadingListMutation.mutateAsync(
-                                                {
-                                                    articleId: props.articleId,
-                                                    readingListIds:
-                                                        selectedLists,
-                                                }
-                                            );
-                                        }}
-                                        isLoading={
-                                            addArticleToReadingListMutation.isPending
-                                        }
-                                    >
-                                        Save
-                                    </Button>
+                                    {readingListsQuery.data?.readingLists &&
+                                    readingListsQuery.data.readingLists
+                                        .length !== 0 ? (
+                                        <Button
+                                            w="100%"
+                                            leftIcon={<AddIcon />}
+                                            variant="solid"
+                                            mt="1rem"
+                                            disabled={
+                                                selectedLists.length === 0 ||
+                                                addArticleToReadingListMutation.isPending
+                                            }
+                                            onClick={async () => {
+                                                await addArticleToReadingListMutation.mutateAsync(
+                                                    {
+                                                        articleId:
+                                                            props.articleId,
+                                                        readingListIds:
+                                                            selectedLists,
+                                                    }
+                                                );
+                                            }}
+                                            isLoading={
+                                                addArticleToReadingListMutation.isPending
+                                            }
+                                        >
+                                            Save
+                                        </Button>
+                                    ) : null}
                                 </VStack>
                             )}
                         </>
