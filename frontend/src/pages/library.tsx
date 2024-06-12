@@ -110,10 +110,16 @@ export default function UserLibraryPage() {
                                         return null;
                                     }
 
+                                    const likeCount =
+                                        getReadingListQuery.likes[
+                                            article._id as string
+                                        ] ?? 0;
+
                                     return (
                                         <ArticlePreviewCard
                                             key={articleId}
                                             article={article}
+                                            likeCount={likeCount}
                                         />
                                     );
                                 }

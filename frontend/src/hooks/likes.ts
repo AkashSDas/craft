@@ -17,8 +17,9 @@ export function useLikesManager() {
     type LikedArticlesData = (typeof likedArticlesQuery)["data"];
 
     const likeOrDislikeArticleMutation = useMutation({
-        mutationFn: (article: Article) =>
-            likeOrDislikeArticle(article.articleId),
+        mutationFn: (article: Article | Pick<Article, "articleId">) => {
+            return likeOrDislikeArticle(article.articleId);
+        },
         onMutate(variables) {
             const prev = queryClient.getQueryData([
                 "likedArticles",
@@ -45,13 +46,19 @@ export function useLikesManager() {
                                 }) ?? [],
                         };
                     } else {
-                        return {
-                            ...old,
-                            articles: [
-                                ...(old.articles ?? []),
-                                { ...variables },
-                            ],
-                        };
+                        // check if the variables is the full article object or just an object
+                        // with articleId
+                        if ((variables as any)._id !== undefined) {
+                            return {
+                                ...old,
+                                articles: [
+                                    ...(old.articles ?? []),
+                                    { ...(variables as any) },
+                                ],
+                            };
+                        } else {
+                            likedArticlesQuery.refetch();
+                        }
                     }
                 }
             );

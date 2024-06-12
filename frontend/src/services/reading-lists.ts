@@ -72,6 +72,8 @@ const ArticlePreviewSchema = z.object({
     lastUpdatedAt: z.string(),
 });
 
+const LikesSchema = z.record(z.string(), z.number());
+
 export type CreateReadingListResponse = z.infer<
     typeof CreateReadingListResponseSchema
 >;
@@ -184,6 +186,7 @@ export async function getReadingList(
         message: string;
         readingList: ReadingListType;
         articles: ArticlePreview[];
+        likes: z.infer<typeof LikesSchema>;
     };
     type ErrorResponse = { message: string };
 
@@ -195,17 +198,23 @@ export async function getReadingList(
     const { data, status } = res;
 
     if (status === 200 && data !== null && "readingList" in data) {
-        const readingList = await ReadingListSchema.parseAsync(
-            data.readingList
-        );
+        const [readingList, articles, likes] = await Promise.all([
+            ReadingListSchema.parseAsync(data.readingList),
+            await Promise.all(
+                data.articles.map(async (article) => {
+                    return ArticlePreviewSchema.parseAsync(article);
+                })
+            ),
+            await LikesSchema.parseAsync(data.likes),
+        ]);
 
-        const articles = await Promise.all(
-            data.articles.map(async (article) => {
-                return ArticlePreviewSchema.parseAsync(article);
-            })
-        );
-
-        return { success: true, message: data.message, readingList, articles };
+        return {
+            success: true,
+            message: data.message,
+            readingList,
+            articles,
+            likes,
+        };
     } else if (status === 400 && data !== null && "message" in data) {
         return { success: false, message: data.message };
     }

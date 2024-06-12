@@ -1,19 +1,33 @@
 import { ArticlePreview } from "@app/services/reading-lists";
-import { Box, Divider, HStack, Link, Text, VStack } from "@chakra-ui/react";
+import {
+    Box,
+    Divider,
+    HStack,
+    Link,
+    Text,
+    VStack,
+    useDisclosure,
+} from "@chakra-ui/react";
 import Image from "next/image";
 import { useMemo } from "react";
 import { Image as ImageBlock } from "@app/services/articles";
 import { UserChip } from "../user-chip/UserChip";
+import { ControlPanel } from "./ControlPanel";
+import { CommentsDrawer } from "@app/components/comments/CommentsDrawer";
+import { ReadingListsDrawer } from "@app/components/reading-lists/ReadingListsDrawer";
 
 type Props = {
     article: ArticlePreview;
+    likeCount: number;
 };
 
 export function ArticlePreviewCard(props: Props): React.JSX.Element {
-    const { article } = props;
+    const { article, likeCount } = props;
     const { authorIds, headline, description, readTimeInMs, lastUpdatedAt } =
         article;
     const user = authorIds[0];
+    const comments = useDisclosure();
+    const readingLists = useDisclosure();
 
     const firstImgBlockURL = useMemo(
         function () {
@@ -139,8 +153,32 @@ export function ArticlePreviewCard(props: Props): React.JSX.Element {
                             {description}
                         </Text>
                     </VStack>
+
+                    <ControlPanel
+                        article={article}
+                        likeCount={likeCount}
+                        openCommentsDrawer={(e) => {
+                            e.preventDefault();
+                            comments.onOpen();
+                        }}
+                        openReadingListsDrawer={(e) => {
+                            e.preventDefault();
+                            readingLists.onOpen();
+                        }}
+                    />
                 </VStack>
             </HStack>
+
+            <CommentsDrawer
+                isOpen={comments.isOpen}
+                onClose={comments.onClose}
+                articleId={article.articleId}
+            />
+            <ReadingListsDrawer
+                isOpen={readingLists.isOpen}
+                onClose={readingLists.onClose}
+                articleId={article.articleId}
+            />
         </HStack>
     );
 }

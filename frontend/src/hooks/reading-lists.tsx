@@ -66,5 +66,6 @@ export function useGetReadingList(readingListId: string | undefined) {
         isError,
         readingList: data?.readingList,
         articles: data?.articles ?? [],
+        likes: data?.likes ?? ({} as Record<string, number>),
     };
 }

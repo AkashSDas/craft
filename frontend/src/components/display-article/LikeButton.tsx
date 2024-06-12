@@ -6,7 +6,7 @@ import { useMemo, useState } from "react";
 
 type LikeButtonProps = {
     likeCount: number;
-    article: Article;
+    article: Pick<Article, "articleId">;
 };
 
 export function LikeButton(props: LikeButtonProps) {
@@ -38,7 +38,9 @@ export function LikeButton(props: LikeButtonProps) {
                     height={20}
                 />
             }
-            onClick={async function handleLike() {
+            onClick={async function handleLike(e) {
+                e.preventDefault();
+
                 if (isLiked) {
                     setTotalLikeCount((prev) => prev - 1);
                 } else {
