@@ -48,7 +48,7 @@ export function useLikesManager() {
                     } else {
                         // check if the variables is the full article object or just an object
                         // with articleId
-                        if ((variables as any)._id !== undefined) {
+                        if ((variables as any).blocks !== undefined) {
                             return {
                                 ...old,
                                 articles: [

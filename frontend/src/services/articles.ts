@@ -261,3 +261,26 @@ export async function getUserArticles(type: "draft" | "public") {
         message: res.error?.message ?? "Unknown error",
     };
 }
+
+export async function makeArticlePublic(articleId: string) {
+    type SuccessResponse = { message: string };
+    type ErrorResponse = { message: string };
+
+    const res = await fetchFromAPI<SuccessResponse | ErrorResponse>(
+        endpoints.makeArticlePublic(articleId),
+        { method: "PUT" },
+        true
+    );
+    const { data, status } = res;
+
+    if (status === 200 && data !== null && "message" in data) {
+        return { success: true, message: data.message };
+    } else if (status === 400 && data !== null && "message" in data) {
+        return { success: false, message: data.message };
+    }
+
+    return {
+        success: false,
+        message: res.error?.message ?? "Unknown error",
+    };
+}

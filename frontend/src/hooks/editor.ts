@@ -3,6 +3,7 @@ import {
     UpdateArticleContentPayload,
     createArticle,
     getArticle,
+    makeArticlePublic,
     reorderArticleBlocks,
     updateArticleContent,
     updateArticleFiles,
@@ -171,6 +172,39 @@ export function useCreateArticle() {
         onSuccess(data, variables, context) {
             if (data.success && data.article) {
                 router.push(`/articles/${data.article.articleId}/edit`);
+            } else {
+                toast({
+                    title: "Error",
+                    description: data.message ?? "Unknown error",
+                    status: "error",
+                    duration: 5000,
+                    isClosable: true,
+                });
+            }
+        },
+    });
+
+    return { mutation };
+}
+
+export function useMakeArticlePublic() {
+    const router = useRouter();
+    const toast = useToast();
+
+    const mutation = useMutation({
+        mutationFn: (articleId: string) => makeArticlePublic(articleId),
+        onError(error, variables, context) {
+            toast({
+                title: "Error",
+                description: error.message,
+                status: "error",
+                duration: 5000,
+                isClosable: true,
+            });
+        },
+        onSuccess(data, variables, context) {
+            if (data.success) {
+                router.push(`/articles/${variables}`);
             } else {
                 toast({
                     title: "Error",

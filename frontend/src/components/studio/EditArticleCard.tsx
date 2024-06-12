@@ -14,11 +14,14 @@ import {
     MenuButton,
     MenuList,
     MenuItem,
+    Button,
+    Spinner,
 } from "@chakra-ui/react";
 import Image from "next/image";
 import Link from "next/link";
 import { useState, useMemo } from "react";
 import { DeleteIcon } from "@chakra-ui/icons";
+import { useMakeArticlePublic } from "@app/hooks/editor";
 
 type EditArticleCardProps = {
     article: Article;
@@ -78,6 +81,8 @@ export function EditArticleCard(props: EditArticleCardProps) {
         },
         [props.article]
     );
+
+    const { mutation: makeArticlePublic } = useMakeArticlePublic();
 
     return (
         <HStack
@@ -203,14 +208,23 @@ export function EditArticleCard(props: EditArticleCardProps) {
                         fontWeight="medium"
                         _hover={{ bgColor: "gray.100", color: "gray.500" }}
                         _active={{ bgColor: "gray.200" }}
-                        onClick={() => {}}
+                        isDisabled={makeArticlePublic.isPending}
+                        onClick={async () => {
+                            await makeArticlePublic.mutateAsync(
+                                props.article.articleId
+                            );
+                        }}
                         icon={
-                            <Image
-                                src="/icons/globe.png"
-                                alt="Publish article"
-                                height={18}
-                                width={18}
-                            />
+                            makeArticlePublic.isPending ? (
+                                <Spinner size="sm" color="gray.400" />
+                            ) : (
+                                <Image
+                                    src="/icons/globe.png"
+                                    alt="Publish article"
+                                    height={18}
+                                    width={18}
+                                />
+                            )
                         }
                     >
                         Publish

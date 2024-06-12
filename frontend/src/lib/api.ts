@@ -98,6 +98,9 @@ export const endpoints = Object.freeze({
     getUserArtilces: (type: "draft" | "public") => {
         return `articles/me?type=${type}`;
     },
+    makeArticlePublic: (articleId: string) => {
+        return `articles/${articleId}/publish`;
+    },
 
     // Followers
     followAuthor: "followers",
