@@ -33,7 +33,7 @@ export class ReadingListsService {
 
         await this.repo.addArticleToLists(
             userId,
-            artExists._id,
+            dto.articleId,
             dto.readingListIds.map((id) => new Types.ObjectId(id)),
         );
 
@@ -41,7 +41,7 @@ export class ReadingListsService {
 
         await this.repo.removeArticleFromListsNotMentioned(
             userId,
-            artExists._id,
+            dto.articleId,
             dto.readingListIds.map((id) => new Types.ObjectId(id)),
         );
     }

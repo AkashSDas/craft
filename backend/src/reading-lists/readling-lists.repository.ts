@@ -33,7 +33,7 @@ export class ReadingListsRepository {
 
     async addArticleToLists(
         userId: Types.ObjectId,
-        articleId: Types.ObjectId,
+        articleId: string,
         readingListIds: Types.ObjectId[],
     ) {
         return this.model.updateMany(
@@ -44,7 +44,7 @@ export class ReadingListsRepository {
 
     async removeArticleFromListsNotMentioned(
         userId: Types.ObjectId,
-        articleId: Types.ObjectId,
+        articleId: string,
         readingListIds: Types.ObjectId[],
     ) {
         if (readingListIds.length === 0) {

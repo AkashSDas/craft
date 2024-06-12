@@ -6,7 +6,7 @@ import { User } from "src/users/schema";
 export interface IReadingList {
     userId: Types.ObjectId;
     name: string;
-    articleIds: Types.ObjectId[];
+    articleIds: string[];
 
     /**
      * A user can have only one ReadingList with read later and it will be
@@ -26,12 +26,12 @@ export class ReadingList extends Document implements IReadingList {
     name: string;
 
     @Prop({
-        type: [SchemaTypes.ObjectId],
+        type: [String],
         default: [],
         required: true,
         ref: Article.name,
     })
-    articleIds: Types.ObjectId[];
+    articleIds: string[];
 
     @Prop({ type: Boolean, required: true, default: false })
     isReadLater: boolean;
