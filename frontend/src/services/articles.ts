@@ -49,7 +49,7 @@ const QuoteSchema = z.object({
     }),
 });
 
-const BlockSchema = z.union([
+export const BlockSchema = z.union([
     ParagraphSchema,
     HeadingSchema,
     DividerSchema,

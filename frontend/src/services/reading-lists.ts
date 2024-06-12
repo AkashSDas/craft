@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { ImageSchema } from "./articles";
+import { BlockSchema, ImageSchema } from "./articles";
 import { endpoints, fetchFromAPI } from "@app/lib/api";
 import { ReadingListInputsType } from "@app/components/reading-lists/ReadingListInput";
 
@@ -37,11 +37,50 @@ const GetReadingListsResponseSchema = z.object({
     readingLists: z.array(ReadingListSchema),
 });
 
+const GetReadingListResponseSchema = z.object({
+    message: z.string(),
+    readingList: z.object({
+        _id: z.string(),
+        name: z.string(),
+        isPrivate: z.boolean(),
+        isReadLater: z.boolean(),
+        userId: z.object({
+            userId: z.string(),
+            username: z.string(),
+            profilePic: ImageSchema,
+        }),
+        createdAt: z.string(),
+        articleIds: z.array(z.string()),
+    }),
+});
+
+const ArticlePreviewSchema = z.object({
+    _id: z.string(),
+    articleId: z.string(),
+    headline: z.string().optional(),
+    description: z.string().optional(),
+    coverImage: ImageSchema.optional(),
+    authorIds: z.array(
+        z.object({
+            userId: z.string(),
+            username: z.string(),
+            profilePic: ImageSchema.optional(),
+        })
+    ),
+    blocks: z.record(z.string(), BlockSchema),
+    readTimeInMs: z.number().min(0),
+    lastUpdatedAt: z.string(),
+});
+
 export type CreateReadingListResponse = z.infer<
     typeof CreateReadingListResponseSchema
 >;
 type GetReadingListsResponse = z.infer<typeof GetReadingListsResponseSchema>;
 export type ReadingListType = z.infer<typeof ReadingListSchema>;
+export type GetReadingListResponse = z.infer<
+    typeof GetReadingListResponseSchema
+>;
+export type ArticlePreview = z.infer<typeof ArticlePreviewSchema>;
 
 // ==================================
 // Services
@@ -127,6 +166,46 @@ export async function addArticleReadingLists(
 
     if (status === 200 && data !== null && "message" in data) {
         return { success: true, message: data.message };
+    } else if (status === 400 && data !== null && "message" in data) {
+        return { success: false, message: data.message };
+    }
+
+    return {
+        success: false,
+        message: res.error?.message ?? "Unknown error",
+    };
+}
+
+export async function getReadingList(
+    readingListId: string,
+    userId: string | null = null
+) {
+    type SuccessResponse = {
+        message: string;
+        readingList: ReadingListType;
+        articles: ArticlePreview[];
+    };
+    type ErrorResponse = { message: string };
+
+    const res = await fetchFromAPI<SuccessResponse | ErrorResponse>(
+        endpoints.getReadingList(readingListId),
+        { method: "GET", params: { userId } },
+        true
+    );
+    const { data, status } = res;
+
+    if (status === 200 && data !== null && "readingList" in data) {
+        const readingList = await ReadingListSchema.parseAsync(
+            data.readingList
+        );
+
+        const articles = await Promise.all(
+            data.articles.map(async (article) => {
+                return ArticlePreviewSchema.parseAsync(article);
+            })
+        );
+
+        return { success: true, message: data.message, readingList, articles };
     } else if (status === 400 && data !== null && "message" in data) {
         return { success: false, message: data.message };
     }

@@ -2,6 +2,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { useUser } from "./auth";
 import {
     addArticleReadingLists,
+    getReadingList,
     getReadingLists,
 } from "@app/services/reading-lists";
 import { useToast } from "@chakra-ui/react";
@@ -48,4 +49,22 @@ export function useReadingListsManager() {
     });
 
     return { readingListsQuery, addArticleToReadingListMutation };
+}
+
+export function useGetReadingList(readingListId: string | undefined) {
+    const { user } = useUser();
+
+    const { isLoading, isError, data } = useQuery({
+        queryKey: ["readingLists", user?.userId, readingListId],
+        queryFn: () => getReadingList(readingListId!, user?.userId),
+        staleTime: 1000 * 60 * 5, // 5 minutes
+        enabled: readingListId !== undefined,
+    });
+
+    return {
+        isLoading,
+        isError,
+        readingList: data?.readingList,
+        articles: data?.articles ?? [],
+    };
 }
