@@ -15,8 +15,8 @@ export const getServerSideProps: GetServerSideProps<{
 }> = async function (ctx) {
     const articleId = ctx.params?.articleId as string;
     const res = await getArticle(articleId);
-    console.log(res);
-    if (!res.article || !res?.article?.isPublic) {
+    // if (!res.article || !res?.article?.isPublic) {
+    if (!res.article) {
         return { notFound: true };
     }
 
