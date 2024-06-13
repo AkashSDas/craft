@@ -5,8 +5,10 @@ import {
     deleteReadingList,
     getReadingList,
     getReadingLists,
+    updateReadingList,
 } from "@app/services/reading-lists";
 import { useToast } from "@chakra-ui/react";
+import { UpdateReadingListInputsType } from "@app/components/reading-lists/ReadingListUpdateInput";
 
 export function useReadingListsManager() {
     const { isLoggedIn, user } = useUser();
@@ -17,6 +19,36 @@ export function useReadingListsManager() {
         queryFn: getReadingLists,
         enabled: isLoggedIn,
         staleTime: 1000 * 60 * 5, // 5 minutes
+    });
+
+    const updateReadingListUpdateMutation = useMutation({
+        async mutationFn(payload: {
+            readingListId: string;
+            update: UpdateReadingListInputsType;
+        }) {
+            const { readingListId, update } = payload;
+            return await updateReadingList(readingListId, update);
+        },
+        onSuccess(data, variables, context) {
+            if (data.success) {
+                readingListsQuery.refetch();
+            } else {
+                toast({
+                    title: data.message ?? "Failed to update reading list",
+                    status: "error",
+                    duration: 3000,
+                    isClosable: true,
+                });
+            }
+        },
+        onError(error, variables, context) {
+            toast({
+                title: error.message ?? "Failed to update reading list",
+                status: "error",
+                duration: 3000,
+                isClosable: true,
+            });
+        },
     });
 
     const deleteReadingListMutation = useMutation({
@@ -85,6 +117,7 @@ export function useReadingListsManager() {
         readingListsQuery,
         addArticleToReadingListMutation,
         deleteReadingListMutation,
+        updateReadingListUpdateMutation,
     };
 }
 

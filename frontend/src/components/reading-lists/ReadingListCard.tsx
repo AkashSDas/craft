@@ -10,12 +10,15 @@ import {
     Spinner,
     Text,
     VStack,
+    useDisclosure,
 } from "@chakra-ui/react";
 import Image from "next/image";
 import { UserChip } from "../shared/user-chip/UserChip";
 import { useState } from "react";
 import { DeleteIcon } from "@chakra-ui/icons";
 import { useReadingListsManager } from "@app/hooks/reading-lists";
+import { ReadingListUpdateInput } from "./ReadingListUpdateInput";
+import { ReadingListUpdateDrawer } from "./ReadingListUpdateDrawer";
 
 type Props = {
     onClick: () => void;
@@ -30,6 +33,7 @@ export function ReadingListCard(props: Props): React.JSX.Element {
     const { name, createdAt, userId: user } = props.readingList;
     const [isMenuOpen, setMenuOpen] = useState(false);
     const { deleteReadingListMutation } = useReadingListsManager();
+    const editDrawer = useDisclosure();
 
     return (
         <HStack
@@ -165,7 +169,7 @@ export function ReadingListCard(props: Props): React.JSX.Element {
                             fontWeight="medium"
                             _hover={{ bgColor: "gray.100", color: "gray.500" }}
                             _active={{ bgColor: "gray.200" }}
-                            onClick={() => {}}
+                            onClick={() => editDrawer.onOpen()}
                             icon={
                                 <Image
                                     src="/icons/edit.png"
@@ -208,6 +212,16 @@ export function ReadingListCard(props: Props): React.JSX.Element {
                     </MenuList>
                 </Menu>
             )}
+
+            <ReadingListUpdateDrawer
+                readingListId={props.readingList._id}
+                isOpen={editDrawer.isOpen}
+                onClose={editDrawer.onClose}
+                defaultValues={{
+                    name,
+                    isPrivate: props.readingList.isPrivate,
+                }}
+            />
         </HStack>
     );
 }

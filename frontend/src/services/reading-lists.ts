@@ -2,6 +2,7 @@ import { z } from "zod";
 import { BlockSchema, ImageSchema } from "./articles";
 import { endpoints, fetchFromAPI } from "@app/lib/api";
 import { ReadingListInputsType } from "@app/components/reading-lists/ReadingListInput";
+import { UpdateReadingListInputsType } from "@app/components/reading-lists/ReadingListUpdateInput";
 
 // ==================================
 // Validators
@@ -232,6 +233,32 @@ export async function deleteReadingList(listId: string) {
     const res = await fetchFromAPI<SuccessResponse | ErrorResponse>(
         endpoints.deleteReadingList(listId),
         { method: "DELETE" },
+        true
+    );
+    const { data, status } = res;
+
+    if (status === 200 && data !== null && "message" in data) {
+        return { success: true, message: data.message };
+    } else if (status === 400 && data !== null && "message" in data) {
+        return { success: false, message: data.message };
+    }
+
+    return {
+        success: false,
+        message: res.error?.message ?? "Unknown error",
+    };
+}
+
+export async function updateReadingList(
+    listId: string,
+    payload: UpdateReadingListInputsType
+) {
+    type SuccessResponse = { message: string };
+    type ErrorResponse = { message: string };
+
+    const res = await fetchFromAPI<SuccessResponse | ErrorResponse>(
+        endpoints.updateReadingList(listId),
+        { method: "PUT", data: payload },
         true
     );
     const { data, status } = res;
