@@ -112,4 +112,17 @@ export class ReadingListsService {
 
         await this.repo.deleteOne(userId, exists._id);
     }
+
+    async updateReadingList(
+        userId: Types.ObjectId,
+        readingListId: string,
+        dto: CreateReadingListDto,
+    ) {
+        const exists = await this.repo.exists(readingListId, userId);
+        if (!exists) {
+            throw new NotFoundException("Reading list not found");
+        }
+
+        await this.repo.update(userId, exists._id, dto);
+    }
 }

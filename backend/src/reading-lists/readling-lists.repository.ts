@@ -13,8 +13,12 @@ export class ReadingListsRepository {
         return this.model.create(data);
     }
 
-    async update(listId: Types.ObjectId, data: Partial<ReadingList>) {
-        return this.model.updateOne({ _id: listId }, data);
+    async update(
+        userId: Types.ObjectId,
+        listId: Types.ObjectId,
+        data: Partial<ReadingList>,
+    ) {
+        return this.model.updateOne({ _id: listId, userId }, data);
     }
 
     async delete(listId: Types.ObjectId): Promise<any> {

@@ -18,6 +18,7 @@ import { IRequest } from "src";
 import {
     AddOrRemoveArticleToReadingListsDto,
     CreateReadingListDto,
+    UpdateReadingListDto,
 } from "./dto";
 
 @Controller("reading-lists")
@@ -36,6 +37,18 @@ export class ReadingListsController {
     ) {
         await this.serv.addOrRemoveFromReadingLists(req.user._id, dto);
         return { message: "Article updated in the reading lists." };
+    }
+
+    @Put(":readingListId")
+    @HttpCode(HttpStatus.OK)
+    @UseGuards(AccessTokenGuard)
+    async updateReadingList(
+        @Req() req: IRequest,
+        @Param("readingListId") readingListId: string,
+        @Body() dto: UpdateReadingListDto,
+    ) {
+        await this.serv.updateReadingList(req.user._id, readingListId, dto);
+        return { message: "Reading list updated" };
     }
 
     @Post("")
