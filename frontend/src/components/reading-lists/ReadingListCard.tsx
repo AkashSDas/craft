@@ -7,6 +7,7 @@ import {
     MenuButton,
     MenuItem,
     MenuList,
+    Spinner,
     Text,
     VStack,
 } from "@chakra-ui/react";
@@ -14,6 +15,7 @@ import Image from "next/image";
 import { UserChip } from "../shared/user-chip/UserChip";
 import { useState } from "react";
 import { DeleteIcon } from "@chakra-ui/icons";
+import { useReadingListsManager } from "@app/hooks/reading-lists";
 
 type Props = {
     onClick: () => void;
@@ -27,6 +29,7 @@ export function ReadingListCard(props: Props): React.JSX.Element {
     const { isActive, actionItems, isReadingLater } = props;
     const { name, createdAt, userId: user } = props.readingList;
     const [isMenuOpen, setMenuOpen] = useState(false);
+    const { deleteReadingListMutation } = useReadingListsManager();
 
     return (
         <HStack
@@ -186,8 +189,19 @@ export function ReadingListCard(props: Props): React.JSX.Element {
                                 color: "red.500",
                             }}
                             _active={{ bgColor: "gray.200" }}
-                            onClick={() => {}}
-                            icon={<DeleteIcon fontSize="medium" />}
+                            isDisabled={deleteReadingListMutation.isPending}
+                            onClick={async () => {
+                                await deleteReadingListMutation.mutateAsync(
+                                    props.readingList._id
+                                );
+                            }}
+                            icon={
+                                deleteReadingListMutation.isPending ? (
+                                    <Spinner size="sm" />
+                                ) : (
+                                    <DeleteIcon fontSize="medium" />
+                                )
+                            }
                         >
                             Delete
                         </MenuItem>

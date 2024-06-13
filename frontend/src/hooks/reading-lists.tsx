@@ -2,6 +2,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { useUser } from "./auth";
 import {
     addArticleReadingLists,
+    deleteReadingList,
     getReadingList,
     getReadingLists,
 } from "@app/services/reading-lists";
@@ -16,6 +17,38 @@ export function useReadingListsManager() {
         queryFn: getReadingLists,
         enabled: isLoggedIn,
         staleTime: 1000 * 60 * 5, // 5 minutes
+    });
+
+    const deleteReadingListMutation = useMutation({
+        async mutationFn(readingListId: string) {
+            return deleteReadingList(readingListId);
+        },
+        onSuccess(data, variables, context) {
+            if (data.success) {
+                toast({
+                    title: "Reading list deleted",
+                    status: "success",
+                    duration: 3000,
+                    isClosable: true,
+                });
+                readingListsQuery.refetch();
+            } else {
+                toast({
+                    title: data.message ?? "Unknown error",
+                    status: "error",
+                    duration: 3000,
+                    isClosable: true,
+                });
+            }
+        },
+        onError(error, variables, context) {
+            toast({
+                title: error.message ?? "Failed to delete reading list",
+                status: "error",
+                duration: 3000,
+                isClosable: true,
+            });
+        },
     });
 
     const addArticleToReadingListMutation = useMutation({
@@ -48,7 +81,11 @@ export function useReadingListsManager() {
         },
     });
 
-    return { readingListsQuery, addArticleToReadingListMutation };
+    return {
+        readingListsQuery,
+        addArticleToReadingListMutation,
+        deleteReadingListMutation,
+    };
 }
 
 export function useGetReadingList(readingListId: string | undefined) {
