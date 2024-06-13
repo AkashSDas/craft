@@ -103,4 +103,13 @@ export class ReadingListsService {
 
         return { list, articles, likes };
     }
+
+    async deleteReadingList(userId: Types.ObjectId, readingListId: string) {
+        const exists = await this.repo.exists(readingListId, userId);
+        if (!exists) {
+            throw new NotFoundException("Reading list not found");
+        }
+
+        await this.repo.deleteOne(userId, exists._id);
+    }
 }

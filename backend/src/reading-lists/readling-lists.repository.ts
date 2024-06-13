@@ -65,4 +65,15 @@ export class ReadingListsRepository {
             .findOne({ _id: listId })
             .populate("userId", "username userId profilePic");
     }
+
+    async deleteOne(
+        userId: Types.ObjectId,
+        listId: Types.ObjectId,
+    ): Promise<any> {
+        return this.model.deleteOne({ _id: listId, userId });
+    }
+
+    async exists(listId: string, userId: Types.ObjectId) {
+        return this.model.exists({ _id: listId, userId });
+    }
 }

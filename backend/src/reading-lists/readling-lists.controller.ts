@@ -1,6 +1,7 @@
 import {
     Body,
     Controller,
+    Delete,
     Get,
     HttpCode,
     HttpStatus,
@@ -81,5 +82,16 @@ export class ReadingListsController {
             likes: likesObj,
             message: "Reading list",
         };
+    }
+
+    @Delete(":readingListId")
+    @HttpCode(HttpStatus.OK)
+    @UseGuards(AccessTokenGuard)
+    async deleteReadingList(
+        @Req() req: IRequest,
+        @Param("readingListId") readingListId: string,
+    ) {
+        await this.serv.deleteReadingList(req.user._id, readingListId);
+        return { message: "Reading list deleted" };
     }
 }
