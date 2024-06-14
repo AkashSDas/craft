@@ -6,6 +6,7 @@ import {
     HttpCode,
     HttpStatus,
     NotFoundException,
+    Param,
     Post,
     Put,
     Query,
@@ -42,6 +43,23 @@ export class ArticleController {
         @Query("type") type: "draft" | "public",
     ) {
         const articles = await this.serv.getUserArticles(req.user._id, type);
+        const likes = await this.likesService.getArticlesLikes(
+            articles.map((a) => a._id),
+        );
+
+        const likeCount = new Map();
+        likes.forEach((v, k) => {
+            likeCount.set(k, v);
+        });
+
+        return { articles, likeCount };
+    }
+
+    @Get("authors/:authorId/articles")
+    @HttpCode(HttpStatus.OK)
+    async getAuthorArticles(@Req() req: IRequest, @Param("authorId") authorId) {
+        const articles = await this.serv.getUserArticles(authorId, "public");
+
         const likes = await this.likesService.getArticlesLikes(
             articles.map((a) => a._id),
         );
