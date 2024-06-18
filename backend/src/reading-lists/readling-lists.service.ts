@@ -26,7 +26,12 @@ export class ReadingListsService {
     async createReadLaterList(userId: Types.ObjectId) {
         const exists = await this.repo.checkIfReadLaterForUserExists(userId);
         if (!exists) {
-            this.repo.create({ userId, name: "Read Later", isReadLater: true });
+            this.repo.create({
+                userId,
+                name: "Read Later",
+                isReadLater: true,
+                isPrivate: true,
+            });
         }
     }
 
