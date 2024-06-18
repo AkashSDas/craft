@@ -22,4 +22,8 @@ export class UserService {
 
         return { author, followersCount };
     }
+
+    async checkUserExists(userId: string) {
+        return await this.repo.exists({ userId });
+    }
 }

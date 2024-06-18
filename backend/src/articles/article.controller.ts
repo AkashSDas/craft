@@ -5,6 +5,7 @@ import {
     Get,
     HttpCode,
     HttpStatus,
+    Inject,
     NotFoundException,
     Param,
     Post,
@@ -12,6 +13,7 @@ import {
     Query,
     Req,
     UseGuards,
+    forwardRef,
 } from "@nestjs/common";
 import { ArticleService } from "./article.service";
 import { AccessTokenGuard } from "../auth/guard";
@@ -19,12 +21,14 @@ import { IRequest } from "../index";
 import { UpdateArticleContentDto } from "./dto";
 import { LikesService } from "src/likes/likes.service";
 import { Request } from "express";
+import { UserService } from "src/users/user.service";
 
 @Controller("articles")
 export class ArticleController {
     constructor(
         private serv: ArticleService,
         private likesService: LikesService,
+        @Inject(forwardRef(() => UserService)) private userService: UserService,
     ) {}
 
     @Post("")
@@ -57,16 +61,25 @@ export class ArticleController {
 
     @Get("authors/:authorId/articles")
     @HttpCode(HttpStatus.OK)
-    async getAuthorArticles(@Req() req: IRequest, @Param("authorId") authorId) {
-        const articles = await this.serv.getUserArticles(authorId, "public");
+    async getAuthorArticles(
+        @Req() req: IRequest,
+        @Param("authorId") authorId: string,
+    ) {
+        const author = await this.userService.checkUserExists(authorId);
+        if (!author) {
+            throw new NotFoundException("Author not found");
+        }
+
+        const articles = await this.serv.getUserArticles(author._id, "public");
 
         const likes = await this.likesService.getArticlesLikes(
             articles.map((a) => a._id),
         );
 
-        const likeCount = new Map();
+        console.log(likes);
+        const likeCount = {};
         likes.forEach((v, k) => {
-            likeCount.set(k, v);
+            likeCount[k] = v;
         });
 
         return { articles, likeCount };
