@@ -27,7 +27,7 @@ export default function AuthorReadingListsPage() {
                     ) : isError ? (
                         <Text>Something went wrong</Text>
                     ) : (
-                        <VStack gap="24px">
+                        <VStack gap="24px" w="100%">
                             <Button
                                 w="100%"
                                 variant="tab"
