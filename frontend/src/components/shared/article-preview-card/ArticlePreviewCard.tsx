@@ -17,7 +17,7 @@ import { CommentsDrawer } from "@app/components/comments/CommentsDrawer";
 import { ReadingListsDrawer } from "@app/components/reading-lists/ReadingListsDrawer";
 
 type Props = {
-    article: ArticlePreview;
+    article: Omit<ArticlePreview, "_id">;
     likeCount: number;
 };
 
