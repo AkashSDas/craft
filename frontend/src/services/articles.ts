@@ -81,6 +81,8 @@ export const ArticleSchema = z.object({
 
 const ArticlesSchema = z.array(ArticleSchema);
 
+const LikesSchema = z.record(z.string(), z.number());
+
 export type Paragraph = z.infer<typeof ParagraphSchema>;
 export type Heading = z.infer<typeof HeadingSchema>;
 export type Divider = z.infer<typeof DividerSchema>;
@@ -89,6 +91,11 @@ export type Quote = z.infer<typeof QuoteSchema>;
 export type Block = z.infer<typeof BlockSchema>;
 export type BlockId = string;
 export type Article = z.infer<typeof ArticleSchema>;
+
+const AuthorArticlesSchema = z.array(
+    z.object({ _id: z.string() }).merge(ArticleSchema)
+);
+export type AuthorArticle = z.infer<typeof AuthorArticlesSchema>[number];
 
 // ==================================
 // Services
@@ -283,4 +290,34 @@ export async function makeArticlePublic(articleId: string) {
         success: false,
         message: res.error?.message ?? "Unknown error",
     };
+}
+
+export async function getAuthorArticles(authorId: string) {
+    type SuccessResponse = {
+        articles: AuthorArticle[];
+        likeCount: z.infer<typeof LikesSchema>;
+    };
+    type ErrorResponse = { message: string };
+
+    const res = await fetchFromAPI<SuccessResponse | ErrorResponse>(
+        endpoints.getAuthorArticles(authorId),
+        { method: "GET" }
+    );
+    const { data, status } = res;
+
+    if (
+        status === 200 &&
+        data !== null &&
+        "articles" in data &&
+        "likeCount" in data
+    ) {
+        const [articles, likes] = await Promise.all([
+            AuthorArticlesSchema.parseAsync(data.articles),
+            LikesSchema.parseAsync(data.likeCount),
+        ]);
+
+        return { success: true, articles, likes };
+    } else if (status === 400 && data !== null && "message" in data) {
+        return { success: false, message: data.message };
+    }
 }

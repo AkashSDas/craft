@@ -1,3 +1,4 @@
+import { getAuthorArticles } from "@app/services/articles";
 import { getAuthorProfile } from "@app/services/user";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/router";
@@ -24,4 +25,20 @@ export function useGetAuthorPageProfile() {
     const data = useGetAuthor(router.query.authorId as string);
 
     return data;
+}
+
+export function useGetAuthorArticles(authorId?: string | null) {
+    const { data, isLoading, error, isError } = useQuery({
+        queryKey: ["authorArticles", authorId],
+        queryFn: () => getAuthorArticles(authorId!),
+        enabled: authorId !== null && authorId !== undefined,
+    });
+
+    return {
+        articles: data?.articles ?? [],
+        likes: data?.likes ?? ({} as Record<string, number>),
+        isLoading,
+        error,
+        isError,
+    };
 }

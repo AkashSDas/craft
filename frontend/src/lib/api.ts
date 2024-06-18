@@ -131,4 +131,7 @@ export const endpoints = Object.freeze({
 
     // User
     getAuthor: (authorId: string) => `users/authors/${authorId}`,
+    getAuthorArticles: (authorId: string) => {
+        return `articles/authors/${authorId}/articles`;
+    },
 });
