@@ -1,11 +1,25 @@
-import { Injectable } from "@nestjs/common";
+import { Inject, Injectable, forwardRef } from "@nestjs/common";
 import { UserRepository } from "./user.repository";
+import { FollowersService } from "src/followers/followers.service";
 
 @Injectable()
 export class UserService {
-    constructor(private repo: UserRepository) {}
+    constructor(
+        @Inject(forwardRef(() => FollowersService))
+        private followersService: FollowersService,
+        private repo: UserRepository,
+    ) {}
 
     async getAuthorProfile(authorId: string) {
-        return await this.repo.findOne({ userId: authorId });
+        const author = await this.repo.findOne({ userId: authorId });
+        let followersCount = 0;
+
+        if (author) {
+            followersCount = await this.followersService.getFollowersCount(
+                author._id,
+            );
+        }
+
+        return { author, followersCount };
     }
 }

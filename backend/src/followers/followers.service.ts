@@ -52,4 +52,10 @@ export class FollowersService {
     async getFollowers(followingId: Types.ObjectId) {
         return await this.repo.getFollowers(followingId.toString());
     }
+
+    async getFollowersCount(followingId: Types.ObjectId) {
+        return await this.repo.count({
+            followingId: followingId.toString(),
+        });
+    }
 }

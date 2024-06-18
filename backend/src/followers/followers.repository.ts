@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Follower } from "./schema";
-import { Model } from "mongoose";
+import { FilterQuery, Model } from "mongoose";
 
 // followerId -- the user who is following
 // followingId -- the user who is being followed
@@ -41,5 +41,9 @@ export class FollowersRepository {
         return await this.model
             .find({ followerId })
             .populate("followingId", "username userId profilePic");
+    }
+
+    async count(query: FilterQuery<Follower>) {
+        return await this.model.countDocuments(query);
     }
 }

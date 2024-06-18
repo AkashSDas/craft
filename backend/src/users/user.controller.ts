@@ -8,13 +8,13 @@ export class UserController {
 
     @Get("authors/:authorId")
     async getAuthorProfile(@Param("authorId") authorId: string) {
-        const author = await this.serv.getAuthorProfile(authorId);
-        console.log(author);
+        const { author, followersCount } =
+            await this.serv.getAuthorProfile(authorId);
 
         if (!author) {
             throw new NotFoundException("Author not found");
         }
 
-        return { author };
+        return { author, followersCount };
     }
 }
