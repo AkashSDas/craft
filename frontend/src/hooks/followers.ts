@@ -50,13 +50,13 @@ export function useFollowerManager() {
                 }
             );
 
-            toast({
-                title: "Unfollowed",
-                description: `You are no longer following ${variables.username}`,
-                status: "success",
-                duration: 3000,
-                isClosable: true,
-            });
+            // toast({
+            //     title: "Unfollowed",
+            //     description: `You are no longer following ${variables.username}`,
+            //     status: "success",
+            //     duration: 3000,
+            //     isClosable: true,
+            // });
 
             return { previousData: prev };
         },
@@ -68,13 +68,13 @@ export function useFollowerManager() {
                 );
             }
 
-            toast({
-                title: "Error",
-                description: "Failed to unfollow author",
-                status: "error",
-                duration: 5000,
-                isClosable: true,
-            });
+            // toast({
+            //     title: "Error",
+            //     description: "Failed to unfollow author",
+            //     status: "error",
+            //     duration: 5000,
+            //     isClosable: true,
+            // });
         },
         async onSuccess(data, variables, context) {
             await queryClient.invalidateQueries({
@@ -106,13 +106,13 @@ export function useFollowerManager() {
                 }
             );
 
-            toast({
-                title: "Followed",
-                description: `You are now following ${variables.username}`,
-                status: "success",
-                duration: 3000,
-                isClosable: true,
-            });
+            // toast({
+            //     title: "Followed",
+            //     description: `You are now following ${variables.username}`,
+            //     status: "success",
+            //     duration: 3000,
+            //     isClosable: true,
+            // });
 
             return { previousData: prev };
         },
@@ -124,13 +124,13 @@ export function useFollowerManager() {
                 );
             }
 
-            toast({
-                title: "Error",
-                description: "Failed to follow author",
-                status: "error",
-                duration: 5000,
-                isClosable: true,
-            });
+            // toast({
+            //     title: "Error",
+            //     description: "Failed to follow author",
+            //     status: "error",
+            //     duration: 5000,
+            //     isClosable: true,
+            // });
         },
         async onSuccess(data, variables, context) {
             await queryClient.invalidateQueries({
