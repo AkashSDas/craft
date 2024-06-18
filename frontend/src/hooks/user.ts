@@ -11,6 +11,7 @@ export function useGetAuthor(authorId?: string | null) {
 
     return {
         author: data?.author,
+        followersCount: data?.followersCount,
         isLoading,
         error,
         isError,

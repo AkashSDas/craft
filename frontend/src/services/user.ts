@@ -11,7 +11,7 @@ const AuthorSchema = z.object({
 type Author = z.infer<typeof AuthorSchema>;
 
 export async function getAuthorProfile(authorId: string) {
-    type SuccessResponse = { author: Author };
+    type SuccessResponse = { author: Author; followersCount: number };
     type ErrorResponse = { message: string };
 
     const response = await fetchFromAPI<SuccessResponse | ErrorResponse>(
@@ -28,6 +28,7 @@ export async function getAuthorProfile(authorId: string) {
             success: true,
             message: "Retrieved author successfully",
             author: parsed,
+            followersCount: data.followersCount,
         };
     } else if (status === 404 && data !== null && "message" in data) {
         return { status: 404, success: false, message: data.message };

@@ -12,7 +12,8 @@ function Wrapper({ children }: PropsWithChildren<unknown>) {
 }
 
 export default function AuthorProfilePage() {
-    const { author, notFound, isLoading, isError } = useGetAuthorPageProfile();
+    const { author, notFound, isLoading, isError, followersCount } =
+        useGetAuthorPageProfile();
 
     if (isLoading) {
         return (
@@ -32,7 +33,7 @@ export default function AuthorProfilePage() {
         <Wrapper>
             <VStack maxW="700px" w="100%" gap="24px">
                 <ProfileHeader
-                    followersCount={0}
+                    followersCount={followersCount ?? 0}
                     username={author.username}
                     profilePicURL={author.profilePic?.URL}
                     userId={author.userId}

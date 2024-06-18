@@ -2,7 +2,7 @@ import { useUser } from "@app/hooks/auth";
 import { useFollowerManager } from "@app/hooks/followers";
 import { Box, Button, HStack, Text, VStack } from "@chakra-ui/react";
 import Image from "next/image";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 
 type Props = {
     followersCount: number;
@@ -14,6 +14,10 @@ type Props = {
 export function ProfileHeader(props: Props) {
     const { user } = useUser();
     const { followersCount, username, userId, profilePicURL } = props;
+    const [change, setChange] = useState<0 | -1>(0);
+    const count = useMemo(() => {
+        return followersCount + change;
+    }, [followersCount, change]);
 
     const { followAuthorMutation, followersQuery, unfollowAuthorMutation } =
         useFollowerManager();
@@ -61,7 +65,7 @@ export function ProfileHeader(props: Props) {
                     color="gray"
                     fontWeight="medium"
                 >
-                    {followersCount} followers
+                    {count} followers
                 </Text>
             </VStack>
 
@@ -76,8 +80,10 @@ export function ProfileHeader(props: Props) {
 
                     if (isFollowing) {
                         unfollowAuthorMutation.mutateAsync(author);
+                        setChange(-1);
                     } else {
                         followAuthorMutation.mutateAsync(author);
+                        setChange(0);
                     }
                 }}
                 isLoading={
