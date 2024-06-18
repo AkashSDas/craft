@@ -1,5 +1,6 @@
 import { useUser } from "@app/hooks/auth";
 import { useFollowerManager } from "@app/hooks/followers";
+import { monasansExpanded } from "@app/lib/chakra";
 import { Box, Button, HStack, Text, VStack } from "@chakra-ui/react";
 import Image from "next/image";
 import { useMemo, useState } from "react";
@@ -54,7 +55,8 @@ export function ProfileHeader(props: Props) {
             <VStack gap="0px" flexGrow={1} alignItems="start">
                 <Text
                     fontSize={{ base: "20px", sm: "24px" }}
-                    fontWeight="bold"
+                    fontFamily={monasansExpanded.style.fontFamily}
+                    fontWeight="extrabold"
                     fontStyle="italic"
                 >
                     {username}
