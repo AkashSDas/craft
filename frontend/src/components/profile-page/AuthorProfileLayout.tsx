@@ -1,6 +1,3 @@
-import { AuthorArticlesTabContent } from "@app/components/profile-page/AuthorArticlesTabContent";
-import { AuthorReadingListTabContent } from "@app/components/profile-page/AuthorReadingListTabContent";
-import { ProfileHeader } from "@app/components/profile-page/ProfileHeader";
 import { useGetAuthorPageProfile } from "@app/hooks/user";
 import {
     Button,
@@ -10,7 +7,9 @@ import {
     Text,
     VStack,
 } from "@chakra-ui/react";
-import { PropsWithChildren, useState } from "react";
+import { PropsWithChildren } from "react";
+import { ProfileHeader } from "./ProfileHeader";
+import Link from "next/link";
 
 function Wrapper({ children }: PropsWithChildren<unknown>) {
     return (
@@ -20,8 +19,13 @@ function Wrapper({ children }: PropsWithChildren<unknown>) {
     );
 }
 
-export default function AuthorProfilePage() {
-    const [tab, setTab] = useState<"posts" | "readingLists">("posts");
+type Props = PropsWithChildren<{
+    tab: "posts" | "readingLists";
+    authorId?: string | null;
+}>;
+
+export function AuthorProfileLayout(props: Props) {
+    const { tab, authorId, children } = props;
     const { author, notFound, isLoading, isError, followersCount } =
         useGetAuthorPageProfile();
 
@@ -53,14 +57,16 @@ export default function AuthorProfilePage() {
                     <Button
                         variant="tab"
                         isActive={tab === "posts"}
-                        onClick={() => setTab("posts")}
+                        as={Link}
+                        href={`/authors/${authorId}`}
                     >
                         Articles
                     </Button>
                     <Button
                         variant="tab"
                         isActive={tab === "readingLists"}
-                        onClick={() => setTab("readingLists")}
+                        as={Link}
+                        href={`/authors/${authorId}/lists`}
                     >
                         Reading Lists
                     </Button>
@@ -68,11 +74,7 @@ export default function AuthorProfilePage() {
 
                 <Divider borderColor="gray.200" />
 
-                {tab === "posts" ? (
-                    <AuthorArticlesTabContent authorId={author.userId} />
-                ) : (
-                    <AuthorReadingListTabContent authorId={author.userId} />
-                )}
+                {children}
             </VStack>
         </Wrapper>
     );
