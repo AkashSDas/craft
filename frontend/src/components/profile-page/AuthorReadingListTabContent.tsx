@@ -1,6 +1,7 @@
 import { Spinner, Text, VStack } from "@chakra-ui/react";
 import { useGetAuthorReadingList } from "@app/hooks/reading-lists";
 import { ReadingListCard } from "../reading-lists/ReadingListCard";
+import Link from "next/link";
 
 type Props = {
     authorId: string;
@@ -29,12 +30,17 @@ export function AuthorReadingListTabContent(props: Props) {
         <VStack w="100%" gap="20px">
             {readingLists.map((list) => {
                 return (
-                    <ReadingListCard
-                        readingList={list}
-                        isReadingLater={false}
-                        onClick={() => {}}
-                        actionItems={null}
-                    />
+                    <Link
+                        href={`/authors/${authorId}/lists/${list._id}`}
+                        style={{ width: "100%" }}
+                    >
+                        <ReadingListCard
+                            readingList={list}
+                            isReadingLater={false}
+                            onClick={() => {}}
+                            actionItems={null}
+                        />
+                    </Link>
                 );
             })}
         </VStack>
