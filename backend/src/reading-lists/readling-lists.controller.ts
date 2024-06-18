@@ -5,6 +5,7 @@ import {
     Get,
     HttpCode,
     HttpStatus,
+    NotFoundException,
     Param,
     Post,
     Put,
@@ -20,10 +21,14 @@ import {
     CreateReadingListDto,
     UpdateReadingListDto,
 } from "./dto";
+import { UserService } from "src/users/user.service";
 
 @Controller("reading-lists")
 export class ReadingListsController {
-    constructor(private serv: ReadingListsService) {}
+    constructor(
+        private serv: ReadingListsService,
+        private userService: UserService,
+    ) {}
 
     /**
      * Update reading lists (add/remove) in which the article is saved
@@ -70,6 +75,21 @@ export class ReadingListsController {
     @UseGuards(AccessTokenGuard)
     async getReadingLists(@Req() req: IRequest) {
         const readingLists = await this.serv.getReadingLists(req.user._id);
+        return { readingLists, message: "Reading lists" };
+    }
+
+    @Get("authors/:authorId")
+    @HttpCode(HttpStatus.OK)
+    async getAuthorReadingLists(
+        @Req() req: IRequest,
+        @Param("authorId") authorId: string,
+    ) {
+        const author = await this.userService.checkUserExists(authorId);
+        if (!author) {
+            throw new NotFoundException("Author not found");
+        }
+
+        const readingLists = await this.serv.getAuthorReadingLists(author._id);
         return { readingLists, message: "Reading lists" };
     }
 

@@ -67,6 +67,10 @@ export class ReadingListsService {
         return await this.repo.getUserReadingLists(userId);
     }
 
+    async getAuthorReadingLists(userId: Types.ObjectId) {
+        return await this.repo.getAuthorReadingLists(userId);
+    }
+
     async getReadingList(userId: string, readingListId: string) {
         const list = await this.repo.findOne(readingListId);
         if (!list) {

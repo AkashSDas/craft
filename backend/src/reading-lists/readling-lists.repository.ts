@@ -31,6 +31,12 @@ export class ReadingListsRepository {
             .populate("userId", "userId username profilePic");
     }
 
+    async getAuthorReadingLists(userId: Types.ObjectId) {
+        return this.model
+            .find({ userId, isPrivate: false })
+            .populate("userId", "userId username profilePic");
+    }
+
     async checkIfReadLaterForUserExists(userId: Types.ObjectId) {
         return this.model.findOne({ userId, isReadLater: true });
     }
