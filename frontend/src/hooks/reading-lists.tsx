@@ -3,6 +3,7 @@ import { useUser } from "./auth";
 import {
     addArticleReadingLists,
     deleteReadingList,
+    getAuthorReadingLists,
     getReadingList,
     getReadingLists,
     updateReadingList,
@@ -137,5 +138,21 @@ export function useGetReadingList(readingListId: string | undefined) {
         readingList: data?.readingList,
         articles: data?.articles ?? [],
         likes: data?.likes ?? ({} as Record<string, number>),
+    };
+}
+
+export function useGetAuthorReadingList(authorId?: string | null) {
+    const { data, isLoading, error, isError } = useQuery({
+        queryKey: ["authorReadingList", authorId],
+        queryFn: () => getAuthorReadingLists(authorId!),
+        enabled: authorId !== null && authorId !== undefined,
+        staleTime: Infinity,
+    });
+
+    return {
+        readingLists: data?.readingLists ?? [],
+        isLoading,
+        error,
+        isError,
     };
 }

@@ -1,4 +1,5 @@
 import { AuthorArticlesTabContent } from "@app/components/profile-page/AuthorArticlesTabContent";
+import { AuthorReadingListTabContent } from "@app/components/profile-page/AuthorReadingListTabContent";
 import { ProfileHeader } from "@app/components/profile-page/ProfileHeader";
 import { useGetAuthorPageProfile } from "@app/hooks/user";
 import {
@@ -69,7 +70,9 @@ export default function AuthorProfilePage() {
 
                 {tab === "posts" ? (
                     <AuthorArticlesTabContent authorId={author.userId} />
-                ) : null}
+                ) : (
+                    <AuthorReadingListTabContent authorId={author.userId} />
+                )}
             </VStack>
         </Wrapper>
     );

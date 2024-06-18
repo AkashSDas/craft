@@ -274,3 +274,31 @@ export async function updateReadingList(
         message: res.error?.message ?? "Unknown error",
     };
 }
+
+export async function getAuthorReadingLists(authorId: string) {
+    type SuccessResponse = GetReadingListsResponse;
+    type ErrorResponse = { message: string };
+
+    const res = await fetchFromAPI<SuccessResponse | ErrorResponse>(
+        endpoints.getAuthorReadingLists(authorId),
+        { method: "GET" }
+    );
+    const { data, status } = res;
+
+    if (status === 200 && data !== null && "readingLists" in data) {
+        const parsed = await GetReadingListsResponseSchema.parseAsync(data);
+
+        return {
+            success: true,
+            message: data.message,
+            readingLists: parsed.readingLists,
+        };
+    } else if (status === 400 && data !== null && "message" in data) {
+        return { success: false, message: data.message };
+    }
+
+    return {
+        success: false,
+        message: res.error?.message ?? "Unknown error",
+    };
+}
