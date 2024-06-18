@@ -128,4 +128,7 @@ export const endpoints = Object.freeze({
     updateReadingList: (readingListId: string) => {
         return `reading-lists/${readingListId}`;
     },
+
+    // User
+    getAuthor: (authorId: string) => `users/authors/${authorId}`,
 });

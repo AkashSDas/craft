@@ -58,6 +58,8 @@ export function ProfilePicture() {
                     fontWeight="500"
                     _hover={{ bgColor: "gray.100" }}
                     _active={{ bgColor: "gray.200", transform: "scale(0.98)" }}
+                    as={Link}
+                    href={`/authors/${user?.userId}`}
                     icon={
                         <Image
                             src="/icons/user.png"
