@@ -83,9 +83,8 @@ export const endpoints = Object.freeze({
     emailLogin: "auth/email-login",
     completeEmailLogin: "auth/email-login",
 
-    // Articles
+    // Articles (editor)
     createArticle: "articles/",
-    getArticle: (articleId: string) => `articles/${articleId}`,
     updateArticleContent: (articleId: string) => {
         return `articles/${articleId}/content`;
     },
@@ -101,6 +100,10 @@ export const endpoints = Object.freeze({
     makeArticlePublic: (articleId: string) => {
         return `articles/${articleId}/publish`;
     },
+
+    // Articles (list)
+    getArticle: (articleId: string) => `articles/${articleId}`,
+    getArticlesPaginated: `articles`,
 
     // Followers
     followAuthor: "followers",

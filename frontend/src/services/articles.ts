@@ -82,6 +82,7 @@ export const ArticleSchema = z.object({
 const ArticlesSchema = z.array(ArticleSchema);
 
 const LikesSchema = z.record(z.string(), z.number());
+type LikesCount = z.infer<typeof LikesSchema>;
 
 export type Paragraph = z.infer<typeof ParagraphSchema>;
 export type Heading = z.infer<typeof HeadingSchema>;
@@ -320,4 +321,44 @@ export async function getAuthorArticles(authorId: string) {
     } else if (status === 400 && data !== null && "message" in data) {
         return { success: false, message: data.message };
     }
+}
+
+export async function getArticlesPaginated(
+    limit: number,
+    offset: number,
+    query?: string | undefined | null
+) {
+    type SuccessResponse = {
+        articles: Article[];
+        likeCount: LikesCount;
+        totalCount: number;
+    };
+    type ErrorResponse = { message: string };
+
+    const res = await fetchFromAPI<SuccessResponse | ErrorResponse>(
+        endpoints.getArticlesPaginated,
+        { method: "GET", params: { limit, offset, query } }
+    );
+    const { data, status } = res;
+
+    if (
+        status === 200 &&
+        data !== null &&
+        "articles" in data &&
+        "likeCount" in data
+    ) {
+        const [articles, likes, totalCount] = await Promise.all([
+            ArticlesSchema.parseAsync(data.articles),
+            LikesSchema.parseAsync(data.likeCount),
+            z.number().min(0).parseAsync(data.totalCount),
+        ]);
+        return { success: true, articles, likes, totalCount };
+    } else if (status === 400 && data !== null && "message" in data) {
+        return { success: false, message: data.message };
+    }
+
+    return {
+        success: false,
+        message: res.error?.message ?? "Unknown error",
+    };
 }
