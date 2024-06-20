@@ -98,6 +98,11 @@ const AuthorArticlesSchema = z.array(
 );
 export type AuthorArticle = z.infer<typeof AuthorArticlesSchema>[number];
 
+const ArticlesPaginatedSchema = z.array(
+    z.object({ _id: z.string() }).merge(ArticleSchema)
+);
+export type PaginatedArticle = z.infer<typeof ArticlesPaginatedSchema>[number];
+
 // ==================================
 // Services
 // ==================================
@@ -329,9 +334,10 @@ export async function getArticlesPaginated(
     query?: string | undefined | null
 ) {
     type SuccessResponse = {
-        articles: Article[];
+        articles: PaginatedArticle[];
         likeCount: LikesCount;
         totalCount: number;
+        nextOffset: number;
     };
     type ErrorResponse = { message: string };
 
@@ -347,12 +353,13 @@ export async function getArticlesPaginated(
         "articles" in data &&
         "likeCount" in data
     ) {
-        const [articles, likes, totalCount] = await Promise.all([
-            ArticlesSchema.parseAsync(data.articles),
+        const [articles, likes, totalCount, nextOffset] = await Promise.all([
+            ArticlesPaginatedSchema.parseAsync(data.articles),
             LikesSchema.parseAsync(data.likeCount),
             z.number().min(0).parseAsync(data.totalCount),
+            z.number().min(0).parseAsync(data.nextOffset),
         ]);
-        return { success: true, articles, likes, totalCount };
+        return { success: true, articles, likes, totalCount, nextOffset };
     } else if (status === 400 && data !== null && "message" in data) {
         return { success: false, message: data.message };
     }
