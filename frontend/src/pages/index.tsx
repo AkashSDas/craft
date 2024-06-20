@@ -14,7 +14,7 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import InfiniteScroll from "react-infinite-scroll-component";
 
-const LIMIT = 2;
+const LIMIT = 5;
 const INITIAL_OFFSET = 0;
 
 export const getServerSideProps: GetServerSideProps<{
@@ -55,8 +55,8 @@ export default function Home(props: Props) {
             return getArticlesPaginated(LIMIT, pageParam, searchQuery);
         },
         // initialPageParam: INITIAL_OFFSET + LIMIT, // as we've fetched first page in SSR
-        // same as below
-        initialPageParam: props.nextOffset,
+        // same as below (due to backend)
+        initialPageParam: INITIAL_OFFSET,
         getNextPageParam: (lastPage, allPages) => {
             const lastPageLength = lastPage.articles?.length;
             if (lastPageLength) {
@@ -79,6 +79,7 @@ export default function Home(props: Props) {
                 },
             ],
         },
+        staleTime: 1000 * 60 * 5, // 5 minutes
     });
 
     return (
