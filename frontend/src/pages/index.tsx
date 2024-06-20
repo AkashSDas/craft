@@ -5,6 +5,7 @@ import {
     Divider,
     HStack,
     Heading,
+    Spacer,
     Spinner,
     Text,
     VStack,
@@ -107,13 +108,23 @@ export default function Home(props: Props) {
                     hasMore={hasNextPage}
                     loader={
                         isFetchingNextPage ? (
-                            <HStack w="100%" justifyContent="center" my="2rem">
+                            <HStack
+                                w="100%"
+                                justifyContent="center"
+                                mb="2rem"
+                                mt="1rem"
+                            >
                                 <Spinner />
                             </HStack>
                         ) : null
                     }
                     endMessage={
-                        <HStack w="100%" justifyContent="center" my="2rem">
+                        <HStack
+                            w="100%"
+                            justifyContent="center"
+                            mb="2rem"
+                            mt="1rem"
+                        >
                             <Text textAlign="center" color="gray.500">
                                 <b>Yay! You have seen it all</b>
                             </Text>
@@ -130,11 +141,15 @@ export default function Home(props: Props) {
                                 }
 
                                 return (
-                                    <ArticlePreviewCard
-                                        key={article.articleId}
-                                        article={article}
-                                        likeCount={likeCount}
-                                    />
+                                    <>
+                                        <ArticlePreviewCard
+                                            key={article.articleId}
+                                            article={article}
+                                            likeCount={likeCount}
+                                        />
+
+                                        <Spacer height="16px" />
+                                    </>
                                 );
                             });
                     })}
