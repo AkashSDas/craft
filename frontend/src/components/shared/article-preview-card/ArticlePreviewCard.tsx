@@ -3,7 +3,6 @@ import {
     Box,
     Divider,
     HStack,
-    Link,
     Text,
     VStack,
     useDisclosure,
@@ -11,10 +10,24 @@ import {
 import Image from "next/image";
 import { useMemo } from "react";
 import { Image as ImageBlock } from "@app/services/articles";
-import { UserChip } from "../user-chip/UserChip";
 import { ControlPanel } from "./ControlPanel";
 import { CommentsDrawer } from "@app/components/comments/CommentsDrawer";
 import { ReadingListsDrawer } from "@app/components/reading-lists/ReadingListsDrawer";
+import Link from "next/link";
+import dynamic from "next/dynamic";
+
+// Since on home page with SSR when articles are loaded, ArticlePreviewCard is
+// a link and UserChip is also a link (<a> inside <a> giving hydration err).
+// To avoid this hydration err, I'm just disabling prerendering on UserChip
+const UserChip = dynamic(
+    () =>
+        import("../user-chip/UserChip").then((mod) => {
+            return {
+                default: mod.UserChip,
+            };
+        }),
+    { ssr: false }
+);
 
 type Props = {
     article: Omit<ArticlePreview, "_id">;
