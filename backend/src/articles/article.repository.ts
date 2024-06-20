@@ -79,4 +79,38 @@ export class ArticleRepository {
                 }),
             );
     }
+
+    // ===========================================
+    // List articles (trending, list)
+    // ===========================================
+
+    async getArticlesPaginated(limit: number, offset: number, text?: string) {
+        if (typeof text === "string" && text.length > 0) {
+            const query = { $text: { $search: text }, isPublic: true };
+            const [articles, totalCount] = await Promise.all([
+                this.model
+                    .find(query)
+                    .skip(offset)
+                    .limit(limit)
+                    .populate("authorIds", "username profilePic userId")
+                    .sort({ lastUpdatedAt: -1 }),
+                this.model.countDocuments(query),
+            ]);
+
+            return { articles, totalCount };
+        }
+
+        const [articles, totalCount] = await Promise.all([
+            this.model
+                .find({ isPublic: true })
+                .skip(offset)
+                .limit(limit)
+                .populate("authorIds", "username profilePic userId")
+                .sort({ lastUpdatedAt: -1 }),
+
+            this.model.countDocuments({ isPublic: true }),
+        ]);
+
+        return { articles, totalCount };
+    }
 }

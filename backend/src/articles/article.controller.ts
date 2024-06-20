@@ -1,4 +1,5 @@
 import {
+    BadRequestException,
     Body,
     Controller,
     ForbiddenException,
@@ -31,71 +32,16 @@ export class ArticleController {
         @Inject(forwardRef(() => UserService)) private userService: UserService,
     ) {}
 
+    // =========================================
+    // Article editor
+    // =========================================
+
     @Post("")
     @HttpCode(HttpStatus.CREATED)
     @UseGuards(AccessTokenGuard)
     async createNewArticle(@Req() req: IRequest) {
         const article = await this.serv.createNewArticle(req.user._id);
         return { article, message: "Article created successfully" };
-    }
-
-    @Get("me")
-    @HttpCode(HttpStatus.OK)
-    @UseGuards(AccessTokenGuard)
-    async getUserArticles(
-        @Req() req: IRequest,
-        @Query("type") type: "draft" | "public",
-    ) {
-        const articles = await this.serv.getUserArticles(req.user._id, type);
-        const likes = await this.likesService.getArticlesLikes(
-            articles.map((a) => a._id),
-        );
-
-        const likeCount = new Map();
-        likes.forEach((v, k) => {
-            likeCount.set(k, v);
-        });
-
-        return { articles, likeCount };
-    }
-
-    @Get("authors/:authorId/articles")
-    @HttpCode(HttpStatus.OK)
-    async getAuthorArticles(
-        @Req() req: IRequest,
-        @Param("authorId") authorId: string,
-    ) {
-        const author = await this.userService.checkUserExists(authorId);
-        if (!author) {
-            throw new NotFoundException("Author not found");
-        }
-
-        const articles = await this.serv.getUserArticles(author._id, "public");
-
-        const likes = await this.likesService.getArticlesLikes(
-            articles.map((a) => a._id),
-        );
-
-        console.log(likes);
-        const likeCount = {};
-        likes.forEach((v, k) => {
-            likeCount[k] = v;
-        });
-
-        return { articles, likeCount };
-    }
-
-    @Get(":articleId")
-    @HttpCode(HttpStatus.OK)
-    async getArticle(@Req() req: Request) {
-        const article = await this.serv.getArticle(req.params.articleId);
-        if (!article) {
-            throw new NotFoundException("Article not found");
-        }
-
-        const likes = await this.likesService.getArticlesLikes([article._id]);
-        const likeCount = likes.get(article._id.toString()) ?? 0;
-        return { article, likeCount };
     }
 
     /**
@@ -188,5 +134,113 @@ export class ArticleController {
         const article = await this.serv.getArticle(req.params.articleId);
         await this.serv.publishArticle(article);
         return { message: "Updated successfully" };
+    }
+
+    // =========================================
+    // User articles
+    // =========================================
+
+    @Get("me")
+    @HttpCode(HttpStatus.OK)
+    @UseGuards(AccessTokenGuard)
+    async getUserArticles(
+        @Req() req: IRequest,
+        @Query("type") type: "draft" | "public",
+    ) {
+        const articles = await this.serv.getUserArticles(req.user._id, type);
+        const likes = await this.likesService.getArticlesLikes(
+            articles.map((a) => a._id),
+        );
+
+        const likeCount = {};
+        likes.forEach((v, k) => {
+            likeCount[k] = v;
+        });
+
+        return { articles, likeCount };
+    }
+
+    @Get("authors/:authorId/articles")
+    @HttpCode(HttpStatus.OK)
+    async getAuthorArticles(
+        @Req() req: IRequest,
+        @Param("authorId") authorId: string,
+    ) {
+        const author = await this.userService.checkUserExists(authorId);
+        if (!author) {
+            throw new NotFoundException("Author not found");
+        }
+
+        const articles = await this.serv.getUserArticles(author._id, "public");
+
+        const likes = await this.likesService.getArticlesLikes(
+            articles.map((a) => a._id),
+        );
+
+        const likeCount = {};
+        likes.forEach((v, k) => {
+            likeCount[k] = v;
+        });
+
+        return { articles, likeCount };
+    }
+
+    @Get(":articleId")
+    @HttpCode(HttpStatus.OK)
+    async getArticle(@Req() req: Request) {
+        const article = await this.serv.getArticle(req.params.articleId);
+        if (!article) {
+            throw new NotFoundException("Article not found");
+        }
+
+        const likes = await this.likesService.getArticlesLikes([article._id]);
+        const likeCount = likes.get(article._id.toString()) ?? 0;
+        return { article, likeCount };
+    }
+
+    // =========================================
+    // Search articles and trending articles
+    // =========================================
+
+    @Get("")
+    @HttpCode(HttpStatus.OK)
+    async getArticlesPaginated(
+        @Query("limit", {
+            transform(value, metadata) {
+                const limit = parseInt(value);
+                if (isNaN(limit) || limit < 0) {
+                    throw new BadRequestException("Invalid limit");
+                }
+                return limit;
+            },
+        })
+        limit: number,
+        @Query("offset", {
+            transform(value, metadata) {
+                const offset = parseInt(value);
+                if (isNaN(offset) || offset < 0) {
+                    throw new BadRequestException("Invalid offset");
+                }
+                return offset;
+            },
+        })
+        offset: number,
+        @Query("query") query?: string,
+    ) {
+        const { articles, totalCount } = await this.serv.getArticlesPaginated(
+            limit,
+            offset,
+            query,
+        );
+        const likes = await this.likesService.getArticlesLikes(
+            articles.map((a) => a._id),
+        );
+
+        const likeCount: Record<string, number> = {};
+        likes.forEach((v, k) => {
+            likeCount[k] = v;
+        });
+
+        return { articles, likeCount, totalCount };
     }
 }

@@ -251,4 +251,8 @@ export class ArticleService {
         });
         return article;
     }
+
+    async getArticlesPaginated(limit: number, offset: number, query?: string) {
+        return await this.repo.getArticlesPaginated(limit, offset, query);
+    }
 }
