@@ -241,6 +241,6 @@ export class ArticleController {
             likeCount[k] = v;
         });
 
-        return { articles, likeCount, totalCount };
+        return { articles, likeCount, totalCount, nextOffset: offset + limit };
     }
 }
