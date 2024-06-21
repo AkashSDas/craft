@@ -22,6 +22,8 @@ export function ProfilePicture() {
                 as={Box}
                 w="40px"
                 h="40px"
+                minH="40px"
+                minW="40px"
                 borderRadius="full"
                 overflow="hidden"
                 border="2px solid"

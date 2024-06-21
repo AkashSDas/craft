@@ -1,10 +1,12 @@
-import { Button, HStack, Show, Spinner } from "@chakra-ui/react";
+import { Button, HStack, IconButton, Show, Spinner } from "@chakra-ui/react";
 import Link from "next/link";
 import { Logo } from "../logo";
 import { useUser } from "@app/hooks/auth";
 import { MobileNav } from "./MobileNav";
 import { useCreateArticle } from "@app/hooks/editor";
 import { ProfilePicture } from "./ProfilePicture";
+import Image from "next/image";
+import { SearchButton } from "../../search/SearchButton";
 
 export function Navbar() {
     const { isLoggedIn } = useUser();
@@ -20,12 +22,15 @@ export function Navbar() {
             width="100%"
             zIndex="100"
             h="70px"
+            gap="1rem"
         >
             <Link href="/">
                 <Logo variant="dark" />
             </Link>
 
             <HStack gap="24px">
+                <SearchButton />
+
                 <Show above="sm">
                     {isLoggedIn ? <LoggedInItems /> : <LoggOutItems />}
                 </Show>
@@ -61,11 +66,21 @@ function LoggOutItems() {
     return (
         <>
             <>
-                <Button as={Link} href="/auth/login" variant="navItem">
+                <Button
+                    as={Link}
+                    href="/auth/login"
+                    variant="navItem"
+                    minW="fit-content"
+                >
                     Login
                 </Button>
 
-                <Button as={Link} href="/auth/signup" variant="navPrimary">
+                <Button
+                    as={Link}
+                    href="/auth/signup"
+                    variant="navPrimary"
+                    minW="fit-content"
+                >
                     Get Started
                 </Button>
             </>
