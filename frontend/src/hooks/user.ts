@@ -1,5 +1,5 @@
 import { getAuthorArticles } from "@app/services/articles";
-import { getAuthorProfile } from "@app/services/user";
+import { getAuthorProfile, getTrendingAuthors } from "@app/services/user";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/router";
 
@@ -41,4 +41,14 @@ export function useGetAuthorArticles(authorId?: string | null) {
         error,
         isError,
     };
+}
+
+export function useGetTrendingAuthors() {
+    const { data, isLoading, isError } = useQuery({
+        queryKey: ["trendingAuthors"],
+        queryFn: getTrendingAuthors,
+        staleTime: 1000 * 60 * 30, // 30mins,
+    });
+
+    return { authors: data?.authors ?? [], isLoading, isError };
 }

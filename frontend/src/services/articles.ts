@@ -1,6 +1,8 @@
 import { endpoints, fetchFromAPI } from "@app/lib/api";
 import { z } from "zod";
 
+const TRENDING_ARTICLES_LIMIT = 5;
+
 // ==================================
 // Validators
 // ==================================
@@ -360,6 +362,31 @@ export async function getArticlesPaginated(
             z.number().min(0).parseAsync(data.nextOffset),
         ]);
         return { success: true, articles, likes, totalCount, nextOffset };
+    } else if (status === 400 && data !== null && "message" in data) {
+        return { success: false, message: data.message };
+    }
+
+    return {
+        success: false,
+        message: res.error?.message ?? "Unknown error",
+    };
+}
+
+export async function getTrendingArticles() {
+    type SuccessResponse = { articles: PaginatedArticle[] };
+    type ErrorResponse = { message: string };
+
+    const res = await fetchFromAPI<SuccessResponse | ErrorResponse>(
+        endpoints.getArticlesPaginated,
+        { method: "GET" }
+    );
+    const { data, status } = res;
+
+    if (status === 200 && data !== null && "articles" in data) {
+        const articles = await ArticlesPaginatedSchema.parseAsync(
+            data.articles
+        );
+        return { success: true, articles };
     } else if (status === 400 && data !== null && "message" in data) {
         return { success: false, message: data.message };
     }
