@@ -15,6 +15,7 @@ import { CommentsDrawer } from "@app/components/comments/CommentsDrawer";
 import { ReadingListsDrawer } from "@app/components/reading-lists/ReadingListsDrawer";
 import Link from "next/link";
 import dynamic from "next/dynamic";
+import { HightlightWrapper } from "./HighlightWrapper";
 
 // Since on home page with SSR when articles are loaded, ArticlePreviewCard is
 // a link and UserChip is also a link (<a> inside <a> giving hydration err).
@@ -32,10 +33,11 @@ const UserChip = dynamic(
 type Props = {
     article: Omit<ArticlePreview, "_id">;
     likeCount: number;
+    searchTextHighlight?: string;
 };
 
 export function ArticlePreviewCard(props: Props): React.JSX.Element {
-    const { article, likeCount } = props;
+    const { article, likeCount, searchTextHighlight } = props;
     const { authorIds, headline, description, readTimeInMs, lastUpdatedAt } =
         article;
     const user = authorIds[0];
@@ -158,10 +160,15 @@ export function ArticlePreviewCard(props: Props): React.JSX.Element {
                             fontWeight="bold"
                             noOfLines={2}
                         >
-                            {headline ?? "Untitled"}
+                            <HightlightWrapper query={searchTextHighlight}>
+                                {headline ?? "Untitled"}
+                            </HightlightWrapper>
                         </Text>
+
                         <Text fontSize="1rem" color="gray" noOfLines={2}>
-                            {description}
+                            <HightlightWrapper query={searchTextHighlight}>
+                                {description ?? ""}
+                            </HightlightWrapper>
                         </Text>
                     </VStack>
 
