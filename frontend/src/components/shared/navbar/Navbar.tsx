@@ -49,6 +49,7 @@ function LoggedInItems() {
             <Button
                 variant="navItem"
                 disabled={mutation.isPending}
+                minW="fit-content"
                 onClick={() => mutation.mutateAsync()}
                 leftIcon={
                     mutation.isPending ? <Spinner size="xs" /> : undefined
