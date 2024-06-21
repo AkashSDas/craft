@@ -1,9 +1,21 @@
 import { Editor } from "@app/components/editor/Editor";
 import { useEditArticle } from "@app/hooks/editor";
-import { Spinner, Stack, Text } from "@chakra-ui/react";
+import {
+    Show,
+    Spinner,
+    Stack,
+    Text,
+    useMediaQuery,
+    useQuery,
+} from "@chakra-ui/react";
 
 export default function EditArticle() {
     const { article, isOwner, isLoading } = useEditArticle();
+    const query = useQuery({ above: "md" });
+    const [isAboveSm] = useMediaQuery(query, {
+        ssr: true,
+        fallback: false,
+    });
 
     if (isLoading) {
         return (
@@ -50,5 +62,18 @@ export default function EditArticle() {
         );
     }
 
-    return <Editor />;
+    if (isAboveSm) {
+        return <Editor />;
+    } else {
+        return (
+            <Stack
+                justifyContent="center"
+                alignItems="center"
+                mt="calc(70px + 64px)"
+                px={{ base: "16px", md: "2rem" }}
+            >
+                <Text fontSize="2xl">Do edit on a tablet/desktop</Text>
+            </Stack>
+        );
+    }
 }
