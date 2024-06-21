@@ -4,3 +4,7 @@ html {
     padding: 0;
     box-sizing: border-box;
 }
+
+.search-results .infinite-scroll-component__outerdiv {
+    width: 100%;
+}
