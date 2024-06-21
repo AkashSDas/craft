@@ -8,6 +8,7 @@ import {
     type UpdateQuery,
     type UpdateWithAggregationPipeline,
 } from "mongoose";
+import { Follower } from "src/followers/schema";
 
 @Injectable({})
 export class UserRepository {
@@ -44,5 +45,37 @@ export class UserRepository {
         query: FilterQuery<User>,
     ): Promise<ReturnType<typeof this.model.deleteOne>> {
         return await this.model.deleteOne(query);
+    }
+
+    async findRisingAuthors(limit: number) {
+        return await this.model.aggregate([
+            {
+                $lookup: {
+                    from: Follower.name,
+                    localField: "_id",
+                    foreignField: "followingId",
+                    as: "followers",
+                },
+            },
+            {
+                $addFields: {
+                    followerCount: { $size: "$followers" },
+                },
+            },
+            {
+                $project: {
+                    username: 1,
+                    email: 1,
+                    profilePic: 1,
+                    followerCount: 1,
+                },
+            },
+            {
+                $sort: { followerCount: -1 },
+            },
+            {
+                $limit: limit,
+            },
+        ]);
     }
 }

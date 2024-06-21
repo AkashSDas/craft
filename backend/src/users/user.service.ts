@@ -23,6 +23,11 @@ export class UserService {
         return { author, followersCount };
     }
 
+    async getRisingAuthors(limit: number) {
+        const authors = await this.repo.findRisingAuthors(limit);
+        return authors;
+    }
+
     async checkUserExists(userId: string) {
         return await this.repo.exists({ userId });
     }
