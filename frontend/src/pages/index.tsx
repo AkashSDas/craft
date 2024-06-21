@@ -11,20 +11,19 @@ import {
     VStack,
 } from "@chakra-ui/react";
 import { useInfiniteQuery } from "@tanstack/react-query";
-import { GetServerSideProps, InferGetServerSidePropsType } from "next";
+import { GetStaticProps, InferGetStaticPropsType } from "next";
 import InfiniteScroll from "react-infinite-scroll-component";
 
 const LIMIT = 5;
 const INITIAL_OFFSET = 0;
 
-export const getServerSideProps: GetServerSideProps<{
+export const getStaticProps: GetStaticProps<{
     articles: PaginatedArticle[];
     likes: Record<string, number>;
     totalCount: number;
     nextOffset: number;
 }> = async function (ctx) {
-    const query = ctx.query.query as string | null | undefined;
-    const res = await getArticlesPaginated(LIMIT, INITIAL_OFFSET, query);
+    const res = await getArticlesPaginated(LIMIT, INITIAL_OFFSET, null);
 
     return {
         props: {
@@ -33,14 +32,13 @@ export const getServerSideProps: GetServerSideProps<{
             totalCount: res.totalCount ?? 0,
             nextOffset: res.nextOffset ?? 0,
         },
+        revalidate: 1000 * 30, // 30 seconds
     };
 };
 
-type Props = InferGetServerSidePropsType<typeof getServerSideProps>;
+type Props = InferGetStaticPropsType<typeof getStaticProps>;
 
 export default function Home(props: Props) {
-    const searchQuery = null;
-
     const {
         data,
         error,
@@ -50,9 +48,9 @@ export default function Home(props: Props) {
         status,
         isFetchingNextPage,
     } = useInfiniteQuery({
-        queryKey: ["articlesPaginated", searchQuery],
+        queryKey: ["articlesPaginated"],
         queryFn: ({ pageParam }) => {
-            return getArticlesPaginated(LIMIT, pageParam, searchQuery);
+            return getArticlesPaginated(LIMIT, pageParam, null);
         },
         // initialPageParam: INITIAL_OFFSET + LIMIT, // as we've fetched first page in SSR
         // same as below (due to backend)
