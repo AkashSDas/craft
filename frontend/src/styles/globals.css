@@ -5,6 +5,7 @@ html {
     box-sizing: border-box;
 }
 
-.search-results .infinite-scroll-component__outerdiv {
+.search-results .infinite-scroll-component__outerdiv,
+.feed-articles .infinite-scroll-component__outerdiv {
     width: 100%;
 }

@@ -94,6 +94,7 @@ export default function Home(props: Props) {
                 px="1rem"
                 alignItems="start"
                 gap="16px"
+                className="feed-articles"
             >
                 <FeedHeading />
                 <Divider borderColor="gray.200" />
