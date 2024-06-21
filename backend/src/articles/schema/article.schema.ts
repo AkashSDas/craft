@@ -82,8 +82,4 @@ export class Article extends Document implements IArticle {
 
 export const ArticleSchema = SchemaFactory.createForClass(Article);
 
-ArticleSchema.index({
-    headline: "text",
-    description: "text",
-    "blocks.value.text": "text",
-});
+ArticleSchema.index({ headline: "text", description: "text" });

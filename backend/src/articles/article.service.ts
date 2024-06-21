@@ -255,4 +255,8 @@ export class ArticleService {
     async getArticlesPaginated(limit: number, offset: number, query?: string) {
         return await this.repo.getArticlesPaginated(limit, offset, query);
     }
+
+    async getTrendingArticles(limit: number) {
+        return this.getTrendingArticles(limit);
+    }
 }

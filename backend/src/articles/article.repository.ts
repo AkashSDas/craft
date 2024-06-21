@@ -113,4 +113,45 @@ export class ArticleRepository {
 
         return { articles, totalCount };
     }
+
+    async getTrendingArticles(limit: number) {
+        // These are trending articles sorted on the combination of last
+        // updated on (more weightage) and article likes.
+
+        return await this.model.aggregate([
+            {
+                $lookup: {
+                    from: "likes",
+                    localField: "_id",
+                    foreignField: "articleId",
+                    as: "likes",
+                },
+            },
+            {
+                $addFields: {
+                    likeCount: { $size: "$likes" },
+                    weight: {
+                        $add: [
+                            {
+                                $multiply: [
+                                    {
+                                        $toDouble: {
+                                            $subtract: [
+                                                new Date(),
+                                                "$lastUpdatedAt",
+                                            ],
+                                        },
+                                    },
+                                    0.5,
+                                ],
+                            }, // Weight for recency
+                            { $multiply: ["$likeCount", 1] }, // Weight for likes
+                        ],
+                    },
+                },
+            },
+            { $sort: { weight: -1 } },
+            { $limit: limit },
+        ]);
+    }
 }
