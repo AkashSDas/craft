@@ -32,7 +32,14 @@ export function Editor() {
         <Box pos="relative" mt="70px">
             <Sidebar />
             <Stack ml="300px" alignItems="center">
-                <Stack maxW="700px" w="100%" px="4rem" my="2rem" gap="0">
+                <Stack
+                    maxW="700px"
+                    w="100%"
+                    px="4rem"
+                    my="2rem"
+                    pb="6rem"
+                    gap="0"
+                >
                     <DragDropContext onDragEnd={onDragEnd}>
                         <Droppable droppableId="droppable">
                             {function (provided) {

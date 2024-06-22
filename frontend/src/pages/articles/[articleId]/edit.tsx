@@ -1,5 +1,6 @@
 import { Editor } from "@app/components/editor/Editor";
 import { useEditArticle } from "@app/hooks/editor";
+import { fontStyles } from "@app/utils/fonts";
 import {
     Show,
     Spinner,
@@ -72,7 +73,14 @@ export default function EditArticle() {
                 mt="calc(70px + 64px)"
                 px={{ base: "16px", md: "2rem" }}
             >
-                <Text fontSize="2xl">Do edit on a tablet/desktop</Text>
+                <Text
+                    fontWeight="500"
+                    color="gray.600"
+                    fontSize="20px"
+                    fontFamily={fontStyles["expandedBoldItalic"].fontFamily}
+                >
+                    Do edit on a tablet/desktop
+                </Text>
             </Stack>
         );
     }

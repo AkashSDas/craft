@@ -1,3 +1,4 @@
+import { Layout } from "@app/components/shared/layout/Layout";
 import { EditArticleCard } from "@app/components/studio/EditArticleCard";
 import { useUser } from "@app/hooks/auth";
 import { useCreateArticle } from "@app/hooks/editor";
@@ -49,81 +50,67 @@ export default function UserArticlesPage() {
     }
 
     return (
-        <VStack
-            as="main"
-            my={{ base: "2rem", sm: "4rem" }}
-            mt={{ base: "calc(1rem + 70px)", sm: "calc(4rem + 70px)" }}
-            w="100%"
-            justifyContent="center"
-        >
-            <VStack
-                maxWidth="700px"
-                w="100%"
-                px="1rem"
-                alignItems="start"
-                gap="16px"
-            >
-                <StudioHeading />
-                <HStack gap="1rem">
-                    <Button
-                        variant="tab"
-                        isActive={tab === "draft"}
-                        onClick={() => changeTab("draft")}
-                    >
-                        Draft
-                    </Button>
-                    <Button
-                        variant="tab"
-                        isActive={tab === "public"}
-                        onClick={() => changeTab("public")}
-                    >
-                        Published
-                    </Button>
-                </HStack>
+        <Layout>
+            <StudioHeading />
+            <HStack gap="1rem">
+                <Button
+                    variant="tab"
+                    isActive={tab === "draft"}
+                    onClick={() => changeTab("draft")}
+                >
+                    Draft
+                </Button>
+                <Button
+                    variant="tab"
+                    isActive={tab === "public"}
+                    onClick={() => changeTab("public")}
+                >
+                    Published
+                </Button>
+            </HStack>
 
-                <Divider my="1rem" borderColor="gray.300" />
+            <Divider my="1rem" borderColor="gray.300" />
 
-                <VStack justifyContent="center" w="100%" gap="1rem">
-                    {isLoading || isError ? (
-                        <Spinner size="xl" thickness="3px" mt="4rem" />
-                    ) : (
-                        data?.articles?.map((article) => (
-                            <EditArticleCard
-                                key={article.articleId}
-                                article={article}
-                            />
-                        ))
-                    )}
-                </VStack>
-
-                {!isLoading && !isError && data?.articles?.length === 0 && (
-                    <HStack
-                        h={{ base: "200px", sm: "280px" }}
-                        w="100%"
-                        borderRadius="4px"
-                        bgColor="black"
-                        justifyContent="center"
-                        gap={{ base: "1rem", sm: "2rem" }}
-                        flexDirection={{ base: "column", sm: "row" }}
-                    >
-                        <EmptyHeading />
-                        <Button
-                            px="18px"
-                            onClick={() => mutation.mutateAsync()}
-                            leftIcon={
-                                mutation.isPending ? (
-                                    <Spinner size="xs" />
-                                ) : (
-                                    <AddIcon />
-                                )
-                            }
-                        >
-                            Write One
-                        </Button>
-                    </HStack>
+            <VStack justifyContent="center" w="100%" gap="1rem">
+                {isLoading || isError ? (
+                    <Spinner size="xl" thickness="3px" mt="4rem" />
+                ) : (
+                    data?.articles?.map((article) => (
+                        <EditArticleCard
+                            key={article.articleId}
+                            article={article}
+                        />
+                    ))
                 )}
             </VStack>
-        </VStack>
+
+            {!isLoading && !isError && data?.articles?.length === 0 && (
+                <HStack
+                    h={{ base: "200px", sm: "280px" }}
+                    w="100%"
+                    borderRadius="4px"
+                    bgColor="black"
+                    justifyContent="center"
+                    gap={{ base: "1rem", sm: "2rem" }}
+                    flexDirection={{ base: "column", sm: "row" }}
+                >
+                    <EmptyHeading />
+                    <Button
+                        px="18px"
+                        onClick={() => mutation.mutateAsync()}
+                        leftIcon={
+                            mutation.isPending ? (
+                                <Spinner size="xs" />
+                            ) : (
+                                <AddIcon />
+                            )
+                        }
+                    >
+                        Write One
+                    </Button>
+                </HStack>
+            )}
+        </Layout>
     );
 }
 

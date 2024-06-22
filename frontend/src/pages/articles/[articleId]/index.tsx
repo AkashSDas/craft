@@ -3,6 +3,7 @@ import { AuthorInfo } from "@app/components/display-article/AuthorInfo";
 import { ControlPanel } from "@app/components/display-article/ControlPanel";
 import { DisplayBlock } from "@app/components/display-article/DisplayBlock";
 import { ReadingListsDrawer } from "@app/components/reading-lists/ReadingListsDrawer";
+import { Layout } from "@app/components/shared/layout/Layout";
 import { Article, getArticle } from "@app/services/articles";
 import { Heading, Text, VStack, useDisclosure } from "@chakra-ui/react";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
@@ -68,7 +69,7 @@ export default function ArticlePage(props: Props) {
 
             <VStack
                 as="main"
-                my={{ base: "2rem", sm: "4rem" }}
+                mb={{ base: "2rem", sm: "10rem" }}
                 mt={{ base: "calc(1rem + 70px)", sm: "calc(4rem + 70px)" }}
                 w="100%"
                 alignItems="center"

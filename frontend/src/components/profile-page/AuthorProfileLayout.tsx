@@ -10,14 +10,7 @@ import {
 import { PropsWithChildren } from "react";
 import { ProfileHeader } from "./ProfileHeader";
 import Link from "next/link";
-
-function Wrapper({ children }: PropsWithChildren<unknown>) {
-    return (
-        <VStack mt="calc(70px + 4rem)" mx="1rem" mb="2rem">
-            {children}
-        </VStack>
-    );
-}
+import { Layout } from "../shared/layout/Layout";
 
 type Props = PropsWithChildren<{
     tab: "posts" | "readingLists";
@@ -31,51 +24,49 @@ export function AuthorProfileLayout(props: Props) {
 
     if (isLoading) {
         return (
-            <Wrapper>
+            <Layout>
                 <Spinner size="xl" thickness="3px" />
-            </Wrapper>
+            </Layout>
         );
     } else if (notFound || isError || !author) {
         return (
-            <Wrapper>
+            <Layout>
                 <Text>Author not found</Text>
-            </Wrapper>
+            </Layout>
         );
     }
 
     return (
-        <Wrapper>
-            <VStack maxW="700px" w="100%" gap="24px">
-                <ProfileHeader
-                    followersCount={followersCount ?? 0}
-                    username={author.username}
-                    profilePicURL={author.profilePic?.URL}
-                    userId={author.userId}
-                />
+        <Layout>
+            <ProfileHeader
+                followersCount={followersCount ?? 0}
+                username={author.username}
+                profilePicURL={author.profilePic?.URL}
+                userId={author.userId}
+            />
 
-                <HStack gap="1rem" alignItems="start" w="100%">
-                    <Button
-                        variant="tab"
-                        isActive={tab === "posts"}
-                        as={Link}
-                        href={`/authors/${authorId}`}
-                    >
-                        Articles
-                    </Button>
-                    <Button
-                        variant="tab"
-                        isActive={tab === "readingLists"}
-                        as={Link}
-                        href={`/authors/${authorId}/lists`}
-                    >
-                        Reading Lists
-                    </Button>
-                </HStack>
+            <HStack gap="1rem" alignItems="start" w="100%">
+                <Button
+                    variant="tab"
+                    isActive={tab === "posts"}
+                    as={Link}
+                    href={`/authors/${authorId}`}
+                >
+                    Articles
+                </Button>
+                <Button
+                    variant="tab"
+                    isActive={tab === "readingLists"}
+                    as={Link}
+                    href={`/authors/${authorId}/lists`}
+                >
+                    Reading Lists
+                </Button>
+            </HStack>
 
-                <Divider borderColor="gray.200" />
+            <Divider borderColor="gray.200" />
 
-                {children}
-            </VStack>
-        </Wrapper>
+            {children}
+        </Layout>
     );
 }

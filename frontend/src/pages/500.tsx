@@ -1,25 +1,18 @@
-import { VStack, Text } from "@chakra-ui/react";
+import { Layout } from "@app/components/shared/layout/Layout";
+import { fontStyles } from "@app/utils/fonts";
+import { Text } from "@chakra-ui/react";
 
 export default function InternalServerErrorPage() {
     return (
-        <VStack
-            as="main"
-            my={{ base: "2rem", sm: "4rem" }}
-            mt={{ base: "calc(1rem + 70px)", sm: "calc(4rem + 70px)" }}
-            w="100%"
-            justifyContent="center"
-        >
-            <VStack
-                maxWidth="700px"
-                w="100%"
-                px="1rem"
-                alignItems="start"
-                gap="16px"
+        <Layout>
+            <Text
+                fontWeight="500"
+                color="gray.600"
+                fontSize="20px"
+                fontFamily={fontStyles["expandedBoldItalic"].fontFamily}
             >
-                <Text fontWeight="500" color="gray.600">
-                    Internal Server Error
-                </Text>
-            </VStack>
-        </VStack>
+                Internal Server Error
+            </Text>
+        </Layout>
     );
 }

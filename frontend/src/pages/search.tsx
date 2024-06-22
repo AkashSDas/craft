@@ -1,6 +1,7 @@
 import { SearchInput } from "@app/components/search/SearchInput";
 import { ShowRecentSearches } from "@app/components/search/ShowRecentSearches";
 import { ShowSearchResults } from "@app/components/search/ShowSearchResults";
+import { Layout } from "@app/components/shared/layout/Layout";
 import { PaginatedArticle, getArticlesPaginated } from "@app/services/articles";
 import { VStack } from "@chakra-ui/react";
 import { useRouter } from "next/router";
@@ -59,33 +60,19 @@ export default function SearchPage(props: Props) {
     );
 
     return (
-        <VStack
-            as="main"
-            my={{ base: "2rem", sm: "4rem" }}
-            mt={{ base: "calc(1rem + 70px)", sm: "calc(4rem + 70px)" }}
-            w="100%"
-            justifyContent="center"
-        >
-            <VStack
-                maxWidth="700px"
-                w="100%"
-                px="1rem"
-                alignItems="start"
-                gap="16px"
-            >
-                <SearchInput />
+        <Layout>
+            <SearchInput />
 
-                {router.query.q == null || router.query.q === "" ? (
-                    <ShowRecentSearches />
-                ) : (
-                    <ShowSearchResults
-                        articles={articles}
-                        likes={likes}
-                        totalCount={totalCount}
-                        nextOffset={nextOffset}
-                    />
-                )}
-            </VStack>
-        </VStack>
+            {router.query.q == null || router.query.q === "" ? (
+                <ShowRecentSearches />
+            ) : (
+                <ShowSearchResults
+                    articles={articles}
+                    likes={likes}
+                    totalCount={totalCount}
+                    nextOffset={nextOffset}
+                />
+            )}
+        </Layout>
     );
 }
