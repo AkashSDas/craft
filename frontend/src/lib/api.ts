@@ -105,6 +105,7 @@ export const endpoints = Object.freeze({
     getArticle: (articleId: string) => `articles/${articleId}`,
     getArticlesPaginated: `articles`,
     getTrendingArticles: `articles/trending`,
+    deleteArticle: (articleId: string) => `articles/${articleId}`,
 
     // Followers
     followAuthor: "followers",

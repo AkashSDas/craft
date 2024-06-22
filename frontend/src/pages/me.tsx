@@ -22,7 +22,7 @@ export default function UserArticlesPage() {
     const [tab, setTab] = useState<"draft" | "public">("draft");
     const { isLoggedIn, status } = useUser();
     const { isLoading, data, isError } = useQuery({
-        queryKey: ["my-articles", tab],
+        queryKey: ["myArticles", tab],
         queryFn: () => getUserArticles(tab),
         staleTime: 1000 * 60 * 5, // 5 minutes
         enabled: isLoggedIn && status === "success",

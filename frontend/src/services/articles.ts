@@ -396,3 +396,26 @@ export async function getTrendingArticles() {
         message: res.error?.message ?? "Unknown error",
     };
 }
+
+export async function deleteArticle(articleId: string) {
+    type SuccessResponse = {};
+    type ErrorResponse = { message: string };
+
+    const res = await fetchFromAPI<SuccessResponse | ErrorResponse>(
+        endpoints.deleteArticle(articleId),
+        { method: "DELETE" },
+        true
+    );
+    const { data, status } = res;
+
+    if (status === 204) {
+        return { success: true };
+    } else if (status === 400 && data !== null && "message" in data) {
+        return { success: false, message: data.message };
+    }
+
+    return {
+        success: false,
+        message: res.error?.message ?? "Unknown error",
+    };
+}

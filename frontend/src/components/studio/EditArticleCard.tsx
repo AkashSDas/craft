@@ -22,6 +22,7 @@ import Link from "next/link";
 import { useState, useMemo } from "react";
 import { DeleteIcon } from "@chakra-ui/icons";
 import { useMakeArticlePublic } from "@app/hooks/editor";
+import { useDeleteArticle } from "@app/hooks/articles";
 
 type EditArticleCardProps = {
     article: Article;
@@ -83,6 +84,7 @@ export function EditArticleCard(props: EditArticleCardProps) {
     );
 
     const { mutation: makeArticlePublic } = useMakeArticlePublic();
+    const { isPending, delete: deleteArticle } = useDeleteArticle();
 
     return (
         <HStack
@@ -285,7 +287,8 @@ export function EditArticleCard(props: EditArticleCardProps) {
                             color: "red.500",
                         }}
                         _active={{ bgColor: "gray.200" }}
-                        onClick={() => {}}
+                        onClick={() => deleteArticle(props.article.articleId)}
+                        disabled={isPending}
                         icon={<DeleteIcon fontSize="medium" />}
                     >
                         Delete
