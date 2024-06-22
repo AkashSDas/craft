@@ -33,7 +33,7 @@ export class UserController {
         limit: number,
     ) {
         const authors = await this.serv.getRisingAuthors(limit);
-        return authors;
+        return { authors };
     }
 
     @Get("authors/:authorId")

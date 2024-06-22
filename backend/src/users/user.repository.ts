@@ -68,6 +68,7 @@ export class UserRepository {
                     email: 1,
                     profilePic: 1,
                     followerCount: 1,
+                    userId: 1,
                 },
             },
             {
