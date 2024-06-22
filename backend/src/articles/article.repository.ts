@@ -128,6 +128,14 @@ export class ArticleRepository {
                 },
             },
             {
+                $lookup: {
+                    from: "users",
+                    localField: "authorIds",
+                    foreignField: "_id",
+                    as: "authorIds",
+                },
+            },
+            {
                 $addFields: {
                     likeCount: { $size: "$likes" },
                     weight: {
@@ -148,6 +156,32 @@ export class ArticleRepository {
                             { $multiply: ["$likeCount", 1] }, // Weight for likes
                         ],
                     },
+                },
+            },
+            {
+                $project: {
+                    articleId: 1,
+                    authorIds: {
+                        username: 1,
+                        profilePic: 1,
+                        userId: 1,
+                        _id: 1,
+                    },
+                    blockIds: 1,
+                    blocks: 1,
+                    coverImage: 1,
+                    createdAt: 1,
+                    description: 1,
+                    headline: 1,
+                    isPublic: 1,
+                    lastUpdatedAt: 1,
+                    likeCount: 1,
+                    likes: 1,
+                    readTimeInMs: 1,
+                    topics: 1,
+                    updatedAt: 1,
+                    weight: 1,
+                    _id: 1,
                 },
             },
             { $sort: { weight: -1 } },
