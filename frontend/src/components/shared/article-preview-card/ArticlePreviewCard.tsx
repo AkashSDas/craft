@@ -72,12 +72,12 @@ export function ArticlePreviewCard(props: Props): React.JSX.Element {
             pos="relative"
             p="6px"
             border="2px solid"
-            borderColor="gray.200"
+            borderColor="gray.100"
             w="100%"
             cursor="pointer"
             _hover={{
                 bgColor: "gray.50",
-                borderColor: "gray.300",
+                borderColor: "gray.200",
                 textDecoration: "none",
             }}
             _active={{

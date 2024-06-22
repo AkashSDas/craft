@@ -20,7 +20,7 @@ export function Layout(props: Props) {
             alignItems="start"
             pos="relative"
         >
-            <VStack w="100%" mr="484px">
+            <VStack w="100%" mr={{ base: 0, lg: "484px" }}>
                 <VStack
                     maxWidth="700px"
                     w="100%"
@@ -32,14 +32,14 @@ export function Layout(props: Props) {
                 </VStack>
             </VStack>
 
-            <Show above="md">
+            <Show above="lg">
                 <VStack
                     w="484px"
                     h="calc(100vh - 102px)"
                     alignItems="start"
                     borderLeft="1px solid"
                     borderLeftColor="gray.200"
-                    pr="1rem"
+                    pr="2rem"
                     pl="2rem"
                     pos="fixed"
                     right={0}

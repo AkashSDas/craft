@@ -12,6 +12,7 @@ import Image from "next/image";
 import { useMemo } from "react";
 import { UserChip } from "../user-chip/UserChip";
 import Link from "next/link";
+import { fontStyles } from "@app/utils/fonts";
 
 export function TrendingArticles() {
     const { isLoading, isError, articles } = useGetTrendingArticles();
@@ -25,7 +26,7 @@ export function TrendingArticles() {
     return (
         <VStack w="100%" alignItems="start" gap="14px">
             <Heading variant="h3" fontSize="24px">
-                Trending
+                <TrendingHeading />
             </Heading>
 
             <Divider />
@@ -38,7 +39,7 @@ export function TrendingArticles() {
                 return (
                     <HStack
                         w="100%"
-                        p="2px"
+                        p="4px"
                         gap="12px"
                         alignItems="start"
                         as={Link}
@@ -148,5 +149,30 @@ function ArticleSkeletons(props: { isLoaded: boolean }) {
                 );
             })}
         </>
+    );
+}
+
+function TrendingHeading() {
+    return (
+        <Heading as="h1" fontSize={{ base: "24px", sm: "30px" }}>
+            <Text as="span" {...fontStyles["expandedBoldItalic"]}>
+                T
+            </Text>
+            <Text as="span" {...fontStyles["condensedMedium"]}>
+                re
+            </Text>
+            <Text as="span" {...fontStyles["expandedLightItalic"]}>
+                n
+            </Text>
+            <Text as="span" {...fontStyles["bold"]}>
+                d
+            </Text>
+            <Text as="span" {...fontStyles["expandedLight"]}>
+                in
+            </Text>
+            <Text as="span" {...fontStyles["condensedMedium"]}>
+                g
+            </Text>
+        </Heading>
     );
 }

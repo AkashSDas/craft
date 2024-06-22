@@ -11,6 +11,7 @@ import Image from "next/image";
 import { useMemo } from "react";
 import Link from "next/link";
 import { useGetTrendingAuthors } from "@app/hooks/user";
+import { fontStyles } from "@app/utils/fonts";
 
 export function TrendingAuthors() {
     const { isLoading, isError, authors } = useGetTrendingAuthors();
@@ -26,7 +27,7 @@ export function TrendingAuthors() {
     return (
         <VStack w="100%" alignItems="start" gap="14px">
             <Heading variant="h3" fontSize="24px">
-                Rising Authors
+                <TrendingHeading />
             </Heading>
 
             <Divider />
@@ -38,6 +39,7 @@ export function TrendingAuthors() {
                     <HStack
                         w="100%"
                         p="4px"
+                        px="6px"
                         gap="12px"
                         as={Link}
                         href={`/authors/${author.userId}`}
@@ -125,5 +127,40 @@ function AuthorSkeletons(props: { isLoaded: boolean }) {
                 );
             })}
         </>
+    );
+}
+
+function TrendingHeading() {
+    return (
+        <Heading as="h1" fontSize={{ base: "24px", sm: "30px" }}>
+            <Text as="span" {...fontStyles["expandedBoldItalic"]}>
+                Ri
+            </Text>
+            <Text as="span" {...fontStyles["condensedMedium"]}>
+                s
+            </Text>
+            <Text as="span" {...fontStyles["expandedLightItalic"]}>
+                in
+            </Text>
+            <Text as="span" {...fontStyles["bold"]} mr="6px">
+                g
+            </Text>
+
+            <Text as="span" {...fontStyles["expandedLight"]}>
+                A
+            </Text>
+            <Text as="span" {...fontStyles["condensedMedium"]}>
+                ut
+            </Text>
+            <Text as="span" {...fontStyles["expandedLightItalic"]}>
+                ho
+            </Text>
+            <Text as="span" {...fontStyles["bold"]}>
+                r
+            </Text>
+            <Text as="span" {...fontStyles["expandedBoldItalic"]}>
+                s
+            </Text>
+        </Heading>
     );
 }
