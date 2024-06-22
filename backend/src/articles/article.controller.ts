@@ -2,6 +2,7 @@ import {
     BadRequestException,
     Body,
     Controller,
+    Delete,
     ForbiddenException,
     Get,
     HttpCode,
@@ -159,6 +160,24 @@ export class ArticleController {
         const article = await this.serv.getArticle(req.params.articleId);
         await this.serv.publishArticle(article);
         return { message: "Updated successfully" };
+    }
+
+    @Delete(":articleId")
+    @HttpCode(HttpStatus.NO_CONTENT)
+    @UseGuards(AccessTokenGuard)
+    async deleteArticle(
+        @Req() req: IRequest,
+        @Param("articleId") articleId: string,
+    ) {
+        const exists = await this.serv.checkOwnership(
+            req.user._id,
+            req.params.articleId,
+        );
+        if (!exists) {
+            throw new ForbiddenException(
+                "You don't have permission to edit this article",
+            );
+        }
     }
 
     // =========================================

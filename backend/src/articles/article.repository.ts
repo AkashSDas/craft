@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Article } from "./schema";
-import { Model, Types } from "mongoose";
+import { FilterQuery, Model, Types } from "mongoose";
 
 @Injectable({})
 export class ArticleRepository {
@@ -187,5 +187,13 @@ export class ArticleRepository {
             { $sort: { weight: -1 } },
             { $limit: limit },
         ]);
+    }
+
+    async findOne(filter: FilterQuery<Article>, select?: string) {
+        return await this.model.findOne(filter).select(select);
+    }
+
+    async deleteOne(filter: FilterQuery<Article>): Promise<any> {
+        return await this.model.deleteOne(filter);
     }
 }

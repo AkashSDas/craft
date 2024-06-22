@@ -259,4 +259,36 @@ export class ArticleService {
     async getTrendingArticles(limit: number) {
         return this.repo.getTrendingArticles(limit);
     }
+
+    async deleteArticle(articleId: Types.ObjectId) {
+        const article = await this.repo.findOne({ _id: articleId }, "blocks");
+
+        if (!article) {
+            const { blocks } = article;
+            const deleteBlockIds: string[] = [];
+
+            for (const block of blocks.values()) {
+                if (block.type === "image" && block.value.id) {
+                    deleteBlockIds.push(block.value.id);
+                }
+            }
+
+            const deletePromises: Promise<any>[] = [];
+
+            for (const id of deleteBlockIds) {
+                deletePromises.push(
+                    v2.uploader.destroy(id, {}, (error, result) => {
+                        if (error) {
+                            console.error(error);
+                        } else {
+                            console.log(result);
+                        }
+                    }),
+                );
+            }
+
+            await Promise.all(deletePromises);
+            await this.repo.deleteOne(articleId);
+        }
+    }
 }
