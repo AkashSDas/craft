@@ -50,14 +50,13 @@ export async function getTrendingAuthors() {
     type ErrorResponse = { message: string };
 
     const response = await fetchFromAPI<SuccessResponse | ErrorResponse>(
-        endpoints.getTrendingArticles,
+        endpoints.getTrendingAuthors,
         { method: "GET" }
     );
     const { data, status } = response;
 
     if (status === 200 && data !== null && "authors" in data) {
         const parsed = await AuthorsSchema.parseAsync(data.authors);
-
         return { success: true, authors: parsed };
     } else if (status === 400 && data !== null && "message" in data) {
         return { success: false, message: data.message };
