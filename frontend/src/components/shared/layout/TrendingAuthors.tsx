@@ -1,20 +1,19 @@
-import { useGetTrendingArticles } from "@app/hooks/articles";
 import {
     VStack,
     Heading,
     Divider,
-    Skeleton,
     Text,
     HStack,
     SkeletonText,
+    SkeletonCircle,
 } from "@chakra-ui/react";
 import Image from "next/image";
 import { useMemo } from "react";
-import { UserChip } from "../user-chip/UserChip";
 import Link from "next/link";
+import { useGetTrendingAuthors } from "@app/hooks/user";
 
-export function TrendingArticles() {
-    const { isLoading, isError, articles } = useGetTrendingArticles();
+export function TrendingAuthors() {
+    const { isLoading, isError, authors } = useGetTrendingAuthors();
     const isLoaded = useMemo(
         function () {
             return !isLoading && !isError;
@@ -22,52 +21,47 @@ export function TrendingArticles() {
         [isLoading, isError]
     );
 
+    console.log({ authors, isLoading, isError });
+
     return (
         <VStack w="100%" alignItems="start" gap="14px">
             <Heading variant="h3" fontSize="24px">
-                Trending
+                Rising Authors
             </Heading>
 
             <Divider />
 
-            {!isLoaded ? <ArticleSkeletons isLoaded={isLoaded} /> : null}
+            {!isLoaded ? <AuthorSkeletons isLoaded={isLoaded} /> : null}
 
-            {articles.map((art) => {
-                const author = art.authorIds[0];
-
+            {authors.map((author) => {
                 return (
                     <HStack
                         w="100%"
-                        p="2px"
+                        p="4px"
                         gap="12px"
-                        alignItems="start"
                         as={Link}
-                        href={`/articles/${art.articleId}`}
-                        key={art.articleId}
+                        href={`/authors/${author.userId}`}
+                        key={author.userId}
                         transition="transform 0.3s cubic-bezier(.5,2.5,.7,.7)"
                         _hover={{
-                            borderColor: "gray.300",
                             bgColor: "gray.100",
                         }}
                         _active={{
                             transform: "scale(0.98)",
-                            borderColor: "gray.900",
                             bgColor: "gray.200",
                         }}
-                        border="1.5px solid"
-                        borderColor="gray.200"
                         borderRadius="4px"
                     >
                         <Image
-                            src={art.coverImage?.URL ?? "/default-cvoer.png"}
-                            alt="Article cover"
-                            height={96}
-                            width={190}
+                            src={author.profilePic?.URL ?? "/mascot.png"}
+                            alt="Profile pic"
+                            height={48}
+                            width={48}
                             style={{
-                                maxHeight: "96px",
-                                minWidth: "190px",
                                 objectFit: "cover",
-                                borderRadius: "4px",
+                                minWidth: "48px",
+                                minHeight: "48px",
+                                borderRadius: "50%",
                             }}
                         />
 
@@ -77,21 +71,13 @@ export function TrendingArticles() {
                             flexGrow={1}
                             gap="12px"
                         >
-                            <UserChip
-                                avatarURL={
-                                    author.profilePic?.URL ?? "/mascot.png"
-                                }
-                                alt={author.username}
-                                username={author.username}
-                                userId={author.userId}
-                            />
-
                             <Text
                                 noOfLines={2}
                                 fontWeight="600"
                                 color="gray.700"
+                                fontSize="16px"
                             >
-                                {art.headline}
+                                {author.username}
                             </Text>
                         </VStack>
                     </HStack>
@@ -101,17 +87,18 @@ export function TrendingArticles() {
     );
 }
 
-function ArticleSkeletons(props: { isLoaded: boolean }) {
+function AuthorSkeletons(props: { isLoaded: boolean }) {
     return (
         <>
             {[1, 2, 3].map((item) => {
                 return (
                     <HStack w="100%" p="2px" gap="12px" alignItems="start">
-                        <Skeleton
+                        <SkeletonCircle
                             isLoaded={props.isLoaded}
-                            h="96px"
-                            minW="190px"
-                            borderRadius="4px"
+                            h="48px"
+                            w="48px"
+                            minH="48px"
+                            minW="48px"
                             startColor="gray.100"
                             endColor="gray.300"
                             fadeDuration={0.5}
@@ -123,16 +110,6 @@ function ArticleSkeletons(props: { isLoaded: boolean }) {
                             flexGrow={1}
                             gap="12px"
                         >
-                            <Skeleton
-                                isLoaded={props.isLoaded}
-                                h="28px"
-                                w="100px"
-                                borderRadius="20px"
-                                startColor="gray.100"
-                                endColor="gray.300"
-                                fadeDuration={0.5}
-                            />
-
                             <SkeletonText
                                 isLoaded={props.isLoaded}
                                 noOfLines={2}
