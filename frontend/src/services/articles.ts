@@ -377,7 +377,7 @@ export async function getTrendingArticles() {
     type ErrorResponse = { message: string };
 
     const res = await fetchFromAPI<SuccessResponse | ErrorResponse>(
-        endpoints.getArticlesPaginated,
+        endpoints.getTrendingArticles,
         { method: "GET" }
     );
     const { data, status } = res;
