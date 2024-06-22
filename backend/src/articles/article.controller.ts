@@ -169,15 +169,14 @@ export class ArticleController {
         @Req() req: IRequest,
         @Param("articleId") articleId: string,
     ) {
-        const exists = await this.serv.checkOwnership(
-            req.user._id,
-            req.params.articleId,
-        );
+        const exists = await this.serv.checkOwnership(req.user._id, articleId);
         if (!exists) {
             throw new ForbiddenException(
                 "You don't have permission to edit this article",
             );
         }
+
+        await this.serv.deleteArticle(exists._id);
     }
 
     // =========================================

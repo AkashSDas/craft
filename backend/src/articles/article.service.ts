@@ -263,7 +263,7 @@ export class ArticleService {
     async deleteArticle(articleId: Types.ObjectId) {
         const article = await this.repo.findOne({ _id: articleId }, "blocks");
 
-        if (!article) {
+        if (article) {
             const { blocks } = article;
             const deleteBlockIds: string[] = [];
 
@@ -288,7 +288,7 @@ export class ArticleService {
             }
 
             await Promise.all(deletePromises);
-            await this.repo.deleteOne(articleId);
+            await this.repo.deleteOne({ _id: articleId });
         }
     }
 }
