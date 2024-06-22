@@ -257,6 +257,6 @@ export class ArticleService {
     }
 
     async getTrendingArticles(limit: number) {
-        return this.getTrendingArticles(limit);
+        return this.repo.getTrendingArticles(limit);
     }
 }

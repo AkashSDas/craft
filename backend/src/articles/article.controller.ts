@@ -32,6 +32,31 @@ export class ArticleController {
         @Inject(forwardRef(() => UserService)) private userService: UserService,
     ) {}
 
+    @Get("trending")
+    @HttpCode(HttpStatus.OK)
+    async getTrendingArticles(
+        @Query("limit", {
+            transform: (value) => {
+                const limit = parseInt(value);
+                if (isNaN(limit)) return 5;
+
+                if (limit < 0) {
+                    throw new BadRequestException("Invalid limit");
+                } else if (limit > 10) {
+                    throw new BadRequestException(
+                        "Limit cannot be greater than 10",
+                    );
+                }
+
+                return limit;
+            },
+        })
+        limit: number,
+    ) {
+        const articles = await this.serv.getTrendingArticles(limit);
+        return { articles };
+    }
+
     // =========================================
     // Article editor
     // =========================================
@@ -242,30 +267,5 @@ export class ArticleController {
         });
 
         return { articles, likeCount, totalCount, nextOffset: offset + limit };
-    }
-
-    @Get("trending")
-    @HttpCode(HttpStatus.OK)
-    async getTrendingArticles(
-        @Query("limit", {
-            transform: (value) => {
-                const limit = parseInt(value);
-                if (isNaN(limit)) return 5;
-
-                if (limit < 0) {
-                    throw new BadRequestException("Invalid limit");
-                } else if (limit > 10) {
-                    throw new BadRequestException(
-                        "Limit cannot be greater than 10",
-                    );
-                }
-
-                return limit;
-            },
-        })
-        limit: number,
-    ) {
-        const articles = await this.serv.getTrendingArticles(limit);
-        return { articles };
     }
 }
