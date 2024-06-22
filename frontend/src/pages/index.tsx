@@ -1,4 +1,5 @@
 import { ArticlePreviewCard } from "@app/components/shared/article-preview-card/ArticlePreviewCard";
+import { Layout } from "@app/components/shared/layout/Layout";
 import { PaginatedArticle, getArticlesPaginated } from "@app/services/articles";
 import { fontStyles } from "@app/utils/fonts";
 import {
@@ -81,81 +82,66 @@ export default function Home(props: Props) {
     });
 
     return (
-        <VStack
-            as="main"
-            my={{ base: "2rem", sm: "4rem" }}
-            mt={{ base: "calc(1rem + 70px)", sm: "calc(4rem + 70px)" }}
-            w="100%"
-            justifyContent="center"
-        >
-            <VStack
-                maxWidth="700px"
-                w="100%"
-                px="1rem"
-                alignItems="start"
-                gap="16px"
-                className="feed-articles"
-            >
-                <FeedHeading />
-                <Divider borderColor="gray.200" />
+        <Layout mainClassName="feed-articles">
+            <FeedHeading />
+            <Divider borderColor="gray.200" />
 
-                <InfiniteScroll
-                    dataLength={data.pages.reduce(
-                        (a, b) => a + (b.articles?.length ?? 0),
-                        0
-                    )}
-                    next={fetchNextPage}
-                    hasMore={hasNextPage}
-                    loader={
-                        isFetchingNextPage ? (
-                            <HStack
-                                w="100%"
-                                justifyContent="center"
-                                mb="2rem"
-                                mt="1rem"
-                            >
-                                <Spinner />
-                            </HStack>
-                        ) : null
-                    }
-                    endMessage={
+            <InfiniteScroll
+                dataLength={data.pages.reduce(
+                    (a, b) => a + (b.articles?.length ?? 0),
+                    0
+                )}
+                next={fetchNextPage}
+                hasMore={hasNextPage}
+                loader={
+                    isFetchingNextPage ? (
                         <HStack
                             w="100%"
                             justifyContent="center"
                             mb="2rem"
                             mt="1rem"
                         >
-                            <Text textAlign="center" color="gray.500">
-                                <b>Yay! You have seen it all</b>
-                            </Text>
+                            <Spinner />
                         </HStack>
-                    }
-                >
-                    {data?.pages.map((page) => {
-                        return (page.articles ?? [])
-                            .filter(Boolean)
-                            .map((article) => {
-                                let likeCount = 0;
-                                if (page.likes) {
-                                    likeCount = page.likes[article._id] ?? 0;
-                                }
+                    ) : null
+                }
+                endMessage={
+                    <HStack
+                        w="100%"
+                        justifyContent="center"
+                        mb="2rem"
+                        mt="1rem"
+                    >
+                        <Text textAlign="center" color="gray.500">
+                            <b>Yay! You have seen it all</b>
+                        </Text>
+                    </HStack>
+                }
+            >
+                {data?.pages.map((page) => {
+                    return (page.articles ?? [])
+                        .filter(Boolean)
+                        .map((article) => {
+                            let likeCount = 0;
+                            if (page.likes) {
+                                likeCount = page.likes[article._id] ?? 0;
+                            }
 
-                                return (
-                                    <>
-                                        <ArticlePreviewCard
-                                            key={article.articleId}
-                                            article={article}
-                                            likeCount={likeCount}
-                                        />
+                            return (
+                                <>
+                                    <ArticlePreviewCard
+                                        key={article.articleId}
+                                        article={article}
+                                        likeCount={likeCount}
+                                    />
 
-                                        <Spacer height="16px" />
-                                    </>
-                                );
-                            });
-                    })}
-                </InfiniteScroll>
-            </VStack>
-        </VStack>
+                                    <Spacer height="16px" />
+                                </>
+                            );
+                        });
+                })}
+            </InfiniteScroll>
+        </Layout>
     );
 }
 
