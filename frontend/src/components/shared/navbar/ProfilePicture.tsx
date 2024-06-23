@@ -1,4 +1,5 @@
 import { useUser, useLogout } from "@app/hooks/auth";
+import { EditIcon, SettingsIcon } from "@chakra-ui/icons";
 import {
     Menu,
     MenuButton,
@@ -40,6 +41,7 @@ export function ProfilePicture() {
                     src={user?.profilePic?.URL ?? "/mascot.png"}
                     alt={user?.username ?? "Profile Picture"}
                     fill
+                    style={{ objectFit: "cover" }}
                 />
             </MenuButton>
 
@@ -116,6 +118,28 @@ export function ProfilePicture() {
                     }
                 >
                     Studio
+                </MenuItem>
+
+                <MenuItem
+                    h="36px"
+                    borderRadius="4px"
+                    transition="transform 0.3s cubic-bezier(.5,2.5,.7,.7)"
+                    transformOrigin="center"
+                    fontWeight="500"
+                    _hover={{ bgColor: "gray.100" }}
+                    _active={{ bgColor: "gray.200", transform: "scale(0.98)" }}
+                    as={Link}
+                    href="/settings"
+                    icon={
+                        <Image
+                            src="/icons/cog.png"
+                            alt="Settings"
+                            width={18}
+                            height={18}
+                        />
+                    }
+                >
+                    Settings
                 </MenuItem>
 
                 <Divider my="12px" />
