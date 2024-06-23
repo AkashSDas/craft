@@ -1,4 +1,5 @@
 import {
+    BadRequestException,
     Inject,
     Injectable,
     NotFoundException,
@@ -68,6 +69,13 @@ export class UserService {
         payload: UpdateProfileDto,
         file: UploadedFile | undefined | null,
     ) {
+        const user = await this.repo.findOne({ _id: userId }, "oauthProviders");
+        if (user.oAuthProviders.length > 0 && payload.email) {
+            throw new BadRequestException(
+                "Cannot change email when logged in with OAuth",
+            );
+        }
+
         const update: Partial<Pick<User, "profilePic" | "email" | "username">> =
             { ...payload };
 
@@ -77,7 +85,6 @@ export class UserService {
                 file,
             );
         }
-
         await this.repo.updateOne({ _id: userId }, { $set: update });
     }
 }
