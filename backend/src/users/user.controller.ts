@@ -1,16 +1,40 @@
 import {
     BadRequestException,
+    Body,
     Controller,
     Get,
+    HttpCode,
+    HttpStatus,
     Param,
+    Put,
     Query,
+    Req,
+    UseGuards,
 } from "@nestjs/common";
 import { UserService } from "./user.service";
 import { NotFoundException } from "@nestjs/common";
+import { UpdateProfileDto } from "./dto";
+import { AccessTokenGuard } from "src/auth/guard";
+import { IRequest } from "src";
 
 @Controller("users")
 export class UserController {
     constructor(private serv: UserService) {}
+
+    @Put("")
+    @HttpCode(HttpStatus.OK)
+    @UseGuards(AccessTokenGuard)
+    async updateProfile(@Body() dto: UpdateProfileDto, @Req() req: IRequest) {
+        const profilePic = req.files.profilePic;
+        if (Array.isArray(profilePic)) {
+            throw new BadRequestException(
+                "Only one profile picture is allowed",
+            );
+        }
+
+        await this.serv.updateUserProfile(req.user._id, dto, profilePic);
+        return { message: "Successfully updated profile" };
+    }
 
     @Get("authors/trending")
     async getRisingAuthors(

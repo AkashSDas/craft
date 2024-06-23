@@ -12,7 +12,7 @@ import { Document, type Types } from "mongoose";
 import { randomBytes, createHash } from "crypto";
 import { AccessTokenPayload, RefreshTokenPayload } from "src/auth/strategy";
 
-interface IUser {
+export interface IUser {
     /** Public facing user document id */
     userId: string;
 
