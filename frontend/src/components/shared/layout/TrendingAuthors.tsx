@@ -22,8 +22,6 @@ export function TrendingAuthors() {
         [isLoading, isError]
     );
 
-    console.log({ authors, isLoading, isError });
-
     return (
         <VStack w="100%" alignItems="start" gap="14px">
             <Heading variant="h3" fontSize="24px">
@@ -61,6 +59,8 @@ export function TrendingAuthors() {
                             width={48}
                             style={{
                                 objectFit: "cover",
+                                width: "48px",
+                                height: "48px",
                                 minWidth: "48px",
                                 minHeight: "48px",
                                 borderRadius: "50%",

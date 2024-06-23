@@ -28,6 +28,8 @@ export function UserChip(props: Props): React.JSX.Element {
                 height={24}
                 width={24}
                 style={{
+                    height: "24px",
+                    width: "24px",
                     border: "2px solid",
                     borderColor: "#B36439",
                     objectFit: "cover",
@@ -35,7 +37,7 @@ export function UserChip(props: Props): React.JSX.Element {
                 }}
             />
 
-            <Text fontSize="sm" fontWeight="medium">
+            <Text fontSize="13px" fontWeight="medium" color="gray.400">
                 {username}
             </Text>
         </HStack>

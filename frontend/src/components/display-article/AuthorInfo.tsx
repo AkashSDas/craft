@@ -36,9 +36,11 @@ export function AuthorInfo({ author, lastUpdatedAt }: AuthorInfoProps) {
                         height={48}
                         width={48}
                         style={{
+                            height: "48px",
+                            width: "48px",
                             objectFit: "cover",
                             borderRadius: "50%",
-                            border: "3px solid #d67844",
+                            border: "2px solid #d67844",
                         }}
                     />
                 </Link>
