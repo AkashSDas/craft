@@ -67,3 +67,26 @@ export async function getTrendingAuthors() {
         message: response.error?.message ?? "Unknown error",
     };
 }
+
+export async function updateProfile(payload: FormData) {
+    type SuccessResponse = { message: string };
+    type ErrorResponse = { message: string };
+
+    const response = await fetchFromAPI<SuccessResponse | ErrorResponse>(
+        endpoints.updateProfile,
+        { method: "PUT", data: payload, timeout: 1000 * 60 * 5 }, // 5 minutes
+        true
+    );
+    const { data, status } = response;
+
+    if (status === 200 && data !== null && "message" in data) {
+        return { success: true, message: data.message };
+    } else if (status === 400 && data !== null && "message" in data) {
+        return { success: false, message: data.message };
+    }
+
+    return {
+        success: false,
+        message: response.error?.message ?? "Unknown error",
+    };
+}

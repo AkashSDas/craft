@@ -143,4 +143,5 @@ export const endpoints = Object.freeze({
         return `articles/authors/${authorId}/articles`;
     },
     getTrendingAuthors: `users/authors/trending`,
+    updateProfile: "users",
 });
