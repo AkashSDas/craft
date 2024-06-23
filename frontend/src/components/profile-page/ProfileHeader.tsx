@@ -20,17 +20,17 @@ export function ProfileHeader(props: Props) {
         return followersCount + change;
     }, [followersCount, change]);
 
-    const { followAuthorMutation, followersQuery, unfollowAuthorMutation } =
+    const { followAuthorMutation, followingsQuery, unfollowAuthorMutation } =
         useFollowerManager();
     const isFollowing = useMemo(
         function checkFollowingStatus() {
             return (
-                followersQuery.data?.followers?.some(
+                followingsQuery.data?.followings?.some(
                     (follower) => follower.user.userId === userId
                 ) ?? false
             );
         },
-        [userId, user?.userId, followersQuery.data?.followers]
+        [userId, user?.userId, followingsQuery.data?.followings]
     );
 
     return (

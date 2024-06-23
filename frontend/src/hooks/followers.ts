@@ -28,20 +28,22 @@ export function useFollowerManager() {
         staleTime: 1000 * 60 * 5, // 5 minutes
     });
 
-    type FollowersData = (typeof followersQuery)["data"];
+    type FollowingsData = (typeof followingsQuery)["data"];
 
     const unfollowAuthorMutation = useMutation({
         mutationFn: (author: FollowerUser) => unfollowAuthor(author.userId),
         onMutate(variables) {
-            const prev = queryClient.getQueryData(["followers", user?.userId]);
+            const prev = queryClient.getQueryData(["followings", user?.userId]);
             queryClient.setQueryData(
-                ["followers", user?.userId],
-                (old: FollowersData | undefined): FollowersData | undefined => {
+                ["followings", user?.userId],
+                (
+                    old: FollowingsData | undefined
+                ): FollowingsData | undefined => {
                     if (!old) return old;
                     const data = {
                         ...old,
-                        followers:
-                            old.followers?.filter((f) => {
+                        followings:
+                            old.followings?.filter((f) => {
                                 return f.user.userId !== variables.userId;
                             }) ?? [],
                     };
@@ -63,7 +65,7 @@ export function useFollowerManager() {
         onError(error, variables, context) {
             if (context) {
                 queryClient.setQueryData(
-                    ["followers", user?.userId],
+                    ["followings", user?.userId],
                     context.previousData
                 );
             }
@@ -78,7 +80,7 @@ export function useFollowerManager() {
         },
         async onSuccess(data, variables, context) {
             await queryClient.invalidateQueries({
-                queryKey: ["followers", user?.userId],
+                queryKey: ["followings", user?.userId],
             });
         },
     });
@@ -86,15 +88,17 @@ export function useFollowerManager() {
     const followAuthorMutation = useMutation({
         mutationFn: (author: FollowerUser) => followAuthor(author.userId),
         onMutate(variables) {
-            const prev = queryClient.getQueryData(["followers", user?.userId]);
+            const prev = queryClient.getQueryData(["followings", user?.userId]);
             queryClient.setQueryData(
-                ["followers", user?.userId],
-                (old: FollowersData | undefined): FollowersData | undefined => {
+                ["followings", user?.userId],
+                (
+                    old: FollowingsData | undefined
+                ): FollowingsData | undefined => {
                     if (!old) return old;
                     return {
                         ...old,
-                        followers: [
-                            ...(old.followers ?? []),
+                        followings: [
+                            ...(old.followings ?? []),
                             {
                                 _id: "",
                                 user: variables,
@@ -119,7 +123,7 @@ export function useFollowerManager() {
         onError(error, variables, context) {
             if (context) {
                 queryClient.setQueryData(
-                    ["followers", user?.userId],
+                    ["followings", user?.userId],
                     context.previousData
                 );
             }
@@ -134,7 +138,7 @@ export function useFollowerManager() {
         },
         async onSuccess(data, variables, context) {
             await queryClient.invalidateQueries({
-                queryKey: ["followers", user?.userId],
+                queryKey: ["followings", user?.userId],
             });
         },
     });
