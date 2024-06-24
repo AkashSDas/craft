@@ -4,6 +4,7 @@ import { ControlPanel } from "@app/components/display-article/ControlPanel";
 import { DisplayBlock } from "@app/components/display-article/DisplayBlock";
 import { ReadingListsDrawer } from "@app/components/reading-lists/ReadingListsDrawer";
 import { Layout } from "@app/components/shared/layout/Layout";
+import { useRecordReadTimeInArticlePg } from "@app/hooks/views";
 import { Article, getArticle } from "@app/services/articles";
 import { Heading, Text, VStack, useDisclosure } from "@chakra-ui/react";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
@@ -32,6 +33,8 @@ export const getServerSideProps: GetServerSideProps<{
 type Props = InferGetServerSidePropsType<typeof getServerSideProps>;
 
 export default function ArticlePage(props: Props) {
+    useRecordReadTimeInArticlePg();
+
     const comments = useDisclosure();
     const readingLists = useDisclosure();
 
