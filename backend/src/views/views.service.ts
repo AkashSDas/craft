@@ -52,14 +52,17 @@ export class ViewsService {
 
         // if diff is less than 3 hours and is more than read time then
         // we're sure that could be a legit view
-        if (
-            diff > readTimeInMs &&
-            diff < 1000 * 60 * 60 * 3 &&
-            readTimeInMs < article.readTimeInMs * 2
-        ) {
+        if (diff > readTimeInMs && diff < 1000 * 60 * 60 * 3) {
             await this.repo.updateOne(
                 { _id: view._id },
-                { $set: { readTimeInMs } },
+                {
+                    $set: {
+                        readTimeInMs: Math.min(
+                            readTimeInMs,
+                            article.readTimeInMs * 2,
+                        ),
+                    },
+                },
             );
         }
     }
