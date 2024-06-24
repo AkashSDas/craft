@@ -149,7 +149,7 @@ export function ArticlePreviewCard(props: Props): React.JSX.Element {
                                 mt="2px"
                                 fontWeight="500"
                             >
-                                {readTimeInMs}min read
+                                {Math.floor(readTimeInMs / 1000 / 60)}min read
                             </Text>
                         </HStack>
                     </HStack>

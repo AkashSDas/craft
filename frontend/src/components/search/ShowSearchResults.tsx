@@ -10,7 +10,7 @@ import {
 } from "@chakra-ui/react";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { useRouter } from "next/router";
-import { useMemo } from "react";
+import { ReactNode, useMemo } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { ArticlePreviewCard } from "../shared/article-preview-card/ArticlePreviewCard";
 
@@ -133,7 +133,7 @@ export function ShowSearchResults(props: Props) {
                     </HStack>
                 }
             >
-                {data?.pages.map((page) => {
+                {data?.pages.map((page): ReactNode => {
                     return (page.articles ?? [])
                         .filter(Boolean)
                         .map((article) => {
