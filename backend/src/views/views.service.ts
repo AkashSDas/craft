@@ -1,11 +1,14 @@
 import { BadRequestException, Injectable } from "@nestjs/common";
 import { ViewsRepsitory } from "./views.repository";
 import { Types } from "mongoose";
-import { UpdateReadTimeDto } from "./dto";
+import { ArticleRepository } from "src/articles/article.repository";
 
 @Injectable()
 export class ViewsService {
-    constructor(private repo: ViewsRepsitory) {}
+    constructor(
+        private repo: ViewsRepsitory,
+        private articleRepo: ArticleRepository,
+    ) {}
 
     async addViewForArticle(
         userId: Types.ObjectId,
@@ -32,8 +35,15 @@ export class ViewsService {
             userId,
             articleId,
         });
+        const article = await this.articleRepo.findOne(
+            { _id: articleId },
+            "readTimeInMs",
+        );
         if (!view) {
             throw new BadRequestException("View not found");
+        }
+        if (!article) {
+            throw new BadRequestException("Article not found");
         }
 
         const viewCreatedAt: Date = (view as any).createdAt;
@@ -42,7 +52,11 @@ export class ViewsService {
 
         // if diff is less than 3 hours and is more than read time then
         // we're sure that could be a legit view
-        if (diff > readTimeInMs && diff < 1000 * 60 * 60 * 3) {
+        if (
+            diff > readTimeInMs &&
+            diff < 1000 * 60 * 60 * 3 &&
+            readTimeInMs < article.readTimeInMs * 2
+        ) {
             await this.repo.updateOne(
                 { _id: view._id },
                 { $set: { readTimeInMs } },

@@ -11,8 +11,8 @@ export class ViewsRepsitory {
         return await this.model.create(view);
     }
 
-    async findOne(filter: FilterQuery<View>) {
-        return await this.model.findOne(filter);
+    async findOne(filter: FilterQuery<View>, select?: string) {
+        return await this.model.findOne(filter).select(select);
     }
 
     async updateOne(filter: FilterQuery<View>, update: UpdateQuery<View>) {
