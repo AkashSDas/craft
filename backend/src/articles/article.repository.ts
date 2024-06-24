@@ -9,10 +9,14 @@ export class ArticleRepository {
 
     /** Initialize an article by an author. */
     async initArticle(authorId: Types.ObjectId) {
-        return await this.model.create({
+        const res = await this.model.create({
             authorIds: [authorId],
             lastUpdatedAt: new Date(),
         });
+
+        return this.model
+            .findOne({ _id: res._id })
+            .populate("authorIds", "username profilePic userId");
     }
 
     async exists(articleId: string) {
@@ -26,7 +30,14 @@ export class ArticleRepository {
         );
     }
 
-    async getArticleById(articleId: string) {
+    async getArticleById(articleId: string, removeBlocksText: boolean = true) {
+        if (removeBlocksText) {
+            return await this.model
+                .findOne({ articleId })
+                .select({ blocksText: 0 })
+                .populate("authorIds", "username profilePic userId");
+        }
+
         return await this.model
             .findOne({ articleId })
             .populate("authorIds", "username profilePic userId");
@@ -86,7 +97,11 @@ export class ArticleRepository {
 
     async getArticlesPaginated(limit: number, offset: number, text?: string) {
         if (typeof text === "string" && text.length > 0) {
-            const query = { $text: { $search: text }, isPublic: true };
+            console.log("searching", text, text.toLowerCase());
+            const query = {
+                $text: { $search: text.toLowerCase() },
+                isPublic: true,
+            };
             const [articles, totalCount] = await Promise.all([
                 this.model
                     .find(query)
