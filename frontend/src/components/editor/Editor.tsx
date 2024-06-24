@@ -35,7 +35,7 @@ export function Editor() {
                 <Stack
                     maxW="700px"
                     w="100%"
-                    px="4rem"
+                    px="2rem"
                     my="2rem"
                     pb="6rem"
                     gap="0"

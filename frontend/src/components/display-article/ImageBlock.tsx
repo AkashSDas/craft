@@ -12,6 +12,7 @@ export function ImageBlock({ block }: Props): React.JSX.Element {
             pos="relative"
             height={{ base: "220px", sm: "300px" }}
             width="100%"
+            my="12px"
         >
             <NextImage
                 src={block.value.URL ?? ""}

@@ -9,8 +9,10 @@ export function ParagraphBlock({ block }: Props): React.JSX.Element {
     return (
         <Text
             fontFamily="serif"
-            fontSize={{ base: "16px", sm: "18px" }}
+            fontSize={{ base: "18px", sm: "20px" }}
             lineHeight="150%"
+            mb="12px"
+            sx={{ lineHeight: "32px", letterSpacing: "-0.003em" }}
         >
             {block.value.text}
         </Text>
