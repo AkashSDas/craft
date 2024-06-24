@@ -37,12 +37,11 @@ export class ViewsController {
         @Res({ passthrough: true }) res: Response,
     ) {
         const exists = await this.articleServ.exists(dto.articleId);
-        if (exists && req.ip) {
+        if (exists) {
             try {
                 const view = await this.serv.addViewForArticle(
                     req.user._id,
                     exists._id,
-                    req.ip,
                 );
 
                 res.cookie("viewId", view._id, {

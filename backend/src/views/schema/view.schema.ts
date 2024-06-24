@@ -7,7 +7,6 @@ export interface IView {
     articleId: Types.ObjectId;
     userId: Types.ObjectId;
     readTimeInMs: number;
-    ipAddress: string;
 }
 
 @Schema({ timestamps: true })
@@ -20,9 +19,6 @@ export class View extends Document implements IView {
 
     @Prop({ type: Number, required: true, default: 0 })
     readTimeInMs: number;
-
-    @Prop({ type: String, required: true, select: false })
-    ipAddress: string;
 }
 
 export const ViewSchema = SchemaFactory.createForClass(View);

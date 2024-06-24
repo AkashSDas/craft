@@ -10,12 +10,8 @@ export class ViewsService {
         private articleRepo: ArticleRepository,
     ) {}
 
-    async addViewForArticle(
-        userId: Types.ObjectId,
-        articleId: Types.ObjectId,
-        ipAddress: string,
-    ) {
-        const exists = await this.repo.exsits({ articleId, userId, ipAddress });
+    async addViewForArticle(userId: Types.ObjectId, articleId: Types.ObjectId) {
+        const exists = await this.repo.exsits({ articleId, userId });
         if (exists) {
             throw new BadRequestException("View already exists");
         }
