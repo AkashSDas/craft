@@ -13,6 +13,7 @@ import {
 } from "./schema";
 import { UploadApiResponse, v2 } from "cloudinary";
 import { UploadedFile } from "express-fileupload";
+import { calculateReadTime } from "src/utils/article";
 
 @Injectable()
 export class ArticleService {
@@ -224,11 +225,9 @@ export class ArticleService {
 
         // calculate read time (in minutes)
 
-        let readTime = 0;
-        for (const blockId of Object.keys(textRecord)) {
-            const text = textRecord[blockId];
-            readTime += text.split(/\s+/).length / 200;
-        }
+        const readTimeInMs = calculateReadTime(
+            Object.values(textRecord).join(" "),
+        );
 
         // Get updated text
 
@@ -241,7 +240,7 @@ export class ArticleService {
             updatedText = DEFAULT_BLOCKS_TEXT;
         }
 
-        return { readTime, updatedText };
+        return { readTimeInMs, updatedText };
     }
 
     async updateNonFileContent(article: Article, dto: UpdateArticleContentDto) {
@@ -302,7 +301,7 @@ export class ArticleService {
 
         // Get text data and calculate read time
 
-        const { readTime, updatedText } = this.updateBlockTextForArticle(
+        const { readTimeInMs, updatedText } = this.updateBlockTextForArticle(
             article,
             dto,
             deletedBlockIds,
@@ -314,7 +313,7 @@ export class ArticleService {
             blockIds: article.blockIds,
             blocks: article.blocks,
             blocksText: updatedText,
-            readTimeInMs: Math.round(readTime) * 60 * 1000,
+            readTimeInMs: readTimeInMs,
         });
 
         return article;
