@@ -8,6 +8,9 @@ import {
 } from "./content-block.schema";
 import { createId } from "../../utils/ids";
 
+export const DEFAULT_BLOCKS_TEXT = "##";
+export const DEFAULT_BLOCKS_TEXT_SEPARATOR = "##";
+
 export interface IArticle {
     // Core info
     articleId: string;
@@ -25,6 +28,14 @@ export interface IArticle {
     // Content
     blockIds: BlockId[];
     blocks: Map<BlockId, ContentBlockType>;
+
+    /**
+     * This is all of the textual data in blocks combined
+     * This is useful for search (MongoDB), creating summary,
+     * read time calculation, etc. Here block text will be separated by
+     * ##<blockId>##
+     **/
+    blocksText: string;
 }
 
 @Schema({ timestamps: true })
@@ -76,10 +87,17 @@ export class Article extends Document implements IArticle {
     })
     blocks: Map<BlockId, ContentBlockType>;
 
+    @Prop({ type: String, default: DEFAULT_BLOCKS_TEXT, required: true })
+    blocksText: string;
+
     @Prop({ type: Boolean, required: true, default: false })
     isPublic: boolean;
 }
 
 export const ArticleSchema = SchemaFactory.createForClass(Article);
 
-ArticleSchema.index({ headline: "text", description: "text" });
+ArticleSchema.index({
+    headline: "text",
+    description: "text",
+    blocksText: "text",
+});

@@ -91,7 +91,7 @@ export class ArticleController {
             );
         }
 
-        const article = await this.serv.getArticle(req.params.articleId);
+        const article = await this.serv.getArticleForEdit(req.params.articleId);
         await this.serv.updateNonFileContent(article, body);
         await this.serv.updateArticleInfoUsingBlocks(req.params.articleId);
         return { message: "Updated successfully" };

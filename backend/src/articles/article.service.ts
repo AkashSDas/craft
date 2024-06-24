@@ -2,7 +2,15 @@ import { BadRequestException, Injectable } from "@nestjs/common";
 import { ArticleRepository } from "./article.repository";
 import { Types } from "mongoose";
 import { UpdateArticleContentDto } from "./dto";
-import { Article, BlockId, Heading, Image, Paragraph } from "./schema";
+import {
+    Article,
+    BlockId,
+    DEFAULT_BLOCKS_TEXT,
+    DEFAULT_BLOCKS_TEXT_SEPARATOR,
+    Heading,
+    Image,
+    Paragraph,
+} from "./schema";
 import { UploadApiResponse, v2 } from "cloudinary";
 import { UploadedFile } from "express-fileupload";
 
@@ -20,6 +28,10 @@ export class ArticleService {
 
     async getArticle(articleId: string) {
         return await this.repo.getArticleById(articleId);
+    }
+
+    async getArticleForEdit(articleId: string) {
+        return await this.repo.getArticleById(articleId, false);
     }
 
     async reorderBlocks(article: Article, blockIds: BlockId[]) {
@@ -54,7 +66,6 @@ export class ArticleService {
         const deleteIds: string[] = [];
         for (const blockId of Object.keys(existingFiles)) {
             const block = article.blocks.get(blockId);
-            console.log({ block });
             if (block) {
                 if (block.type === "image" && block.value?.id) {
                     deleteIds.push(block.value.id);
@@ -63,7 +74,6 @@ export class ArticleService {
                 delete existingFiles[blockId];
             }
         }
-        console.log(deleteIds, existingFiles);
 
         if (deleteIds.length > 0) {
             const deletePromises: ReturnType<any>[] = [];
@@ -138,9 +148,6 @@ export class ArticleService {
         const coverImg = Array.from(blocks.values()).find(
             (block) => block.type === "image",
         ) as Image | undefined;
-        console.log(heading);
-        console.log(description);
-        console.log(coverImg);
 
         const update: Partial<Article> = {};
         if (heading) {
@@ -154,6 +161,87 @@ export class ArticleService {
         }
 
         await this.repo.updateOne(articleId, update);
+    }
+
+    updateBlockTextForArticle(
+        article: Article,
+        dto: UpdateArticleContentDto,
+        deletedBlockIds: string[],
+    ) {
+        const { blocksText } = article;
+        const { addedBlockIds, blocks, changedBlockIds } = dto;
+
+        // Prepare exsiting text data to be updated
+
+        // > "##blockId1##content1##blockId2##content2".split("##")
+        // [ '', 'blockId1', 'content1', 'blockId2', 'content2' ]
+        const text = blocksText.split(DEFAULT_BLOCKS_TEXT_SEPARATOR);
+        let textData = text.slice(1, text.length); // skipping 1st empty str
+        if (text.length === 2) {
+            // > "##".split("##")
+            // [ '', '' ]
+            textData = []; // empty text
+        }
+
+        const textRecord: Record<BlockId, string> = {};
+        for (let i = 0; i < textData.length; i += 2) {
+            const blockId = textData[i];
+            if (blockId !== "") {
+                const content = textData[i + 1];
+                textRecord[blockId] = content;
+            }
+        }
+
+        // Update existing blocks and add new blocks
+
+        const upsertBlockIds = new Set([...changedBlockIds, ...addedBlockIds]);
+        for (const blockId of Array.from(upsertBlockIds)) {
+            const block = blocks[blockId];
+
+            switch (block.type) {
+                case "quote":
+                    textRecord[blockId] = block.value.text;
+                    break;
+                case "paragraph":
+                    textRecord[blockId] = block.value.text;
+                    break;
+                case "heading":
+                    textRecord[blockId] = block.value.text;
+                    break;
+                case "image":
+                    textRecord[blockId] = block.value.caption ?? "";
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        // Delete blocks that are not in the new block ids
+
+        for (const blockId of deletedBlockIds) {
+            delete textRecord[blockId];
+        }
+
+        // calculate read time (in minutes)
+
+        let readTime = 0;
+        for (const blockId of Object.keys(textRecord)) {
+            const text = textRecord[blockId];
+            readTime += text.split(/\s+/).length / 200;
+        }
+
+        // Get updated text
+
+        let updatedText = "";
+        for (const blockId of Object.keys(textRecord)) {
+            updatedText += `##${blockId}##${textRecord[blockId]}`;
+        }
+
+        if (updatedText === "") {
+            updatedText = DEFAULT_BLOCKS_TEXT;
+        }
+
+        return { readTime, updatedText };
     }
 
     async updateNonFileContent(article: Article, dto: UpdateArticleContentDto) {
@@ -212,11 +300,21 @@ export class ArticleService {
         }
         await Promise.all(deletePromises);
 
+        // Get text data and calculate read time
+
+        const { readTime, updatedText } = this.updateBlockTextForArticle(
+            article,
+            dto,
+            deletedBlockIds,
+        );
+
         // Update article in database
 
         await this.repo.updateOne(article.articleId, {
             blockIds: article.blockIds,
             blocks: article.blocks,
+            blocksText: updatedText,
+            readTimeInMs: Math.round(readTime) * 60 * 1000,
         });
 
         return article;
@@ -233,7 +331,6 @@ export class ArticleService {
     async publishArticle(article: Article) {
         // check if the article has headline, description, cover image
         // if not, throw error
-        console.log(article);
 
         if (
             !article.headline ||
