@@ -144,4 +144,8 @@ export const endpoints = Object.freeze({
     },
     getTrendingAuthors: `users/authors/trending`,
     updateProfile: "users",
+
+    // Views
+    addViewForArticle: "views",
+    updateReadTimeForArticle: "views",
 });
