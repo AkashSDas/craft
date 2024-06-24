@@ -9,6 +9,7 @@ import { FollowersModule } from "./followers/followers.module";
 import { LikesModule } from "./likes/likes.module";
 import { CommentModule } from "./comments/comments.module";
 import { ReadingListsModule } from "./reading-lists/readling-lists.module";
+import { ViewsModule } from "./views/views.module";
 
 @Module({
     imports: [
@@ -21,6 +22,7 @@ import { ReadingListsModule } from "./reading-lists/readling-lists.module";
         LikesModule,
         CommentModule,
         ReadingListsModule,
+        ViewsModule,
     ],
     providers: [CloudinaryProvider],
 })
