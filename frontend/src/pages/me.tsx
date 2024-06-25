@@ -1,3 +1,4 @@
+import { EmptyHeading } from "@app/components/shared/headings/EmptyHeading";
 import { Layout } from "@app/components/shared/layout/Layout";
 import { EditArticleCard } from "@app/components/studio/EditArticleCard";
 import { useUser } from "@app/hooks/auth";
@@ -111,28 +112,6 @@ export default function UserArticlesPage() {
                 </HStack>
             )}
         </Layout>
-    );
-}
-
-function EmptyHeading() {
-    return (
-        <Heading as="h3" color="white" fontSize={{ base: "36px", sm: "40px" }}>
-            <Text as="span" {...fontStyles["expandedBoldItalic"]}>
-                E
-            </Text>
-            <Text as="span" {...fontStyles["expandedBoldItalic"]}>
-                m
-            </Text>
-            <Text as="span" {...fontStyles["condensedMedium"]}>
-                p
-            </Text>
-            <Text as="span" {...fontStyles["condensedMedium"]}>
-                t
-            </Text>
-            <Text as="span" {...fontStyles["expandedLightItalic"]}>
-                y
-            </Text>
-        </Heading>
     );
 }
 
