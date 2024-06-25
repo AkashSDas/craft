@@ -1,6 +1,7 @@
 import { useGetAuthorArticles } from "@app/hooks/user";
-import { Spinner, Text, VStack } from "@chakra-ui/react";
+import { HStack, Spinner, Text, VStack } from "@chakra-ui/react";
 import { ArticlePreviewCard } from "../shared/article-preview-card/ArticlePreviewCard";
+import { EmptyHeading } from "../shared/headings/EmptyHeading";
 
 type Props = {
     authorId: string;
@@ -27,6 +28,20 @@ export function AuthorArticlesTabContent(props: Props) {
 
     return (
         <VStack w="100%" gap="20px">
+            {articles.length === 0 ? (
+                <HStack
+                    h={{ base: "200px", sm: "280px" }}
+                    w="100%"
+                    borderRadius="4px"
+                    bgColor="black"
+                    justifyContent="center"
+                    gap={{ base: "1rem", sm: "2rem" }}
+                    flexDirection={{ base: "column", sm: "row" }}
+                >
+                    <EmptyHeading />
+                </HStack>
+            ) : null}
+
             {articles.map((article) => {
                 return (
                     <ArticlePreviewCard

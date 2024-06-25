@@ -51,6 +51,7 @@ export function AuthorProfileLayout(props: Props) {
                     isActive={tab === "posts"}
                     as={Link}
                     href={`/authors/${authorId}`}
+                    prefetch
                 >
                     Articles
                 </Button>
@@ -59,6 +60,7 @@ export function AuthorProfileLayout(props: Props) {
                     isActive={tab === "readingLists"}
                     as={Link}
                     href={`/authors/${authorId}/lists`}
+                    prefetch
                 >
                     Reading Lists
                 </Button>
