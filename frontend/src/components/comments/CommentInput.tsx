@@ -12,7 +12,7 @@ import {
     useToast,
 } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -39,6 +39,7 @@ export function CommentInput(props: Props): React.JSX.Element {
         defaultValues,
         resolver: zodResolver(schema),
     });
+    const queryClient = useQueryClient();
 
     const mutation = useMutation({
         mutationFn: (text: string) => addComment(props.articleId, text),
@@ -46,6 +47,9 @@ export function CommentInput(props: Props): React.JSX.Element {
             if (data.success) {
                 form.reset();
                 props.closeDrawer();
+                queryClient.invalidateQueries({
+                    queryKey: ["comments", props.articleId],
+                });
 
                 toast({
                     title: "Success",

@@ -37,6 +37,9 @@ export function CommentCard({ comment, articleId }: Props) {
                     height={36}
                     width={36}
                     style={{
+                        width: "36px",
+                        minWidth: "36px",
+                        height: "36px",
                         objectFit: "cover",
                         borderRadius: "50%",
                         border: "2px solid #d67844",
@@ -46,7 +49,12 @@ export function CommentCard({ comment, articleId }: Props) {
 
             <VStack flexGrow={1} w="100%" alignItems="start" gap="0px">
                 <HStack>
-                    <Text fontWeight="600" fontSize="14px">
+                    <Text
+                        fontWeight="600"
+                        fontSize="14px"
+                        as={Link}
+                        href={`/authors/${author.userId}`}
+                    >
                         {author.username}
                     </Text>
                     <Text fontSize="14px" color="gray" fontWeight="500">
