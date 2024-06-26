@@ -28,6 +28,11 @@ export class ViewsRepsitory {
         startTimestampInMs: number,
         endTimestampInMs: number,
     ) {
+        console.log({ startTimestampInMs, endTimestampInMs });
+        console.log({
+            startTimestampInMs: new Date(startTimestampInMs),
+            endTimestampInMs: new Date(endTimestampInMs),
+        });
         const results = await this.model.aggregate([
             {
                 $match: {
@@ -47,14 +52,15 @@ export class ViewsRepsitory {
                         },
                     },
                     totalViews: { $sum: 1 },
-                    totalReadTime: { $sum: "$readTimeInMs" },
+                    totalReadTimeInMs: { $sum: "$readTimeInMs" },
                 },
             },
             {
                 $project: {
                     date: "$_id",
                     totalViews: 1,
-                    totalReadTime: 1,
+                    totalReadTimeInMs: 1,
+                    _id: 0,
                 },
             },
             {

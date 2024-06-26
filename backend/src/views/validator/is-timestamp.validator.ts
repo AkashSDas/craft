@@ -16,6 +16,7 @@ export function IsTimestamp(validationOptions?: ValidationOptions) {
             options: validationOptions,
             validator: {
                 validate(value: any, args: ValidationArguments) {
+                    value = Number(value);
                     return (
                         typeof value === "number" &&
                         !isNaN(new Date(value).getTime())
@@ -46,9 +47,11 @@ export function IsAfter(
             validator: {
                 validate(value: any, args: ValidationArguments) {
                     const [relatedPropertyName] = args.constraints;
-                    const relatedValue = (args.object as any)[
+                    let relatedValue = (args.object as any)[
                         relatedPropertyName
                     ];
+                    value = Number(value);
+                    relatedValue = Number(relatedValue);
                     return (
                         typeof value === "number" &&
                         typeof relatedValue === "number" &&

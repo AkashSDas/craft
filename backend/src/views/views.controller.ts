@@ -94,8 +94,11 @@ export class ViewsController {
     ) {
         const views = await this.serv.getUserArticlesMonthlyViewsAggregated(
             req.user._id,
-            query.startTimestampInMs,
-            query.endTimestampInMs,
+
+            // Validators only check the values but since they're query they will
+            // come in as string
+            Number(query.startTimestampInMs),
+            Number(query.endTimestampInMs),
         );
 
         return { views };
