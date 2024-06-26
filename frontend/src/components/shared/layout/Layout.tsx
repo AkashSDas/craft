@@ -6,6 +6,8 @@ import { TrendingAuthors } from "./TrendingAuthors";
 
 type Props = PropsWithChildren<{
     mainClassName?: string;
+    hideSidebar?: boolean;
+    fullWidth?: boolean;
 }>;
 
 export function Layout(props: Props) {
@@ -20,9 +22,12 @@ export function Layout(props: Props) {
             alignItems="start"
             pos="relative"
         >
-            <VStack w="100%" mr={{ base: 0, lg: "484px" }}>
+            <VStack
+                w="100%"
+                mr={{ base: 0, lg: props.hideSidebar ? 0 : "484px" }}
+            >
                 <VStack
-                    maxWidth="700px"
+                    maxWidth={props.fullWidth ? "100%" : "700px"}
                     w="100%"
                     alignItems="start"
                     gap="16px"
@@ -32,25 +37,27 @@ export function Layout(props: Props) {
                 </VStack>
             </VStack>
 
-            <Show above="lg">
-                <VStack
-                    w="484px"
-                    h="calc(100vh - 102px)"
-                    alignItems="start"
-                    borderLeft="1px solid"
-                    borderLeftColor="gray.200"
-                    pr="2rem"
-                    pl="2rem"
-                    pos="fixed"
-                    right={0}
-                    overflow="auto"
-                    gap="2rem"
-                    pb="4rem"
-                >
-                    <TrendingArticles />
-                    <TrendingAuthors />
-                </VStack>
-            </Show>
+            {props.hideSidebar ? null : (
+                <Show above="lg">
+                    <VStack
+                        w="484px"
+                        h="calc(100vh - 102px)"
+                        alignItems="start"
+                        borderLeft="1px solid"
+                        borderLeftColor="gray.200"
+                        pr="2rem"
+                        pl="2rem"
+                        pos="fixed"
+                        right={0}
+                        overflow="auto"
+                        gap="2rem"
+                        pb="4rem"
+                    >
+                        <TrendingArticles />
+                        <TrendingAuthors />
+                    </VStack>
+                </Show>
+            )}
         </HStack>
     );
 }
