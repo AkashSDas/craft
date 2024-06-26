@@ -148,4 +148,5 @@ export const endpoints = Object.freeze({
     // Views
     addViewForArticle: "views",
     updateReadTimeForArticle: "views",
+    getUserArticlesMonthlyViews: "views/monthly-views",
 });

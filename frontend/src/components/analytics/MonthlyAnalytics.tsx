@@ -1,4 +1,5 @@
 import { useUser } from "@app/hooks/auth";
+import { getUserArticlesMonthlyViews } from "@app/services/views";
 import { OVERALL_MONTHS, getMonthsInRange } from "@app/utils/datetime";
 import { ChevronDownIcon } from "@chakra-ui/icons";
 import {
@@ -10,13 +11,15 @@ import {
     MenuButton,
     MenuItem,
     MenuList,
+    Skeleton,
     Text,
     VStack,
 } from "@chakra-ui/react";
+import { useQuery } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
 
 export function MonthlyAnalytics() {
-    const { user } = useUser();
+    const { user, isLoggedIn } = useUser();
     const months = useMemo(
         function () {
             return getMonthsInRange(
@@ -52,6 +55,30 @@ export function MonthlyAnalytics() {
         },
         [selectedMonth]
     );
+
+    const { data, isLoading, isError } = useQuery({
+        queryKey: [user?._id, "monthlyAnalyitcs", selectedMonth],
+        staleTime: 1000 * 60 * 60 * 24, // 24 hours
+        enabled: isLoggedIn,
+        async queryFn() {
+            const [month, year] = selectedMonth.split(" ");
+            const startDate = new Date(
+                Number(year),
+                OVERALL_MONTHS.indexOf(month),
+                1
+            );
+            let endDate = new Date(
+                Number(year),
+                OVERALL_MONTHS.indexOf(month) + 1,
+                0
+            );
+
+            return getUserArticlesMonthlyViews(
+                startDate.getTime(),
+                endDate.getTime()
+            );
+        },
+    });
 
     return (
         <VStack gap="24px" w="100%">
@@ -114,6 +141,12 @@ export function MonthlyAnalytics() {
                     </MenuList>
                 </Menu>
             </HStack>
+
+            <Divider borderColor="gray.200" />
+
+            {isLoading || isError ? (
+                <Skeleton h="300px" w="100%" borderRadius="4px" />
+            ) : null}
         </VStack>
     );
 }
