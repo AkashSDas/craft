@@ -11,7 +11,13 @@ export class ViewsService {
     ) {}
 
     async addViewForArticle(userId: Types.ObjectId, articleId: Types.ObjectId) {
-        const exists = await this.repo.exsits({ articleId, userId });
+        const exists = await this.repo.exsits({
+            articleId,
+            userId,
+            updatedAt: {
+                $gte: new Date(Date.now() - 1000 * 60 * 60 * 3), // 3 hours
+            },
+        });
         if (exists) {
             throw new BadRequestException("View already exists");
         }
