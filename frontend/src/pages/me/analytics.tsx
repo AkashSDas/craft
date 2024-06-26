@@ -1,3 +1,4 @@
+import { MonthlyAnalytics } from "@app/components/analytics/MonthlyAnalytics";
 import { EmptyHeading } from "@app/components/shared/headings/EmptyHeading";
 import { Layout } from "@app/components/shared/layout/Layout";
 import { EditArticleCard } from "@app/components/studio/EditArticleCard";
@@ -41,8 +42,9 @@ export default function UserArticlesPage() {
     return (
         <Layout hideSidebar fullWidth>
             <AnalyticsHeading />
-            <Text color="gray.500">These stats are updated hourly.</Text>
             <Divider my="1rem" borderColor="gray.300" />
+
+            <MonthlyAnalytics />
         </Layout>
     );
 }

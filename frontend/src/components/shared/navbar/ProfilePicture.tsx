@@ -121,6 +121,28 @@ export function ProfilePicture() {
                 </MenuItem>
 
                 <MenuItem
+                    as={Link}
+                    href="/me/analytics"
+                    h="36px"
+                    borderRadius="4px"
+                    transition="transform 0.3s cubic-bezier(.5,2.5,.7,.7)"
+                    transformOrigin="center"
+                    fontWeight="500"
+                    _hover={{ bgColor: "gray.100" }}
+                    _active={{ bgColor: "gray.200", transform: "scale(0.98)" }}
+                    icon={
+                        <Image
+                            src="/icons/chart.png"
+                            alt="Analytics"
+                            width={18}
+                            height={18}
+                        />
+                    }
+                >
+                    Analytics
+                </MenuItem>
+
+                <MenuItem
                     h="36px"
                     borderRadius="4px"
                     transition="transform 0.3s cubic-bezier(.5,2.5,.7,.7)"

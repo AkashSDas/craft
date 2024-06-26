@@ -4,4 +4,5 @@ export type User = {
     username: string;
     email: string;
     profilePic?: { id?: string; URL: string };
+    createdAt: string;
 };
