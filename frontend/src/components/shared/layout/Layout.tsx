@@ -27,7 +27,7 @@ export function Layout(props: Props) {
                 mr={{ base: 0, lg: props.hideSidebar ? 0 : "484px" }}
             >
                 <VStack
-                    maxWidth={props.fullWidth ? "100%" : "700px"}
+                    maxWidth={props.fullWidth ? "1000px" : "700px"}
                     w="100%"
                     alignItems="start"
                     gap="16px"
