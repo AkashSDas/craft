@@ -68,4 +68,17 @@ export class ViewsService {
             );
         }
     }
+
+    async getUserArticlesMonthlyViewsAggregated(
+        userId: Types.ObjectId,
+        startTimestampInMs: number,
+        endTimestampInMs: number,
+    ) {
+        const views = await this.repo.getUserArticlesAggregatedViews(
+            userId,
+            startTimestampInMs,
+            endTimestampInMs,
+        );
+        return views;
+    }
 }

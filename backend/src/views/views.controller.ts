@@ -1,10 +1,13 @@
 import {
     Body,
     Controller,
+    Get,
     HttpCode,
     HttpStatus,
+    Param,
     Post,
     Put,
+    Query,
     Req,
     Res,
     UseGuards,
@@ -15,6 +18,7 @@ import { IRequest } from "src";
 import { AddViewDto, UpdateReadTimeDto } from "./dto";
 import { ArticleService } from "src/articles/article.service";
 import { Response } from "express";
+import { MonthlyViewsQuery } from "./query";
 
 @Controller("views")
 export class ViewsController {
@@ -79,5 +83,21 @@ export class ViewsController {
                 });
             } catch (e) {}
         }
+    }
+
+    @Get("monthly-views")
+    @HttpCode(HttpStatus.OK)
+    @UseGuards(AccessTokenGuard)
+    async getUserArticlesMonthlyViewsAggregated(
+        @Req() req: IRequest,
+        @Query() query: MonthlyViewsQuery,
+    ) {
+        const views = await this.serv.getUserArticlesMonthlyViewsAggregated(
+            req.user._id,
+            query.startTimestampInMs,
+            query.endTimestampInMs,
+        );
+
+        return { views };
     }
 }
