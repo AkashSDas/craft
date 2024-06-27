@@ -7,6 +7,7 @@ export interface IView {
     articleId: Types.ObjectId;
     userId: Types.ObjectId;
     readTimeInMs: number;
+    hasRead: boolean;
 }
 
 @Schema({ timestamps: true })
@@ -19,6 +20,9 @@ export class View extends Document implements IView {
 
     @Prop({ type: Number, required: true, default: 0 })
     readTimeInMs: number;
+
+    @Prop({ type: Boolean, required: true, default: false })
+    hasRead: boolean;
 }
 
 export const ViewSchema = SchemaFactory.createForClass(View);

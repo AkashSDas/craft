@@ -18,7 +18,7 @@ import { IRequest } from "src";
 import { AddViewDto, UpdateReadTimeDto } from "./dto";
 import { ArticleService } from "src/articles/article.service";
 import { Response } from "express";
-import { MonthlyViewsQuery } from "./query";
+import { LifetimeViewsQuery, MonthlyViewsQuery } from "./query";
 
 @Controller("views")
 export class ViewsController {
@@ -99,6 +99,21 @@ export class ViewsController {
             // come in as string
             Number(query.startTimestampInMs),
             Number(query.endTimestampInMs),
+        );
+
+        return { views };
+    }
+
+    @Get("lifetime-views")
+    @HttpCode(HttpStatus.OK)
+    @UseGuards(AccessTokenGuard)
+    async getUserArticlesLifetimeViewsAggregated(
+        @Req() req: IRequest,
+        @Query() query: LifetimeViewsQuery,
+    ) {
+        const views = await this.serv.getUserArticlesLifetimeViewsAggregated(
+            req.user._id,
+            query,
         );
 
         return { views };

@@ -2,6 +2,7 @@ import { BadRequestException, Injectable } from "@nestjs/common";
 import { ViewsRepsitory } from "./views.repository";
 import { Types } from "mongoose";
 import { ArticleRepository } from "src/articles/article.repository";
+import { LifetimeViewsQuery } from "./query";
 
 @Injectable()
 export class ViewsService {
@@ -63,6 +64,7 @@ export class ViewsService {
                             readTimeInMs,
                             article.readTimeInMs * 2,
                         ),
+                        hasRead: readTimeInMs > 1000 * 30, // 30 seconds
                     },
                 },
             );
@@ -79,6 +81,18 @@ export class ViewsService {
             startTimestampInMs,
             endTimestampInMs,
         );
+        return views;
+    }
+
+    async getUserArticlesLifetimeViewsAggregated(
+        userId: Types.ObjectId,
+        query: LifetimeViewsQuery,
+    ) {
+        const views = this.repo.getUserArticlesLifetimeViewsAggregated(
+            userId,
+            query,
+        );
+
         return views;
     }
 }
