@@ -260,6 +260,10 @@ export class ArticleService {
             if (block.type === "image" && changedBlockIds.includes(blockId)) {
                 const existingBlock = article.blocks.get(blockId) as Image;
                 (block.value as any).id = existingBlock?.value?.id;
+                const url = block.value.URL;
+                if (typeof url === "string" && url.startsWith("blob:")) {
+                    (block.value as any).URL = undefined;
+                }
             }
 
             article.blocks.set(blockId, block as any);
