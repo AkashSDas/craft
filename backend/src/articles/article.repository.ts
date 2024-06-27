@@ -211,4 +211,101 @@ export class ArticleRepository {
     async deleteOne(filter: FilterQuery<Article>): Promise<any> {
         return await this.model.deleteOne(filter);
     }
+
+    async getUserArticlesLifetimeStats(
+        authorId: Types.ObjectId,
+        sort: Record<string, number>,
+    ) {
+        const results = await this.model.aggregate([
+            { $match: { authorIds: authorId, isPublic: true } },
+            {
+                $group: {
+                    _id: "$_id",
+                    headline: { $first: "$headline" },
+                    coverImage: { $first: "$coverImage" },
+                    lastUpdatedAt: { $first: "$lastUpdatedAt" },
+                    readTimeInMs: { $first: "$readTimeInMs" },
+                },
+            },
+            {
+                $lookup: {
+                    from: "likes",
+                    localField: "_id",
+                    foreignField: "articleId",
+                    as: "likes",
+                },
+            },
+            {
+                $addFields: {
+                    likeCount: { $size: "$likes" },
+                },
+            },
+            {
+                $lookup: {
+                    from: "comments",
+                    localField: "_id",
+                    foreignField: "articleId",
+                    as: "comments",
+                },
+            },
+            {
+                $addFields: {
+                    commentCount: { $size: "$comments" },
+                },
+            },
+            {
+                $project: {
+                    _id: 1,
+                    headline: 1,
+                    coverImage: 1,
+                    lastUpdatedAt: 1,
+                    readTimeInMs: 1,
+                    likeCount: 1,
+                    commentCount: 1,
+                },
+            },
+            {
+                $lookup: {
+                    from: "views",
+                    localField: "_id",
+                    foreignField: "articleId",
+                    as: "views",
+                },
+            },
+            {
+                $addFields: {
+                    totalViews: { $size: "$views" },
+                    totalReadTimeInMs: { $sum: "$views.readTimeInMs" },
+                    totalReads: {
+                        $sum: {
+                            $size: {
+                                $filter: {
+                                    input: "$views",
+                                    as: "view",
+                                    cond: { $eq: ["$$view.hasRead", true] },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+            {
+                $project: {
+                    _id: 1,
+                    headline: 1,
+                    coverImage: 1,
+                    lastUpdatedAt: 1,
+                    readTimeInMs: 1,
+                    likeCount: 1,
+                    commentCount: 1,
+                    totalViews: { $ifNull: ["$totalViews", 0] },
+                    totalReadTimeInMs: { $ifNull: ["$totalReadTimeInMs", 0] },
+                    totalReads: { $ifNull: ["$totalReads", 0] },
+                },
+            },
+            { $sort: sort as any },
+        ]);
+
+        return results;
+    }
 }
