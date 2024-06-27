@@ -1,3 +1,4 @@
+import { LifetimeAnalytics } from "@app/components/analytics/LifetimeAnalytics";
 import { MonthlyAnalytics } from "@app/components/analytics/MonthlyAnalytics";
 import { EmptyHeading } from "@app/components/shared/headings/EmptyHeading";
 import { Layout } from "@app/components/shared/layout/Layout";
@@ -12,6 +13,7 @@ import {
     Divider,
     HStack,
     Heading,
+    Spacer,
     Spinner,
     Text,
     VStack,
@@ -45,6 +47,11 @@ export default function UserArticlesPage() {
             <Divider my="1rem" borderColor="gray.300" />
 
             <MonthlyAnalytics />
+            <Divider my="1rem" borderColor="gray.300" />
+
+            <LifetimeAnalytics />
+
+            <Spacer my="2rem" />
         </Layout>
     );
 }
