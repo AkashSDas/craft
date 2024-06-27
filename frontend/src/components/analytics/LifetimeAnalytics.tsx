@@ -19,6 +19,7 @@ import {
 } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
+import Link from "next/link";
 import { useState } from "react";
 
 const FILTER_PROPERTY = {
@@ -315,57 +316,95 @@ export function LifetimeAnalytics() {
                                               </Text>
                                           </HStack>
 
-                                          <HStack h="28px" gap="4px">
+                                          <HStack
+                                              h="28px"
+                                              gap="4px"
+                                              as={Link}
+                                              href={`/articles/${view.articleId}`}
+                                              target="_blank"
+                                          >
                                               <Text
-                                                  fontFamily={
-                                                      fontStyles["expandedBold"]
-                                                          .fontFamily
-                                                  }
-                                                  fontWeight="700"
-                                                  fontSize="18px"
-                                              >
-                                                  {view.totalViews}
-                                              </Text>
-
-                                              <Text
-                                                  fontFamily={
-                                                      fontStyles[
-                                                          "condensedMedium"
-                                                      ].fontFamily
-                                                  }
-                                                  fontWeight="500"
                                                   fontSize="14px"
+                                                  color="gray.400"
+                                                  fontWeight="medium"
                                               >
-                                                  Views
-                                              </Text>
-                                          </HStack>
-
-                                          <HStack h="28px" gap="4px">
-                                              <Text
-                                                  fontFamily={
-                                                      fontStyles["expandedBold"]
-                                                          .fontFamily
-                                                  }
-                                                  fontWeight="700"
-                                                  fontSize="18px"
-                                              >
-                                                  {view.totalReads}
+                                                  View article
                                               </Text>
 
-                                              <Text
-                                                  fontFamily={
-                                                      fontStyles[
-                                                          "condensedMedium"
-                                                      ].fontFamily
-                                                  }
-                                                  fontWeight="500"
-                                                  fontSize="14px"
-                                              >
-                                                  Reads
-                                              </Text>
+                                              <Image
+                                                  src="/icons/maximize.png"
+                                                  alt="Read time"
+                                                  width={20}
+                                                  height={20}
+                                              />
                                           </HStack>
                                       </HStack>
                                   </VStack>
+
+                                  <HStack
+                                      gap="4px"
+                                      px="8px"
+                                      py="4px"
+                                      border="1.5px solid"
+                                      borderColor="gray.200"
+                                      borderRadius="4px"
+                                      divider={
+                                          <Divider
+                                              orientation="vertical"
+                                              h="20px"
+                                              w="1px"
+                                              borderColor="gray.200"
+                                          />
+                                      }
+                                  >
+                                      <HStack h="28px" gap="4px">
+                                          <Text
+                                              fontFamily={
+                                                  fontStyles["expandedBold"]
+                                                      .fontFamily
+                                              }
+                                              fontWeight="700"
+                                              fontSize="18px"
+                                          >
+                                              {view.totalViews}
+                                          </Text>
+
+                                          <Text
+                                              fontFamily={
+                                                  fontStyles["condensedMedium"]
+                                                      .fontFamily
+                                              }
+                                              fontWeight="500"
+                                              fontSize="14px"
+                                          >
+                                              Views
+                                          </Text>
+                                      </HStack>
+
+                                      <HStack h="28px" gap="4px">
+                                          <Text
+                                              fontFamily={
+                                                  fontStyles["expandedBold"]
+                                                      .fontFamily
+                                              }
+                                              fontWeight="700"
+                                              fontSize="18px"
+                                          >
+                                              {view.totalReads}
+                                          </Text>
+
+                                          <Text
+                                              fontFamily={
+                                                  fontStyles["condensedMedium"]
+                                                      .fontFamily
+                                              }
+                                              fontWeight="500"
+                                              fontSize="14px"
+                                          >
+                                              Reads
+                                          </Text>
+                                      </HStack>
+                                  </HStack>
                               </HStack>
                           );
                       })}

@@ -28,6 +28,7 @@ const GetUserArticlesLifetimeViews = z.object({
             totalReads: z.number().min(0),
             totalViews: z.number().min(0),
             _id: z.string(),
+            articleId: z.string(),
         })
     ),
 });
