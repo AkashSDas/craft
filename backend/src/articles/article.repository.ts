@@ -225,6 +225,7 @@ export class ArticleRepository {
                     coverImage: { $first: "$coverImage" },
                     lastUpdatedAt: { $first: "$lastUpdatedAt" },
                     readTimeInMs: { $first: "$readTimeInMs" },
+                    articleId: { $first: "$articleId" },
                 },
             },
             {
@@ -262,6 +263,7 @@ export class ArticleRepository {
                     readTimeInMs: 1,
                     likeCount: 1,
                     commentCount: 1,
+                    articleId: 1,
                 },
             },
             {
@@ -298,6 +300,7 @@ export class ArticleRepository {
                     readTimeInMs: 1,
                     likeCount: 1,
                     commentCount: 1,
+                    articleId: 1,
                     totalViews: { $ifNull: ["$totalViews", 0] },
                     totalReadTimeInMs: { $ifNull: ["$totalReadTimeInMs", 0] },
                     totalReads: { $ifNull: ["$totalReads", 0] },
