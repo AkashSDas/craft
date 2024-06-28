@@ -42,13 +42,13 @@ export function TrendingArticles() {
 
                 return (
                     <HStack
+                        key={art._id}
                         w="100%"
                         p="4px"
                         gap="12px"
                         alignItems="start"
                         as={Link}
                         href={`/articles/${art.articleId}`}
-                        key={art.articleId}
                         transition="transform 0.3s cubic-bezier(.5,2.5,.7,.7)"
                         _hover={{
                             borderColor: "gray.300",
@@ -111,7 +111,13 @@ function ArticleSkeletons(props: { isLoaded: boolean }) {
         <>
             {[1, 2, 3].map((item) => {
                 return (
-                    <HStack w="100%" p="2px" gap="12px" alignItems="start">
+                    <HStack
+                        key={item.toString()}
+                        w="100%"
+                        p="2px"
+                        gap="12px"
+                        alignItems="start"
+                    >
                         <Skeleton
                             isLoaded={props.isLoaded}
                             h="96px"

@@ -46,6 +46,7 @@ export function AuthorReadingListTabContent(props: Props) {
             {readingLists.map((list) => {
                 return (
                     <Link
+                        key={list._id}
                         href={`/authors/${authorId}/lists/${list._id}`}
                         style={{ width: "100%" }}
                     >

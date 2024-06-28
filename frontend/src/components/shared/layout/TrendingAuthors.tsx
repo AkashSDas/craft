@@ -98,7 +98,13 @@ function AuthorSkeletons(props: { isLoaded: boolean }) {
         <>
             {[1, 2, 3].map((item) => {
                 return (
-                    <HStack w="100%" p="2px" gap="12px" alignItems="start">
+                    <HStack
+                        key={item.toString()}
+                        w="100%"
+                        p="2px"
+                        gap="12px"
+                        alignItems="start"
+                    >
                         <SkeletonCircle
                             isLoaded={props.isLoaded}
                             h="48px"
