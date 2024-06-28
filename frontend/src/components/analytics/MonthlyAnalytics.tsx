@@ -15,6 +15,7 @@ import {
     Skeleton,
     Text,
     VStack,
+    useBreakpointValue,
 } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
@@ -27,6 +28,7 @@ import { monaSansCondensed, monasansExpanded } from "@app/lib/chakra";
 import { fontStyles } from "@app/utils/fonts";
 
 export function MonthlyAnalytics() {
+    const isSm = useBreakpointValue({ base: true, sm: false });
     const { user, isLoggedIn } = useUser();
     const months = useMemo(
         function () {
@@ -137,7 +139,12 @@ export function MonthlyAnalytics() {
 
     return (
         <VStack gap="24px" w="100%">
-            <HStack w="100%" justifyContent="space-between" gap="12px">
+            <HStack
+                w="100%"
+                justifyContent="space-between"
+                gap={{ base: "18px", sm: "12px" }}
+                flexDirection={{ base: "column", sm: "row" }}
+            >
                 <VStack flexGrow={1} w="100%" alignItems="start">
                     <Heading
                         variant="h2"
@@ -168,7 +175,7 @@ export function MonthlyAnalytics() {
                     <MenuButton
                         as={Button}
                         variant="paleSolid"
-                        w="190px"
+                        w={{ base: "100%", sm: "190px" }}
                         rightIcon={<ChevronDownIcon fontSize="20px" />}
                     >
                         {selectedMonth}
@@ -272,7 +279,7 @@ export function MonthlyAnalytics() {
             </HStack>
 
             <Skeleton
-                h="300px"
+                h={isSm ? "200px" : "300px"}
                 w="100%"
                 borderRadius="4px"
                 isLoaded={!(isLoading || isError)}
@@ -282,7 +289,7 @@ export function MonthlyAnalytics() {
             >
                 <Box
                     w="100%"
-                    h="295px"
+                    h={isSm ? "200px" : "295px"}
                     p="4px"
                     borderRadius="4px"
                     border="2px solid"

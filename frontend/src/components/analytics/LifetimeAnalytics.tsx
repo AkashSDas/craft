@@ -78,7 +78,12 @@ export function LifetimeAnalytics() {
 
     return (
         <VStack gap="24px" w="100%">
-            <HStack w="100%" justifyContent="space-between" gap="12px">
+            <HStack
+                w="100%"
+                justifyContent="space-between"
+                gap={{ base: "18px", sm: "12px" }}
+                flexDirection={{ base: "column", sm: "row" }}
+            >
                 <VStack flexGrow={1} w="100%" alignItems="start">
                     <Heading
                         variant="h2"
@@ -109,7 +114,7 @@ export function LifetimeAnalytics() {
                     <MenuButton
                         as={Button}
                         variant="paleSolid"
-                        w="190px"
+                        w={{ base: "100%", sm: "190px" }}
                         rightIcon={<ChevronDownIcon fontSize="20px" />}
                     >
                         {selectedMenu}
@@ -186,7 +191,7 @@ export function LifetimeAnalytics() {
                     ? [1, 2, 3].map((item) => {
                           return (
                               <Skeleton
-                                  key={item}
+                                  key={item.toString()}
                                   minH="102px"
                                   w="100%"
                                   borderRadius="4px"
@@ -204,8 +209,9 @@ export function LifetimeAnalytics() {
 
                           return (
                               <HStack
+                                  key={view._id}
                                   py="4px"
-                                  gap="12px"
+                                  gap={{ base: "4px", sm: "12px" }}
                                   w="100%"
                                   flexDirection={{ base: "column", md: "row" }}
                                   alignItems={{ base: "start", md: "center" }}
@@ -221,7 +227,11 @@ export function LifetimeAnalytics() {
 
                                   <Box
                                       pos="relative"
-                                      height={{ base: "180px", md: "94px" }}
+                                      height={{
+                                          base: "180px",
+                                          sm: "240px",
+                                          md: "94px",
+                                      }}
                                       w="100%"
                                       maxW={{ base: "100%", md: "160px" }}
                                   >

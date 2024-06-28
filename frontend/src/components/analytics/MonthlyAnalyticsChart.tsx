@@ -1,4 +1,10 @@
-import { Box, HStack, Text, VStack } from "@chakra-ui/react";
+import {
+    Box,
+    HStack,
+    Text,
+    VStack,
+    useBreakpointValue,
+} from "@chakra-ui/react";
 import React from "react";
 import {
     AreaChart,
@@ -17,6 +23,8 @@ export type MonthlyAnalyticsChartProps = {
 };
 
 export function MonthlyAnalyticsChart(props: MonthlyAnalyticsChartProps) {
+    const isSm = useBreakpointValue({ base: true, sm: false });
+
     return (
         <ResponsiveContainer>
             <AreaChart data={props.views} margin={{ top: 12, right: 32 }}>
@@ -30,12 +38,12 @@ export function MonthlyAnalyticsChart(props: MonthlyAnalyticsChartProps) {
                 <XAxis
                     dataKey="day"
                     style={{
-                        fontSize: "13px",
+                        fontSize: isSm ? "11px" : "13px",
                         fontWeight: "500",
                         color: "gray",
                     }}
                     tickFormatter={(v, idx) => {
-                        if (idx % 5 !== 0) return "";
+                        if (idx % (isSm ? 8 : 5) !== 0) return "";
                         if (typeof v !== "string") return v;
                         const result = v.split(",")[0]?.trim();
                         return result ?? v;
@@ -45,7 +53,7 @@ export function MonthlyAnalyticsChart(props: MonthlyAnalyticsChartProps) {
                     type="number"
                     domain={[0, "dataMax + 5"]}
                     style={{
-                        fontSize: "13px",
+                        fontSize: isSm ? "11px" : "13px",
                         fontWeight: "500",
                         color: "gray",
                     }}
