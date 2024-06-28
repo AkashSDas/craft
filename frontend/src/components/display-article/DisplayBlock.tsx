@@ -6,11 +6,11 @@ import { ImageBlock } from "./ImageBlock";
 import { QuoteBlock } from "./QuoteBlock";
 
 type Props = {
-    block: Block;
+    block: Block | undefined;
 };
 
 export function DisplayBlock({ block }: Props): React.JSX.Element | null {
-    switch (block.type) {
+    switch (block?.type) {
         case "paragraph":
             return <ParagraphBlock block={block} />;
         case "heading":

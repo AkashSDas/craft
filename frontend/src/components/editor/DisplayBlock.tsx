@@ -6,12 +6,12 @@ import { ParagraphInputBlock } from "./ParagraphInputBlock";
 import { QuoteBlock } from "./QuoteBlock";
 
 type Props = {
-    block: Block;
+    block: Block | undefined;
     index: number;
 };
 
 export function DisplayBlock({ block, index }: Props) {
-    switch (block.type) {
+    switch (block?.type) {
         case "paragraph":
             return (
                 <ParagraphInputBlock
