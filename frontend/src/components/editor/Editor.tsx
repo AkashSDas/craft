@@ -31,7 +31,7 @@ export function Editor() {
     return (
         <Box pos="relative" mt="70px">
             <Sidebar />
-            <Stack ml="300px" alignItems="center">
+            <Stack ml="300px" alignItems="center" mb="4rem">
                 <Stack
                     maxW="700px"
                     w="100%"
