@@ -199,6 +199,7 @@ export class ArticleRepository {
                     _id: 1,
                 },
             },
+            { $match: { isPublic: true } },
             { $sort: { weight: -1 } },
             { $limit: limit },
         ]);
