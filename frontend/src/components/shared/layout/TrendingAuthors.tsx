@@ -24,8 +24,12 @@ export function TrendingAuthors() {
 
     return (
         <VStack w="100%" alignItems="start" gap="14px">
-            <Heading variant="h3" fontSize="24px">
-                <TrendingHeading />
+            <Heading
+                as="h3"
+                fontSize={{ base: "24px", sm: "30px" }}
+                fontFamily={fontStyles.condensedMedium.fontFamily}
+            >
+                Rising Authors
             </Heading>
 
             <Divider />
@@ -127,40 +131,5 @@ function AuthorSkeletons(props: { isLoaded: boolean }) {
                 );
             })}
         </>
-    );
-}
-
-function TrendingHeading() {
-    return (
-        <Heading as="h1" fontSize={{ base: "24px", sm: "30px" }}>
-            <Text as="span" {...fontStyles["expandedBoldItalic"]}>
-                Ri
-            </Text>
-            <Text as="span" {...fontStyles["condensedMedium"]}>
-                s
-            </Text>
-            <Text as="span" {...fontStyles["expandedLightItalic"]}>
-                in
-            </Text>
-            <Text as="span" {...fontStyles["bold"]} mr="6px">
-                g
-            </Text>
-
-            <Text as="span" {...fontStyles["expandedLight"]}>
-                A
-            </Text>
-            <Text as="span" {...fontStyles["condensedMedium"]}>
-                ut
-            </Text>
-            <Text as="span" {...fontStyles["expandedLightItalic"]}>
-                ho
-            </Text>
-            <Text as="span" {...fontStyles["bold"]}>
-                r
-            </Text>
-            <Text as="span" {...fontStyles["expandedBoldItalic"]}>
-                s
-            </Text>
-        </Heading>
     );
 }

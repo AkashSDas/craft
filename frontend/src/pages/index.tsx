@@ -1,16 +1,7 @@
 import { ArticlePreviewCard } from "@app/components/shared/article-preview-card/ArticlePreviewCard";
 import { Layout } from "@app/components/shared/layout/Layout";
 import { PaginatedArticle, getArticlesPaginated } from "@app/services/articles";
-import { fontStyles } from "@app/utils/fonts";
-import {
-    Divider,
-    HStack,
-    Heading,
-    Spacer,
-    Spinner,
-    Text,
-    VStack,
-} from "@chakra-ui/react";
+import { HStack, Spacer, Spinner, Text } from "@chakra-ui/react";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { GetStaticProps, InferGetStaticPropsType } from "next";
 import InfiniteScroll from "react-infinite-scroll-component";
@@ -83,9 +74,6 @@ export default function Home(props: Props) {
 
     return (
         <Layout mainClassName="feed-articles">
-            <FeedHeading />
-            <Divider borderColor="gray.200" />
-
             <InfiniteScroll
                 dataLength={data.pages.reduce(
                     (a, b) => a + (b.articles?.length ?? 0),
@@ -142,24 +130,5 @@ export default function Home(props: Props) {
                 })}
             </InfiniteScroll>
         </Layout>
-    );
-}
-
-function FeedHeading() {
-    return (
-        <Heading as="h1" fontSize={{ base: "24px", sm: "30px" }}>
-            <Text as="span" {...fontStyles["expandedBoldItalic"]}>
-                F
-            </Text>
-            <Text as="span" {...fontStyles["condensedMedium"]}>
-                e
-            </Text>
-            <Text as="span" {...fontStyles["expandedLightItalic"]}>
-                e
-            </Text>
-            <Text as="span" {...fontStyles["bold"]}>
-                d
-            </Text>
-        </Heading>
     );
 }

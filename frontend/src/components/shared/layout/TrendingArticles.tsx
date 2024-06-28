@@ -25,8 +25,12 @@ export function TrendingArticles() {
 
     return (
         <VStack w="100%" alignItems="start" gap="14px">
-            <Heading variant="h3" fontSize="24px">
-                <TrendingHeading />
+            <Heading
+                as="h3"
+                fontSize={{ base: "24px", sm: "30px" }}
+                fontFamily={fontStyles.condensedMedium.fontFamily}
+            >
+                Trending
             </Heading>
 
             <Divider />
@@ -149,30 +153,5 @@ function ArticleSkeletons(props: { isLoaded: boolean }) {
                 );
             })}
         </>
-    );
-}
-
-function TrendingHeading() {
-    return (
-        <Heading as="h1" fontSize={{ base: "24px", sm: "30px" }}>
-            <Text as="span" {...fontStyles["expandedBoldItalic"]}>
-                T
-            </Text>
-            <Text as="span" {...fontStyles["condensedMedium"]}>
-                re
-            </Text>
-            <Text as="span" {...fontStyles["expandedLightItalic"]}>
-                n
-            </Text>
-            <Text as="span" {...fontStyles["bold"]}>
-                d
-            </Text>
-            <Text as="span" {...fontStyles["expandedLight"]}>
-                in
-            </Text>
-            <Text as="span" {...fontStyles["condensedMedium"]}>
-                g
-            </Text>
-        </Heading>
     );
 }

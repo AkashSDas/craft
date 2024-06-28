@@ -24,6 +24,7 @@ import {
 } from "./MonthlyAnalyticsChart";
 import { isPending } from "@reduxjs/toolkit";
 import { monaSansCondensed, monasansExpanded } from "@app/lib/chakra";
+import { fontStyles } from "@app/utils/fonts";
 
 export function MonthlyAnalytics() {
     const { user, isLoggedIn } = useUser();
@@ -138,7 +139,12 @@ export function MonthlyAnalytics() {
         <VStack gap="24px" w="100%">
             <HStack w="100%" justifyContent="space-between" gap="12px">
                 <VStack flexGrow={1} w="100%" alignItems="start">
-                    <Heading variant="h2">Monthly</Heading>
+                    <Heading
+                        variant="h2"
+                        fontFamily={fontStyles.condensedMedium.fontFamily}
+                    >
+                        Monthly
+                    </Heading>
                     <HStack
                         divider={
                             <Divider

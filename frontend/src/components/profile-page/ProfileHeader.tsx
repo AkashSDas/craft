@@ -57,7 +57,6 @@ export function ProfileHeader(props: Props) {
                     fontSize={{ base: "20px", sm: "24px" }}
                     fontFamily={monasansExpanded.style.fontFamily}
                     fontWeight="extrabold"
-                    fontStyle="italic"
                 >
                     {username}
                 </Text>

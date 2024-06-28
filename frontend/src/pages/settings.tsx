@@ -142,7 +142,12 @@ export default function SettingsPage() {
                     onSubmit={formSubmit}
                     alignItems="start"
                 >
-                    <Heading>Profile</Heading>
+                    <Heading
+                        variant="h2"
+                        fontFamily={fontStyles.condensedMedium.fontFamily}
+                    >
+                        Profile
+                    </Heading>
 
                     <Box pos="relative">
                         <Image

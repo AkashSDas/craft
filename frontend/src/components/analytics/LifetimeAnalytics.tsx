@@ -80,7 +80,12 @@ export function LifetimeAnalytics() {
         <VStack gap="24px" w="100%">
             <HStack w="100%" justifyContent="space-between" gap="12px">
                 <VStack flexGrow={1} w="100%" alignItems="start">
-                    <Heading variant="h2">Lifetime</Heading>
+                    <Heading
+                        variant="h2"
+                        fontFamily={fontStyles.condensedMedium.fontFamily}
+                    >
+                        Lifetime
+                    </Heading>
                     <HStack
                         divider={
                             <Divider
@@ -199,7 +204,6 @@ export function LifetimeAnalytics() {
 
                           return (
                               <HStack
-                                  px="18px"
                                   py="4px"
                                   gap="12px"
                                   w="100%"
