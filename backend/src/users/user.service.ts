@@ -69,11 +69,9 @@ export class UserService {
         payload: UpdateProfileDto,
         file: UploadedFile | undefined | null,
     ) {
-        const user = await this.repo.findOne({ _id: userId }, "oauthProviders");
+        const user = await this.repo.findOne({ _id: userId }, "oAuthProviders");
         if (user.oAuthProviders.length > 0 && payload.email) {
-            throw new BadRequestException(
-                "Cannot change email when logged in with OAuth",
-            );
+            delete payload["email"];
         }
 
         const update: Partial<Pick<User, "profilePic" | "email" | "username">> =

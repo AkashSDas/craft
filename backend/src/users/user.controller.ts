@@ -25,7 +25,7 @@ export class UserController {
     @HttpCode(HttpStatus.OK)
     @UseGuards(AccessTokenGuard)
     async updateProfile(@Body() dto: UpdateProfileDto, @Req() req: IRequest) {
-        const profilePic = req.files.profilePic;
+        const profilePic = req.files?.profilePic;
         if (Array.isArray(profilePic)) {
             throw new BadRequestException(
                 "Only one profile picture is allowed",
