@@ -122,10 +122,10 @@ export function ImageBlock(props: Props) {
                         />
 
                         {/* Add file type and file size validation */}
-                        {file || block.value.URL ? (
+                        {file || block?.value?.URL ? (
                             <Box pos="relative" height="300px" width="100%">
                                 <NextImage
-                                    src={block.value.URL ?? ""}
+                                    src={block?.value?.URL ?? ""}
                                     alt="Image"
                                     layout="fill"
                                     style={{

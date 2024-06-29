@@ -40,7 +40,7 @@ const ImageBlockSchema = z.object({
     type: z.literal("image"),
     value: ImageSchema.merge(
         z.object({ caption: z.string().optional().nullish() })
-    ),
+    ).optional(),
 });
 
 const QuoteSchema = z.object({
