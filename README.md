@@ -71,3 +71,7 @@ Backend:
 - Make editor block rich and add other blocks (code/horizontal-group/list/callout)
 - Add notifications system
 - Add caching for analytics endpoints
+
+## License
+
+[MIT License](./LICENSE)
