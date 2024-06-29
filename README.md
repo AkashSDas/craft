@@ -1,8 +1,10 @@
 # Craft
 
-Place where professional share their thoughts and ideas regarding the craft they're passionate about.
+A place where professionals share their thoughts and ideas regarding the craft they're passionate about.
 
 ![Cover image](./docs/cover.png)
+
+[Demo](https://www.youtube.com/watch?v=x2bsTxkVPXk)
 
 ## Features
 
@@ -15,6 +17,7 @@ Place where professional share their thoughts and ideas regarding the craft they
 - Studio for managing "my" articles
 - Fully responsive
 - Different rendering patterns (ISR, SSR, SSG, CSR) based on page content
+- Design system ([Figma](https://www.figma.com/design/jufexyNYxQYFX1zwtFIiRg/craft?node-id=319-572&t=Q0fHWa6OcqtnvmZ0-1))
 
 ## Getting Started
 
