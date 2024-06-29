@@ -63,5 +63,8 @@ Backend:
 ## Next Steps
 
 - Add tests in frontend (Jest, RTL, Playwright) and backend (Jest)
+- Add husky
+- Dockerize the whole project
 - Make editor block rich and add other blocks (code/horizontal-group/list/callout)
 - Add notifications system
+- Add caching for analytics endpoints
