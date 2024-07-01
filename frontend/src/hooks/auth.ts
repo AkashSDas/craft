@@ -125,6 +125,7 @@ export function useCreateOAuthSession() {
 
 export function useMagicLinkLogin() {
     const router = useRouter();
+    const { redirectUrl = "" } = router.query as { redirectUrl: string };
     const toast = useToast();
     const token = router?.query?.["magic-token"];
 
@@ -139,8 +140,7 @@ export function useMagicLinkLogin() {
             if (data.success) {
                 queryClient.setQueryData(["user"], { user: data.user });
                 localStorage.setItem("accessToken", data.accessToken!);
-
-                await router.push("/");
+                await router.push(redirectUrl || "/");
                 toast({
                     title: "Success",
                     description: data.message,

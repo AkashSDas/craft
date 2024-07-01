@@ -19,6 +19,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { useUser } from "@app/hooks/auth";
+import { useRouter } from "next/router";
 
 type Props = {
     articleId: string;
@@ -44,6 +46,8 @@ const schema = z.object({
 export type ReadingListInputsType = z.infer<typeof schema>;
 
 export function ReadingListInput(props: Props): React.JSX.Element {
+    const { isLoggedIn } = useUser();
+    const router = useRouter();
     const toast = useToast();
     const form = useForm<ReadingListInputs>({
         defaultValues,
@@ -82,7 +86,13 @@ export function ReadingListInput(props: Props): React.JSX.Element {
     });
 
     const createList = form.handleSubmit(
-        async (data) => await mutation.mutateAsync(data)
+        async (data) => {
+            if (!isLoggedIn) {
+                router.push(`/auth/login?redirectUrl=${encodeURIComponent(router.asPath)}`); // Redirect to login page
+                return;
+            }
+            return await mutation.mutateAsync(data)
+        }
     );
 
     return (

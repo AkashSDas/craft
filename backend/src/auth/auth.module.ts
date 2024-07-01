@@ -28,4 +28,4 @@ import { ReadingListsModule } from "src/reading-lists/readling-lists.module";
         AuthService,
     ],
 })
-export class AuthModule {}
+export class AuthModule { }

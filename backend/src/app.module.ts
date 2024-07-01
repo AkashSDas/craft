@@ -26,4 +26,4 @@ import { ViewsModule } from "./views/views.module";
     ],
     providers: [CloudinaryProvider],
 })
-export class AppModule {}
+export class AppModule { }

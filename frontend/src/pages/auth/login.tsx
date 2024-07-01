@@ -8,7 +8,7 @@ export default function Login() {
     const router = useRouter();
     const toast = useToast();
     const { isSignupCompleted } = useUser();
-
+    const { redirectUrl = "" } = router.query as { redirectUrl: string };
     useEffect(
         function checkInvalidOAuthSignup() {
             if (router.query?.info === "signup-invalid") {
@@ -20,7 +20,9 @@ export default function Login() {
                     isClosable: true,
                 });
 
-                router.push("/auth/signup", undefined, { shallow: true });
+                router.push(`/auth/signup?${redirectUrl ?
+                    `redirectUrl=${redirectUrl}`
+                    : ""}`, undefined, { shallow: true });
             }
         },
         [router.query?.info]
@@ -28,7 +30,11 @@ export default function Login() {
 
     useEffect(
         function redirectUser() {
-            if (isSignupCompleted) router.replace("/");
+            if (isSignupCompleted) {
+                router.replace(
+                    redirectUrl || "/"
+                );
+            }
         },
         [isSignupCompleted]
     );

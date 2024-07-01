@@ -3,6 +3,7 @@ import { useFollowerManager } from "@app/hooks/followers";
 import { monasansExpanded } from "@app/lib/chakra";
 import { Box, Button, HStack, Text, VStack } from "@chakra-ui/react";
 import Image from "next/image";
+import { useRouter } from "next/router";
 import { useMemo, useState } from "react";
 
 type Props = {
@@ -13,7 +14,8 @@ type Props = {
 };
 
 export function ProfileHeader(props: Props) {
-    const { user } = useUser();
+    const { user, isLoggedIn } = useUser();
+    const router = useRouter();
     const { followersCount, username, userId, profilePicURL } = props;
     const [change, setChange] = useState<0 | -1>(0);
     const count = useMemo(() => {
@@ -73,6 +75,10 @@ export function ProfileHeader(props: Props) {
             <Button
                 px="24px"
                 onClick={() => {
+                    if (!isLoggedIn) {
+                        router.push(`/auth/login?redirectUrl=${encodeURIComponent(router.asPath)}`); // Redirect to login page
+                        return;
+                    }
                     const author = {
                         userId,
                         username,

@@ -22,6 +22,7 @@ import { useForm } from "react-hook-form";
 import { object, string } from "zod";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/router";
 
 function openLoginWindow(): void {
     window.open(
@@ -31,18 +32,21 @@ function openLoginWindow(): void {
 }
 
 export type EmailLoginInputs = {
-    email: string;
+    email: string,
+    redirectUrl: string
 };
-
 const defaultValues: EmailLoginInputs = {
     email: "",
+    redirectUrl: ""
 };
 
 const schema = object({
-    email: string().email({ message: "Invalid" }),
+    email: string().email({ message: "Invalid" })
 });
 
 export function LoginSection() {
+    const router = useRouter();
+    const { redirectUrl = "" } = router.query as { redirectUrl: string };
     useMagicLinkLogin();
     const toast = useToast();
     const [showEmailSentMsg, setShowEmailSentMsg] = useState(false);
@@ -50,7 +54,6 @@ export function LoginSection() {
         defaultValues,
         resolver: zodResolver(schema),
     });
-
     const mutation = useMutation({
         mutationFn: emailLogin,
         async onSuccess(data, _variables, _context) {
@@ -85,7 +88,10 @@ export function LoginSection() {
     });
 
     const sendMagicLink = form.handleSubmit(
-        async (data) => await mutation.mutateAsync(data)
+        async (data) => {
+            data.redirectUrl = redirectUrl
+            return await mutation.mutateAsync(data)
+        }
     );
 
     return (
@@ -198,7 +204,7 @@ export function LoginSection() {
                 {`Don't`} have an account?{" "}
                 <Text
                     as={Link}
-                    href="/auth/signup"
+                    href={`/auth/signup${redirectUrl ? `?redirectUrl=${redirectUrl}` : ""}`}
                     color="blue.700"
                     fontWeight="medium"
                     textDecor="underline"

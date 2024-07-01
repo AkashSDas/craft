@@ -12,6 +12,7 @@ const nextConfig = {
                 hostname: "res.cloudinary.com",
             },
         ],
+        domains: ['i.imgur.com'],
     },
 };
 

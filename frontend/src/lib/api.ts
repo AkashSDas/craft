@@ -26,10 +26,10 @@ export async function fetchFromAPI<T>(
                 ...opts?.headers,
                 ...(useAuth
                     ? {
-                          Authorization: `Bearer ${localStorage.getItem(
-                              "accessToken"
-                          )}`,
-                      }
+                        Authorization: `Bearer ${localStorage.getItem(
+                            "accessToken"
+                        )}`,
+                    }
                     : {}),
             },
         });

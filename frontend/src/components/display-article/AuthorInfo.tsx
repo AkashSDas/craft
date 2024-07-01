@@ -4,6 +4,7 @@ import { Article } from "@app/services/articles";
 import { HStack, VStack, Button, Text, Spinner } from "@chakra-ui/react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import { useMemo } from "react";
 
 type AuthorInfoProps = {
@@ -12,7 +13,8 @@ type AuthorInfoProps = {
 };
 
 export function AuthorInfo({ author, lastUpdatedAt }: AuthorInfoProps) {
-    const { user } = useUser();
+    const { isLoggedIn, user } = useUser();
+    const router = useRouter();
     const { followAuthorMutation, followersQuery, unfollowAuthorMutation } =
         useFollowerManager();
     const isFollowing = useMemo(
@@ -63,6 +65,10 @@ export function AuthorInfo({ author, lastUpdatedAt }: AuthorInfoProps) {
             <Button
                 px="24px"
                 onClick={() => {
+                    if (!isLoggedIn) {
+                        router.push(`/auth/login?redirectUrl=${encodeURIComponent(router.asPath)}`); // Redirect to login page
+                        return;
+                    }
                     if (isFollowing) {
                         unfollowAuthorMutation.mutateAsync(author);
                     } else {
