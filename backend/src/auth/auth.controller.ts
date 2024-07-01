@@ -41,7 +41,7 @@ export class AuthController {
         private service: AuthService,
         private configService: ConfigService,
         private readingListService: ReadingListsService,
-    ) {}
+    ) { }
 
     @Post("email-signup")
     @HttpCode(HttpStatus.CREATED)
@@ -106,7 +106,7 @@ export class AuthController {
 
     @Get("google-signup")
     @UseGuards(AuthGuard(GOOGLE_SIGNUP_STRATEGY))
-    initializeGoogleSignup() {}
+    initializeGoogleSignup() { }
 
     // TODO: if user already exists then don't create an oauth session
     @Get("google-signup/redirect")
@@ -132,7 +132,7 @@ export class AuthController {
 
     @Get("google-login")
     @UseGuards(AuthGuard(GOOGLE_LOGIN_STRATEGY))
-    initializeGoogleLogin() {}
+    initializeGoogleLogin() { }
 
     /**
      * This will only redirect to success url because if the user is not registered
@@ -247,7 +247,7 @@ export class AuthController {
         }
 
         if (req.logOut) {
-            req.logOut(function successfulOAuthLogout() {});
+            req.logOut(function successfulOAuthLogout() { });
         }
 
         return { message: "Logged out successfully" };

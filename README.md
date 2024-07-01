@@ -37,7 +37,7 @@ Before starting backend make sure to have MongoDB setup and update `DATABASE_URL
 ```bash
 cd backend/
 pnpm install
-pnpm run dev:start
+pnpm run start:dev
 ```
 
 Starting frontend:

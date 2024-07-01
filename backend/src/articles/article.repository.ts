@@ -5,7 +5,7 @@ import { FilterQuery, Model, Types } from "mongoose";
 
 @Injectable({})
 export class ArticleRepository {
-    constructor(@InjectModel(Article.name) private model: Model<Article>) {}
+    constructor(@InjectModel(Article.name) private model: Model<Article>) { }
 
     /** Initialize an article by an author. */
     async initArticle(authorId: Types.ObjectId) {

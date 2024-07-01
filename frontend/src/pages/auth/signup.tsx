@@ -8,10 +8,12 @@ export default function Signup() {
     useCreateOAuthSession();
     const { isSignupCompleted } = useUser();
     const router = useRouter();
-
+    const { redirectUrl = "" } = router.query as { redirectUrl: string };
     useEffect(
         function redirectUser() {
-            if (isSignupCompleted) router.replace("/");
+            if (isSignupCompleted) router.replace(
+                redirectUrl || "/"
+            );
         },
         [isSignupCompleted]
     );

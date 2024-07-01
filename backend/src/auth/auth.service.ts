@@ -23,7 +23,7 @@ export class AuthService {
     constructor(
         private userRepo: UserRepository,
         private jwtService: JwtService,
-    ) {}
+    ) { }
 
     async emailSignup(payload: EmailSignupDto) {
         try {
@@ -53,7 +53,8 @@ export class AuthService {
         }
 
         const token = user.createMagicLinkToken();
-        const link = `${process.env.FRONTEND_URL}/auth/login?magic-token=${token}`;
+
+        const link = `${process.env.FRONTEND_URL}/auth/login?magic-token=${token}${payload.redirectUrl ? `&redirectUrl=${payload.redirectUrl}` : ""}`;
 
         await sendEmail({
             to: user.email,

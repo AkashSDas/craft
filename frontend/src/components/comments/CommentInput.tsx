@@ -13,8 +13,12 @@ import {
 } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useRouter } from "next/router";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { useUser } from "@app/hooks/auth";
+
+
 
 type Props = {
     articleId: string;
@@ -34,13 +38,14 @@ const schema = z.object({
 });
 
 export function CommentInput(props: Props): React.JSX.Element {
+    const { isLoggedIn } = useUser();
+    const router = useRouter();
     const toast = useToast();
     const form = useForm<CommentInputs>({
         defaultValues,
         resolver: zodResolver(schema),
     });
     const queryClient = useQueryClient();
-
     const mutation = useMutation({
         mutationFn: (text: string) => addComment(props.articleId, text),
         async onSuccess(data, _variables, _context) {
@@ -80,7 +85,13 @@ export function CommentInput(props: Props): React.JSX.Element {
     });
 
     const createComment = form.handleSubmit(
-        async (data) => await mutation.mutateAsync(data.text)
+        async (data) => {
+            if (!isLoggedIn) {
+                router.push(`/auth/login?redirectUrl=${encodeURIComponent(router.asPath)}`); // Redirect to login page
+                return;
+            }
+            return await mutation.mutateAsync(data.text)
+        }
     );
 
     return (
