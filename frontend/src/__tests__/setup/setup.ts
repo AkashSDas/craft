@@ -1,4 +1,5 @@
-import { vi } from "vitest";
+import { expect, vi } from "vitest";
+import { toHaveNoViolations } from "jest-axe";
 import "@testing-library/jest-dom";
 
 Object.defineProperty(window, "matchMedia", {
@@ -35,3 +36,5 @@ vi.mock("next/font/google", () => ({
         },
     }),
 }));
+
+expect.extend(toHaveNoViolations);

@@ -4,6 +4,7 @@ import { render, screen } from "@testing-library/react";
 import { useLikesManager } from "@app/hooks/likes";
 import userEvent from "@testing-library/user-event";
 import { type ReactElement } from "react";
+import { axe } from "jest-axe";
 
 vi.mock("@app/hooks/likes", () => ({
     useLikesManager: vi.fn(),
@@ -74,5 +75,21 @@ describe("LikeButton Component", () => {
         expect(
             mockLikeManager.likeOrDislikeArticleMutation.mutateAsync
         ).toHaveBeenCalled();
+    });
+
+    it("should be accessible", async () => {
+        const mockLikeManager = {
+            likeOrDislikeArticleMutation: { mutateAsync: vi.fn() },
+            likedArticlesQuery: { data: { articles: [] } },
+        };
+        (useLikesManager as Mock).mockReturnValue(mockLikeManager);
+
+        const { container } = renderComponent(
+            <LikeButton likeCount={5} article={{ articleId: "123" }} />
+        );
+
+        const results = await axe(container);
+
+        expect(results).toHaveNoViolations();
     });
 });
