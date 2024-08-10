@@ -6,6 +6,7 @@ export default function NotFoundPage() {
     return (
         <Layout>
             <Text
+                data-testid="not-found-page-text"
                 fontWeight="500"
                 color="gray.600"
                 fontSize="20px"

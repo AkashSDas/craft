@@ -11,5 +11,6 @@ export default defineConfig({
     },
     test: {
         environment: "jsdom",
+        setupFiles: [path.resolve(__dirname, "src/__tests__/setup/setup.ts")],
     },
 });

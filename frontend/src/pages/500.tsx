@@ -6,6 +6,7 @@ export default function InternalServerErrorPage() {
     return (
         <Layout>
             <Text
+                data-testid="internal-server-error-page-text"
                 fontWeight="500"
                 color="gray.600"
                 fontSize="20px"
