@@ -8,6 +8,7 @@ type Props = {
 export function ParagraphBlock({ block }: Props): React.JSX.Element {
     return (
         <Text
+            data-testid="paragraph-block"
             fontFamily="serif"
             fontSize={{ base: "18px", sm: "20px" }}
             lineHeight="150%"

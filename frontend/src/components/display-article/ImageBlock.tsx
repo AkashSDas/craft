@@ -9,6 +9,7 @@ type Props = {
 export function ImageBlock({ block }: Props): React.JSX.Element {
     return (
         <Box
+            data-testid="image-block"
             pos="relative"
             height={{ base: "220px", sm: "300px" }}
             width="100%"

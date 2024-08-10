@@ -8,6 +8,7 @@ type Props = {
 export function QuoteBlock({ block }: Props): React.JSX.Element {
     return (
         <Text
+            data-testid="quote-block"
             fontFamily="serif"
             fontSize={{ base: "18px", sm: "20px" }}
             px={{ base: 4, sm: 8 }}

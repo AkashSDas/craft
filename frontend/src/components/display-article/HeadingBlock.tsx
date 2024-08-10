@@ -25,7 +25,11 @@ export function HeadingBlock({ block }: Props): React.JSX.Element {
     }, []);
 
     return (
-        <Heading variant={block.value.variant} fontSize={fontSize}>
+        <Heading
+            data-testid={`heading-block-${block.value.variant}`}
+            variant={block.value.variant}
+            fontSize={fontSize}
+        >
             {block.value.text}
         </Heading>
     );
