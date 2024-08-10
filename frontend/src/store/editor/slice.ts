@@ -171,7 +171,7 @@ export const editorSlice = createSlice({
             const { blockId, file } = action.payload;
             const block = state.blocks[blockId];
             if (block?.type !== "image") return;
-            block.value.URL = URL.createObjectURL(file);
+            block.value!.URL = URL.createObjectURL(file);
             state.files[blockId] = file;
             state.changedBlocks.push(blockId);
 
