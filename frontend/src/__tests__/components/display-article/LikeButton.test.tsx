@@ -3,10 +3,21 @@ import { describe, it, expect, vi, Mock } from "vitest";
 import { render, screen } from "@testing-library/react";
 import { useLikesManager } from "@app/hooks/likes";
 import userEvent from "@testing-library/user-event";
+import { type ReactElement } from "react";
 
 vi.mock("@app/hooks/likes", () => ({
     useLikesManager: vi.fn(),
 }));
+
+export const renderComponent = (
+    ui: ReactElement,
+    options?: Parameters<typeof render>[1]
+) => {
+    return {
+        ...render(ui, options),
+        user: userEvent.setup(),
+    };
+};
 
 describe("LikeButton Component", () => {
     it("should display the initial like count", () => {
@@ -45,7 +56,6 @@ describe("LikeButton Component", () => {
     });
 
     it("should increment the like count", async (): Promise<void> => {
-        const user = userEvent.setup();
         const mockLikeManager = {
             likeOrDislikeArticleMutation: { mutateAsync: vi.fn() },
             // Empty liked articles
@@ -53,7 +63,9 @@ describe("LikeButton Component", () => {
         };
         (useLikesManager as Mock).mockReturnValue(mockLikeManager);
 
-        render(<LikeButton likeCount={5} article={{ articleId: "123" }} />);
+        const { user } = renderComponent(
+            <LikeButton likeCount={5} article={{ articleId: "123" }} />
+        );
 
         const el = screen.getByRole("button");
         expect(el).toHaveTextContent("5");
