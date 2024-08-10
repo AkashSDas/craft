@@ -13,5 +13,19 @@ export default defineConfig({
         globals: true,
         environment: "jsdom",
         setupFiles: [path.resolve(__dirname, "src/__tests__/setup/setup.ts")],
+        coverage: {
+            include: ["src/**/*"],
+            exclude: [
+                "test/**",
+                "vite.*.ts",
+                "**/*.d.ts",
+                "**/*.test.{ts,tsx,js,jsx}",
+                "**/*.config.*",
+                "**/snapshot-tests/**",
+                "**/*.solution.tsx",
+                "**/coverage/**",
+            ],
+            all: true,
+        },
     },
 });
