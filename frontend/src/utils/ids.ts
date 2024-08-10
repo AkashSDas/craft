@@ -1,4 +1,4 @@
-function generateRandomString(length: number): string {
+export function generateRandomString(length: number): string {
     return Math.random()
         .toString(36)
         .substring(2, length + 2);
