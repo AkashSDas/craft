@@ -5,10 +5,9 @@ import { store } from "@app/store";
 import "@app/styles/globals.css";
 import { ChakraProvider } from "@chakra-ui/react";
 import { QueryClientProvider } from "@tanstack/react-query";
-import type { AppProps } from "next/app";
 import { Provider as ReduxProvider } from "react-redux";
 
-export default function App({ Component, pageProps }: AppProps) {
+export default function App({ Component, pageProps }: any) {
     return (
         <ChakraProvider theme={theme}>
             <QueryClientProvider client={queryClient}>
