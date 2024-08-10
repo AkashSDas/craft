@@ -15,7 +15,7 @@ export function ImageBlock({ block }: Props): React.JSX.Element {
             my="12px"
         >
             <NextImage
-                src={block.value.URL ?? ""}
+                src={block?.value?.URL ?? ""}
                 alt="Image"
                 layout="fill"
                 style={{
