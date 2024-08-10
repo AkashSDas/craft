@@ -8,8 +8,32 @@ on:
             - "frontend/**"
 
 jobs:
-    build-and-test:
+    build:
         name: Build
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v2
+            - name: Setup Node.js
+              uses: actions/setup-node@v2
+              with:
+                  node-version: "20"
+                  cache: "pnpm"
+            - name: Install pnpm
+              run: npm install -g pnpm
+            - name: Install dependencies
+              working-directory: frontend
+              run: pnpm install
+            - name: Build
+              working-directory: frontend
+              run: pnpm build
+            - name: Archive build output
+              uses: actions/upload-artifact@v2
+              with:
+                  name: build
+                  path: frontend/dist
+    test:
+        name: Test
         runs-on: ubuntu-latest
         steps:
             - name: Checkout code
@@ -27,6 +51,11 @@ jobs:
             - name: Run tests
               working-directory: frontend
               run: pnpm test
-            - name: Build
+            - name: Run coverage report
               working-directory: frontend
-              run: pnpm build
+              run: pnpm test:cov
+            - name: Generate code coverage
+              uses: actions/upload-artifact@v2
+              with:
+                  name: coverage-report
+                  path: frontend/test
