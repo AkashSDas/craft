@@ -13,10 +13,13 @@ export default defineConfig({
         globals: true,
         environment: "jsdom",
         setupFiles: [path.resolve(__dirname, "src/__tests__/setup/setup.ts")],
+        include: ["src/__tests__/**/*.test.{ts,tsx,js,jsx}"],
+        exclude: ["src/__tests__/e2e/**/*.test.{ts,tsx,js,jsx}"],
         coverage: {
             include: ["src/**/*"],
             exclude: [
                 "test/**",
+                "src/__tests__/**",
                 "vite.*.ts",
                 "**/*.d.ts",
                 "**/*.test.{ts,tsx,js,jsx}",
