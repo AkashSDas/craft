@@ -10,6 +10,9 @@ on:
 jobs:
     build:
         name: Build
+        defaults:
+            run:
+                working-directory: frontend
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v4
@@ -18,19 +21,17 @@ jobs:
                   node-version: "20"
                   cache: "npm"
             - run: npm install -g pnpm
-            - name: Install dependencies
-              working-directory: frontend
-              run: pnpm install
-            - name: Build
-              working-directory: frontend
-              run: pnpm build
-            - name: Archive build output
-              uses: actions/upload-artifact@v4
+            - run: pnpm install
+            - run: pnpm build
+            - uses: actions/upload-artifact@v4
               with:
                   name: build
                   path: frontend/dist
     test:
         name: Test
+        defaults:
+            run:
+                working-directory: frontend
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v4
@@ -39,41 +40,30 @@ jobs:
                   node-version: "20"
                   cache: "npm"
             - run: npm install -g pnpm
-            - name: Install dependencies
-              working-directory: frontend
-              run: pnpm install
-            - name: Run tests
-              working-directory: frontend
-              run: pnpm test
-            - name: Run coverage report
-              working-directory: frontend
-              run: pnpm test:cov
-            - name: Generate code coverage
-              uses: actions/upload-artifact@v4
+            - run: pnpm install
+            - run: pnpm test
+            - run: pnpm test:cov
+            - uses: actions/upload-artifact@v4
               with:
                   name: coverage-report
                   path: frontend/test
     end-to-end-test:
         name: End-to-End Test
+        defaults:
+            run:
+                working-directory: frontend
         timeout-minutes: 60
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v4
             - uses: actions/setup-node@v4
               with:
-                  node-version: "18"
+                  node-version: "20"
                   cache: "npm"
-            - name: Install pnpm
-              run: npm install -g pnpm
-            - name: Install dependencies
-              working-directory: frontend
-              run: pnpm install
-            - name: Install Playwright Browsers
-              working-directory: frontend
-              run: pnpm exec playwright install --with-deps
-            - name: Run Playwright tests
-              working-directory: frontend
-              run: pnpm exec playwright test
+            - run: npm install -g pnpm
+            - run: pnpm install
+            - run: pnpm exec playwright install --with-deps
+            - run: pnpm exec playwright test
             - uses: actions/upload-artifact@v4
               if: always()
               with:
