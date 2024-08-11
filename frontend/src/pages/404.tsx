@@ -2,7 +2,7 @@ import { Layout } from "@app/components/shared/layout/Layout";
 import { fontStyles } from "@app/utils/fonts";
 import { Text } from "@chakra-ui/react";
 import Head from "next/head";
-
+//
 export default function NotFoundPage() {
     return (
         <>
