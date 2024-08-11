@@ -1,6 +1,7 @@
 import { expect, vi } from "vitest";
 import { toHaveNoViolations } from "jest-axe";
 import "@testing-library/jest-dom";
+import { server } from "@app/mocks/server";
 
 Object.defineProperty(window, "matchMedia", {
     writable: true,
@@ -38,3 +39,15 @@ vi.mock("next/font/google", () => ({
 }));
 
 expect.extend(toHaveNoViolations);
+
+beforeAll(() => {
+    server.listen({ onUnhandledRequest: "error" });
+});
+
+afterEach(() => {
+    server.resetHandlers();
+});
+
+afterAll(() => {
+    server.close();
+});
