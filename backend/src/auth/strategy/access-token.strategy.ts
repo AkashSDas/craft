@@ -21,7 +21,7 @@ export class AccessTokenStrategy extends PassportStrategy(
     }
 
     /**
-     * The returned value from here will be appened to req.user for routes
+     * The returned value from here will be added to req.user object for routes
      * that are guarded by AuthGuard(ACCESS_TOKEN_STRATEGY)
      */
     async validate(_req: Request, payload: AccessTokenPayload): Promise<User> {

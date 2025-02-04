@@ -3,11 +3,10 @@ import { InjectModel } from "@nestjs/mongoose";
 import { View } from "./schema";
 import { FilterQuery, Model, Types, UpdateQuery } from "mongoose";
 import { LifetimeViewsQuery } from "./query";
-import { ArticleService } from "src/articles/article.service";
 import { ArticleRepository } from "src/articles/article.repository";
 
 @Injectable()
-export class ViewsRepsitory {
+export class ViewsRepository {
     constructor(
         @InjectModel(View.name) private model: Model<View>,
         private articleRepo: ArticleRepository,
@@ -25,7 +24,7 @@ export class ViewsRepsitory {
         return await this.model.updateOne(filter, update);
     }
 
-    async exsits(filter: FilterQuery<View>) {
+    async exists(filter: FilterQuery<View>) {
         return await this.model.exists(filter);
     }
 

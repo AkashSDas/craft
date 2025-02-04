@@ -6,9 +6,9 @@ export const ViewsService = jest.fn().mockReturnValue({
     getUserArticlesMonthlyViewsAggregated: jest
         .fn()
         .mockResolvedValue([
-            stubs.montlyViewStub(),
-            stubs.montlyViewStub(),
-            stubs.montlyViewStub(),
+            stubs.monthlyViewStub(),
+            stubs.monthlyViewStub(),
+            stubs.monthlyViewStub(),
         ]),
     getUserArticlesLifetimeViewsAggregated: jest
         .fn()

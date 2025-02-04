@@ -31,8 +31,8 @@ export class FollowersController {
     @Delete("")
     @HttpCode(HttpStatus.NO_CONTENT)
     @UseGuards(AccessTokenGuard)
-    async unfollowAuthor(@Req() req: IRequest, @Body() dto: FollowAuthorDto) {
-        await this.serv.unfollowAuthor(req.user._id, dto.followingAuthorId);
+    async unFollowAuthor(@Req() req: IRequest, @Body() dto: FollowAuthorDto) {
+        await this.serv.unFollowAuthor(req.user._id, dto.followingAuthorId);
     }
 
     @Get()

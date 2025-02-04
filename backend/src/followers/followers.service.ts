@@ -33,7 +33,7 @@ export class FollowersService {
         );
     }
 
-    async unfollowAuthor(followerId: Types.ObjectId, authorId: string) {
+    async unFollowAuthor(followerId: Types.ObjectId, authorId: string) {
         const exists = await this.userRepo.exists({ userId: authorId });
         if (!exists) {
             throw new BadRequestException("Author does not exist");

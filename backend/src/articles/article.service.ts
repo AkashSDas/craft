@@ -172,7 +172,7 @@ export class ArticleService {
         const { blocksText } = article;
         const { addedBlockIds, blocks, changedBlockIds } = dto;
 
-        // Prepare exsiting text data to be updated
+        // Prepare existing text data to be updated
 
         // > "##blockId1##content1##blockId2##content2".split("##")
         // [ '', 'blockId1', 'content1', 'blockId2', 'content2' ]

@@ -13,7 +13,7 @@ export class LikesService {
     async likeArticle(articleId: string, userId: Types.ObjectId) {
         const exists = await this.articleRepo.exists(articleId);
         if (!exists) {
-            throw new BadRequestException("Arrticle doesn't exists");
+            throw new BadRequestException("Article doesn't exists");
         }
 
         const hasLiked = await this.repo.exists(exists._id, userId);

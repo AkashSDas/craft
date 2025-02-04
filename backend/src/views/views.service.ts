@@ -1,5 +1,5 @@
 import { BadRequestException, Injectable } from "@nestjs/common";
-import { ViewsRepsitory } from "./views.repository";
+import { ViewsRepository } from "./views.repository";
 import { Types } from "mongoose";
 import { ArticleRepository } from "src/articles/article.repository";
 import { LifetimeViewsQuery } from "./query";
@@ -7,12 +7,12 @@ import { LifetimeViewsQuery } from "./query";
 @Injectable()
 export class ViewsService {
     constructor(
-        private repo: ViewsRepsitory,
+        private repo: ViewsRepository,
         private articleRepo: ArticleRepository,
     ) {}
 
     async addViewForArticle(userId: Types.ObjectId, articleId: Types.ObjectId) {
-        const exists = await this.repo.exsits({
+        const exists = await this.repo.exists({
             articleId,
             userId,
             updatedAt: {

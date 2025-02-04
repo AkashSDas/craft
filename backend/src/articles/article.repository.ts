@@ -131,7 +131,7 @@ export class ArticleRepository {
 
     async getTrendingArticles(limit: number) {
         // These are trending articles sorted on the combination of last
-        // updated on (more weightage) and article likes.
+        // updated on (more weighage) and article likes.
 
         return await this.model.aggregate([
             {

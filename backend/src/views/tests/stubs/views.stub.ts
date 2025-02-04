@@ -14,7 +14,7 @@ export function viewDocumentStub() {
     };
 }
 
-export function montlyViewStub() {
+export function monthlyViewStub() {
     const [year, month, day] = new Date()
         .toISOString()
         .split("T")[0]

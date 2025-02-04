@@ -15,7 +15,7 @@ export function IsTimestamp(validationOptions?: ValidationOptions) {
             propertyName: propertyName,
             options: validationOptions,
             validator: {
-                validate(value: any, args: ValidationArguments) {
+                validate(value: any, _args: ValidationArguments) {
                     value = Number(value);
                     return (
                         typeof value === "number" &&
