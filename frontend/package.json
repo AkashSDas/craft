@@ -53,5 +53,9 @@
         "msw": "^2.3.5",
         "typescript": "^5",
         "vitest": "^2.0.5"
-    }
+    },
+    "engines": {
+        "node": ">=v20.11.0"
+    },
+    "packageManager": "pnpm@9.12.2"
 }
