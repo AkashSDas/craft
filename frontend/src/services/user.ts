@@ -2,8 +2,6 @@ import { z } from "zod";
 import { ImageSchema } from "./articles";
 import { endpoints, fetchFromAPI } from "@app/lib/api";
 
-const TRENDING_AUTHORS_LIMIT = 5;
-
 const AuthorSchema = z.object({
     userId: z.string(),
     username: z.string(),

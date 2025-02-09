@@ -5,7 +5,7 @@ type Props = {
     children: string;
 };
 
-export function HightlightWrapper(props: Props) {
+export function HighlightWrapper(props: Props) {
     if (!props.query) {
         return props.children ?? null;
     }

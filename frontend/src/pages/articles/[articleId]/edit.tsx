@@ -2,7 +2,6 @@ import { Editor } from "@app/components/editor/Editor";
 import { useEditArticle } from "@app/hooks/editor";
 import { fontStyles } from "@app/utils/fonts";
 import {
-    Show,
     Spinner,
     Stack,
     Text,

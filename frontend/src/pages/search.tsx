@@ -3,7 +3,6 @@ import { ShowRecentSearches } from "@app/components/search/ShowRecentSearches";
 import { ShowSearchResults } from "@app/components/search/ShowSearchResults";
 import { Layout } from "@app/components/shared/layout/Layout";
 import { PaginatedArticle, getArticlesPaginated } from "@app/services/articles";
-import { VStack } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next/types";
 import { useEffect, useState } from "react";

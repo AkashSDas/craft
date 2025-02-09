@@ -1,11 +1,10 @@
-import { Button, HStack, IconButton, Show, Spinner } from "@chakra-ui/react";
+import { Button, HStack, Show, Spinner } from "@chakra-ui/react";
 import Link from "next/link";
 import { Logo } from "../logo";
 import { useUser } from "@app/hooks/auth";
 import { MobileNav } from "./MobileNav";
 import { useCreateArticle } from "@app/hooks/editor";
 import { ProfilePicture } from "./ProfilePicture";
-import Image from "next/image";
 import { SearchButton } from "../../search/SearchButton";
 
 export function Navbar() {

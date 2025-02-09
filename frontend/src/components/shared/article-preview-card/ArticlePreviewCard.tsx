@@ -15,11 +15,11 @@ import { CommentsDrawer } from "@app/components/comments/CommentsDrawer";
 import { ReadingListsDrawer } from "@app/components/reading-lists/ReadingListsDrawer";
 import Link from "next/link";
 import dynamic from "next/dynamic";
-import { HightlightWrapper } from "./HighlightWrapper";
+import { HighlightWrapper } from "./HighlightWrapper";
 
 // Since on home page with SSR when articles are loaded, ArticlePreviewCard is
 // a link and UserChip is also a link (<a> inside <a> giving hydration err).
-// To avoid this hydration err, I'm just disabling prerendering on UserChip
+// To avoid this hydration err, I'm just disabling pre-rendering on UserChip
 const UserChip = dynamic(
     () =>
         import("../user-chip/UserChip").then((mod) => {
@@ -160,15 +160,15 @@ export function ArticlePreviewCard(props: Props): React.JSX.Element {
                             fontWeight="bold"
                             noOfLines={2}
                         >
-                            <HightlightWrapper query={searchTextHighlight}>
+                            <HighlightWrapper query={searchTextHighlight}>
                                 {headline ?? "Untitled"}
-                            </HightlightWrapper>
+                            </HighlightWrapper>
                         </Text>
 
                         <Text fontSize="1rem" color="gray" noOfLines={2}>
-                            <HightlightWrapper query={searchTextHighlight}>
+                            <HighlightWrapper query={searchTextHighlight}>
                                 {description ?? ""}
-                            </HightlightWrapper>
+                            </HighlightWrapper>
                         </Text>
                     </VStack>
 

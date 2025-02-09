@@ -14,7 +14,6 @@ import {
     MenuButton,
     MenuList,
     MenuItem,
-    Button,
     Spinner,
 } from "@chakra-ui/react";
 import Image from "next/image";

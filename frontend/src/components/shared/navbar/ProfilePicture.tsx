@@ -1,5 +1,4 @@
 import { useUser, useLogout } from "@app/hooks/auth";
-import { EditIcon, SettingsIcon } from "@chakra-ui/icons";
 import {
     Menu,
     MenuButton,
@@ -8,7 +7,6 @@ import {
     Divider,
     Spinner,
     Box,
-    MenuIcon,
 } from "@chakra-ui/react";
 import Image from "next/image";
 import Link from "next/link";

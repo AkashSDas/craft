@@ -1,7 +1,7 @@
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { z } from "zod";
 
-const LOCALSTORAGE_KEY = "recentSearches";
+const LOCAL_STORAGE_KEY = "recentSearches";
 const DEFAULT_LIMIT = 10;
 
 const HistorySchema = z.array(z.string());
@@ -14,7 +14,7 @@ export function useRecentSearch() {
     }, []);
 
     function parseHistory() {
-        const storedHistory = localStorage.getItem(LOCALSTORAGE_KEY);
+        const storedHistory = localStorage.getItem(LOCAL_STORAGE_KEY);
         if (storedHistory) {
             try {
                 const parsedHistory = HistorySchema.safeParse(
@@ -42,14 +42,14 @@ export function useRecentSearch() {
             );
 
             setHistory(newHistory);
-            localStorage.setItem(LOCALSTORAGE_KEY, JSON.stringify(newHistory));
+            localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(newHistory));
         }
     }
 
     function removeHistory(searchText: string) {
         const newHistory = history.filter((item) => item !== searchText);
         setHistory(newHistory);
-        localStorage.setItem(LOCALSTORAGE_KEY, JSON.stringify(newHistory));
+        localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(newHistory));
     }
 
     return { history, addHistory, removeHistory };

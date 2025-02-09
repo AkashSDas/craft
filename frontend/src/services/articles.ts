@@ -1,8 +1,6 @@
 import { endpoints, fetchFromAPI } from "@app/lib/api";
 import { z } from "zod";
 
-const TRENDING_ARTICLES_LIMIT = 5;
-
 // ==================================
 // Validators
 // ==================================

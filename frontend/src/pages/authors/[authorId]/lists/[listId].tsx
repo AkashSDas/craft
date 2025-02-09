@@ -1,11 +1,6 @@
 import { AuthorProfileLayout } from "@app/components/profile-page/AuthorProfileLayout";
-import { AuthorReadingListTabContent } from "@app/components/profile-page/AuthorReadingListTabContent";
-import { ReadingListCard } from "@app/components/reading-lists/ReadingListCard";
 import { ArticlePreviewCard } from "@app/components/shared/article-preview-card/ArticlePreviewCard";
-import {
-    useGetAuthorReadingList,
-    useGetReadingList,
-} from "@app/hooks/reading-lists";
+import { useGetReadingList } from "@app/hooks/reading-lists";
 import { useGetAuthorPageProfile } from "@app/hooks/user";
 import { ArrowBackIcon } from "@chakra-ui/icons";
 import { Button, Spinner, Text, VStack } from "@chakra-ui/react";

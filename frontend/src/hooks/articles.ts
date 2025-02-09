@@ -1,4 +1,3 @@
-import { queryClient } from "@app/lib/react-query";
 import {
     deleteArticle,
     getTrendingArticles,

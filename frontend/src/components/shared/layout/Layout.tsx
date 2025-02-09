@@ -1,5 +1,4 @@
-import { useGetTrendingArticles } from "@app/hooks/articles";
-import { Divider, HStack, Heading, Show, VStack } from "@chakra-ui/react";
+import { HStack, Show, VStack } from "@chakra-ui/react";
 import { PropsWithChildren } from "react";
 import { TrendingArticles } from "./TrendingArticles";
 import { TrendingAuthors } from "./TrendingAuthors";
